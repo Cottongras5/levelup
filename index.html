@@ -4,32 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LevelUP</title>
+    <link rel="icon" type="image/png" href="pics/a.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg: #160e29;
-            --card: linear-gradient(180deg, #2f1f4f 0%, #201030 100%);
+            --bg: #130b26;
+            --card: linear-gradient(180deg, #302050 0%, #1a0a2a 100%);
             --chov: linear-gradient(180deg, #38235e 0%, #3f154a 100%);
             --txt: #f0e0ff;
-            --act: #00ff88;
-            --brd: rgba(0, 255, 136, 0.25);
-            --sbar: linear-gradient(180deg, #241440 0%, #190c30 100%);
-            --mtxt: #a88acb;
-            --glow: rgba(0, 255, 136, 0.4);
+            --act: #11ff99;
+            --brd: rgba(0, 255, 136, 0.2);
+            --mtxt: #a688c9;
             --shd: 0 5px 20px rgba(156, 0, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
-
         [data-th="light"] {
-            --bg: #daeaff;
-            --card: #ffffff;
-            --chov: #f0f6ff;
-            --txt: #1c2038;
-            --act: #00aaee;
-            --brd: #ffffff;
-            --sbar: #ffffff;
-            --mtxt: #697896;
-            --glow: rgba(0, 170, 238, 0.3);
-            --shd: 0 5px 18px rgba(0, 100, 200, 0.12);
+            --bg: #c9e8d5;
+            --card: #f0fffb;
+            --chov: #d6ffed;
+            --txt: #2c3030;
+            --act: #00bd6b;
+            --brd: #1d905e;
+            --mtxt: #798b8a;
+            --shd: 0 5px 20px rgba(0, 133, 88, 0.3);
         }
 
         [data-th="dark"] {
@@ -37,40 +33,22 @@
             --card: #21252b;
             --chov: #2d333d;
             --txt: #abb2bf;
-            --act: #00aaee;
+            --act: #00ff88;
             --brd: #3b4048;
-            --sbar: #21252b;
             --mtxt: #5c6370;
-            --glow: rgba(0, 170, 238, 0.3);
             --shd: 0 5px 20px rgba(0, 0, 0, 0.4);
         }
 
-        [data-th="mllgt"] {
-            --bg: #9ef5ff;
-            --card: #e3fbff;
-            --chov: #cdf5ff;
-            --txt: #224248;
-            --act: #ff9a00;
-            --brd: #e3fbff;
-            --sbar: #e3fbff;
-            --mtxt: #5d838a;
-            --glow: rgba(255, 154, 0, 0.35);
-            --shd: 0 5px 18px rgba(0, 180, 200, 0.18);
+       [data-th="mllgt"] {
+            --bg: #cac7ff;
+            --card: linear-gradient(180deg, #f8f0ff 0%, #d8d0df 100%);
+            --chov: linear-gradient(180deg, #d6ffe4 0%, #96bfa4 100%);
+            --txt: #1c2038;
+            --act: #10b040;
+            --brd: rgba(0, 130, 70, 0.2);
+            --mtxt: #697896;
+            --shd: 0 5px 20px rgba(85, 14, 255, 0.3);
         }
-
-        [data-th="mldrk"] {
-            --bg: #204044;
-            --card: rgba(50, 94, 106, 0.95);
-            --chov: #325c63;
-            --txt: #e3fbff;
-            --act: #ff9a00;
-            --brd: #2f4a4f;
-            --sbar: rgba(50, 94, 106, 0.95);
-            --mtxt: #83a5ac;
-            --glow: rgba(255, 154, 0, 0.35);
-            --shd: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
         [data-th="crims"] {
             --bg: #0d0204;
             --card: #1a050a;
@@ -78,9 +56,7 @@
             --txt: #f0cfd5;
             --act: #ff2a55;
             --brd: #5e0f1d;
-            --sbar: #1a050a;
             --mtxt: #9e6470;
-            --glow: rgba(255, 42, 85, 0.35);
             --shd: 0 5px 20px rgba(255, 0, 50, 0.15);
         }
 
@@ -91,9 +67,7 @@
             --txt: #dcd0f5;
             --act: #a855f7;
             --brd: #4c1d95;
-            --sbar: #0e051c;
             --mtxt: #816aab;
-            --glow: rgba(168, 85, 247, 0.35);
             --shd: 0 5px 20px rgba(120, 40, 200, 0.2);
         }
 
@@ -104,9 +78,7 @@
             --txt: #ffffff;
             --act: #666666;
             --brd: #000000;
-            --sbar: #111113;
             --mtxt: #777777;
-            --glow: rgba(255, 255, 255, 0.2);
             --shd: 0 5px 20px rgba(0, 0, 0, 0.6);
         }
 
@@ -169,7 +141,7 @@
         .btn:hover {
             background: var(--chov);
             border-color: var(--act);
-            box-shadow: var(--shd), 0 0 16px var(--glow);
+            box-shadow: var(--shd);
             transform: translateY(-2px);
         }
 
@@ -179,7 +151,7 @@
 
         .btn.on {
             border-color: var(--act);
-            box-shadow: var(--shd), 0 0 12px var(--glow);
+            box-shadow: var(--shd), 0 0 12px var(--act);
             background: var(--chov);
             color: var(--act);
         }
@@ -198,8 +170,8 @@
         }
 
         @keyframes aGlow {
-            from { box-shadow: var(--shd), 0 0 6px var(--glow); }
-            to { box-shadow: var(--shd), 0 0 24px var(--glow), 0 0 40px var(--act); }
+            from { box-shadow: var(--shd); }
+            to { box-shadow: var(--shd), 0 0 40px var(--act); }
         }
 
         .prtc {
@@ -207,7 +179,7 @@
             pointer-events: none;
             border-radius: 50%;
             background: var(--act);
-            box-shadow: 0 0 10px var(--act), 0 0 18px var(--glow);
+            box-shadow: 0 0 10px var(--act);
             z-index: 999;
             animation: pFly var(--dur) cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
@@ -224,7 +196,7 @@
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            background: var(--sbar);
+            background: var(--card);
             border-bottom: 1px solid var(--brd);
             box-shadow: var(--shd);
             position: sticky;
@@ -251,10 +223,6 @@
             color: var(--act);
             line-height: 1;
             transition: text-shadow 0.3s;
-        }
-
-        .mtitl:hover {
-            text-shadow: 0 0 12px var(--glow);
         }
 
         .stitl {
@@ -340,27 +308,28 @@
             transition: transform 0.3s ease;
         }
 
-        .hero:hover {
-            transform: translateY(-2px);
-        }
-
-        .hero::before {
+        #vInit > .hero::before {
             content: "";
             position: absolute;
             top: -50%;
             right: -10%;
             width: 350px;
             height: 350px;
-            background: var(--glow);
+            background: var(--act);
             filter: blur(90px);
+            opacity: 0.22;
             border-radius: 50%;
             pointer-events: none;
             animation: pulseGlow 6s infinite alternate ease-in-out;
         }
 
         @keyframes pulseGlow {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            100% { transform: scale(1.1); opacity: 1; }
+            0% { transform: scale(0.9); opacity: 0.16; }
+            100% { transform: scale(1.1); opacity: 0.28; }
+        }
+
+        .hero:hover {
+            transform: translateY(-2px);
         }
 
         .hcnt {
@@ -448,7 +417,7 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            background: var(--sbar);
+            background: var(--card);
             border: 1px solid var(--brd);
             padding: 14px 16px;
             border-radius: 12px;
@@ -554,7 +523,7 @@
         .ecard:hover {
             transform: translateY(-3px) scale(1.005);
             border-color: var(--act);
-            box-shadow: var(--shd), 0 8px 25px var(--glow);
+            box-shadow: var(--shd);
         }
 
         #bView {
@@ -582,11 +551,42 @@
         .bhdr {
             height: 60px;
             padding: 0 24px;
-            background: var(--sbar);
+            background: var(--card);
             border-bottom: 1px solid var(--brd);
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+
+        .bact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zctl {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px;
+            border: 1px solid var(--brd);
+            border-radius: 10px;
+            background: var(--card);
+        }
+
+        .zlbl {
+            min-width: 52px;
+            color: var(--mtxt);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .zbtn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 1.2rem;
         }
 
         .bcnt {
@@ -646,7 +646,7 @@
         .mch:hover {
             transform: scale(1.02);
             border-color: var(--act);
-            box-shadow: 0 5px 20px var(--glow);
+            box-shadow: var(--shd);
         }
 
         .conn-col {
@@ -726,7 +726,7 @@
         }
 
         footer {
-            background: var(--sbar);
+            background: var(--card);
             border-top: 1px solid var(--brd);
             padding: 24px;
             margin-top: auto;
@@ -778,7 +778,7 @@
         }
 
         .mdl {
-            background: var(--sbar);
+            background: var(--card);
             border: 1px solid var(--brd);
             box-shadow: var(--shd), 0 20px 40px rgba(0,0,0,0.5);
             border-radius: 16px;
@@ -834,7 +834,11 @@
 
         select:focus {
             border-color: var(--act);
-            box-shadow: 0 0 10px var(--glow);
+            box-shadow: 0 0 10px var(--act);
+        }
+
+        nav.cnav .nbtn.on {
+            box-shadow: var(--shd), 0 0 16px var(--act);
         }
 
         @media (max-aspect-ratio: 1/1), (max-width: 680px) {
@@ -941,7 +945,7 @@
             <div class="hero">
                 <div class="hcnt">
                     <h1><span class="acc">LevelUP</span>: Subiendo de Nivel</h1>
-                    <p>El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña tocaba el saxofón detrás del palenque de paja. El pingüino fue al quiosco a comprar un zapato. My name is Giovanni Giorgio, but everybody calls me Giorgio</p>
+                    <p>Desarrolladores de Eventos de Gaming y E-Sports en la Universidad de Margarita con +5000 de Aura</p>
                 </div>
                 <img src="pics/logo.png" alt="Logo" class="limg">
             </div>
@@ -953,6 +957,10 @@
                         <a href="https://www.instagram.com/levelup.mgta/" target="_blank" rel="noopener" class="btn sbtn">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                             <span>Instagram</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@levelup.ve" target="_blank" rel="noopener" class="btn sbtn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-3.77V2h-3.4v13.67a2.88 2.88 0 1 1-2-2.74V9.46a6.28 6.28 0 1 0 5.4 6.21V8.83a8.16 8.16 0 0 0 4.77 1.52V6.96a4.84 4.84 0 0 1-1-.27z"/></svg>
+                            <span>TikTok</span>
                         </a>
                         <a href="https://discord.gg/uGJ6rjPJTq" target="_blank" rel="noopener" class="btn sbtn">
                             <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
@@ -966,20 +974,20 @@
                 </div>
 
                 <div class="ssec">
-                    <h2 class="sttl">Contacto</h2>
+                    <h2 class="sttl">Info. de Contacto</h2>
                     <div class="clist">
                         <div class="citem">
                             <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                             <div class="cdat">
                                 <span class="clbl">Correo</span>
-                                <span class="cval">aca va el correo</span>
+                                <span class="cval">levelupgamin917@gmail.com</span>
                             </div>
                         </div>
                         <div class="citem">
                             <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
                             <div class="cdat">
                                 <span class="clbl">Teléfono</span>
-                                <span class="cval">aca va el telefono</span>
+                                <span class="cval">+58 412 350 4575</span>
                             </div>
                         </div>
                         <div class="citem mcard">
@@ -1022,7 +1030,14 @@
     <div id="bView">
         <div class="bhdr">
             <h2 id="bTtl" style="color:var(--act);">Nombre</h2>
-            <button class="btn" id="bClsB">Volver</button>
+            <div class="bact">
+                <div class="zctl" aria-label="Controles de zoom del bracket">
+                    <button class="btn ico zbtn" id="zOut" aria-label="Alejar bracket">−</button>
+                    <span class="zlbl" id="zLbl">100%</span>
+                    <button class="btn ico zbtn" id="zIn" aria-label="Acercar bracket">+</button>
+                </div>
+                <button class="btn" id="bClsB">Volver</button>
+            </div>
         </div>
         <div class="bcnt" id="bTree"></div>
     </div>
@@ -1030,7 +1045,7 @@
     <footer>
         <div class="fcontent">
             <span class="fcopy">&copy; 2026 <span class="acc">LevelUP</span>. Todos los derechos reservados.</span>
-            <p class="fnotice">Proyecto estudiantil independiente. Las marcas, logos y nombres de videojuegos mencionados pertenecen a sus respectivos propietarios. Este sitio no está afiliado ni respaldado oficialmente por la Universidad de Margarita. O bueno, eso creo.</p>
+            <p class="fnotice">Proyecto estudiantil independiente. Las marcas y nombres de videojuegos mencionados pertenecen a sus respectivos propietarios. O bueno, eso creo.</p>
         </div>
     </footer>
 
@@ -1043,11 +1058,10 @@
             <div class="sitm">
                 <span class="slbl">Temas</span>
                 <select id="thSel">
-                    <option value="lvl" selected>LevelUP</option>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    <option value="mllgt">Melon Light</option>
-                    <option value="mldrk">Melon Dark</option>
+                    <option value="light">Claro</option>
+                    <option value="dark">Oscuro</option>
+                    <option value="mllgt">LevelUP Claro</option>
+                    <option value="lvl" selected>LevelUP Oscuro</option>
                     <option value="crims">Crimson</option>
                     <option value="nebul">Nebula</option>
                     <option value="eybrn">Eyeburn</option>
@@ -1078,9 +1092,13 @@
         const bTtl = document.getElementById("bTtl");
         const bTree = document.getElementById("bTree");
         const bClsB = document.getElementById("bClsB");
+        const zIn = document.getElementById("zIn");
+        const zOut = document.getElementById("zOut");
+        const zLbl = document.getElementById("zLbl");
         let aTid = null;
         let currEvt = null;
         let winners = {};
+        let zoom = 1;
 
         oStg.addEventListener("click", () => sMod.classList.add("on"));
         cStg.addEventListener("click", () => sMod.classList.remove("on"));
@@ -1091,6 +1109,20 @@
         bClsB.addEventListener("click", () => {
             bView.classList.remove("show");
         });
+
+        function setZoom(value) {
+            zoom = Math.min(2, Math.max(0.5, value));
+            bTree.style.zoom = zoom;
+            zLbl.innerText = `${Math.round(zoom * 100)}%`;
+        }
+
+        zIn.addEventListener("click", () => setZoom(zoom + 0.1));
+        zOut.addEventListener("click", () => setZoom(zoom - 0.1));
+        bTree.addEventListener("wheel", (e) => {
+            if (!bView.classList.contains("show")) return;
+            e.preventDefault();
+            setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+        }, { passive: false });
 
         thSel.addEventListener("change", (e) => {
             document.documentElement.setAttribute("data-th", e.target.value);
@@ -1204,6 +1236,7 @@
             currEvt = evt;
             winners = evt.bracket_state || {};
             bTtl.innerText = evt.title;
+            setZoom(1);
             bView.classList.add("show");
             renderTree();
         };
