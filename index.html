@@ -2,8 +2,8 @@
 <html lang="es" data-th="lvl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LevelUP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LevelUP - Unimar Gaming & E-Sports</title>
     <link rel="icon" type="image/png" href="pics/a.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -13,9 +13,9 @@
             --chov: linear-gradient(180deg, #38235e 0%, #3f154a 100%);
             --txt: #f0e0ff;
             --act: #11ff99;
-            --brd: rgba(0, 255, 136, 0.2);
+            --brd: rgba(0, 255, 136, 0.25);
             --mtxt: #a688c9;
-            --shd: 0 5px 20px rgba(156, 0, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            --shd: 0 5px 20px rgba(156, 0, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
         [data-th="light"] {
             --bg: #c9e8d5;
@@ -27,7 +27,6 @@
             --mtxt: #798b8a;
             --shd: 0 5px 20px rgba(0, 133, 88, 0.3);
         }
-
         [data-th="dark"] {
             --bg: #14161c;
             --card: #21252b;
@@ -38,14 +37,13 @@
             --mtxt: #5c6370;
             --shd: 0 5px 20px rgba(0, 0, 0, 0.4);
         }
-
-       [data-th="mllgt"] {
+        [data-th="mllgt"] {
             --bg: #cac7ff;
             --card: linear-gradient(180deg, #f8f0ff 0%, #d8d0df 100%);
             --chov: linear-gradient(180deg, #d6ffe4 0%, #96bfa4 100%);
             --txt: #1c2038;
             --act: #10b040;
-            --brd: rgba(0, 130, 70, 0.2);
+            --brd: rgba(0, 130, 70, 0.25);
             --mtxt: #697896;
             --shd: 0 5px 20px rgba(85, 14, 255, 0.3);
         }
@@ -59,7 +57,6 @@
             --mtxt: #9e6470;
             --shd: 0 5px 20px rgba(255, 0, 50, 0.15);
         }
-
         [data-th="nebul"] {
             --bg: #090312;
             --card: #130826;
@@ -70,14 +67,13 @@
             --mtxt: #816aab;
             --shd: 0 5px 20px rgba(120, 40, 200, 0.2);
         }
-
         [data-th="eybrn"] {
             --bg: #000000;
             --card: #111113;
             --chov: #242426;
             --txt: #ffffff;
             --act: #666666;
-            --brd: #000000;
+            --brd: #222222;
             --mtxt: #777777;
             --shd: 0 5px 20px rgba(0, 0, 0, 0.6);
         }
@@ -86,8 +82,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-            user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -96,9 +92,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.25s ease, color 0.25s ease;
             overflow-x: hidden;
-            font-size: 115%;
+            font-size: 16px;
         }
 
         .acc {
@@ -115,33 +111,19 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 10px 20px;
+            gap: 8px;
+            padding: 10px 18px;
             font-weight: 600;
-            font-size: 1rem;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            font-size: 0.95rem;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.15s, border-color 0.15s, box-shadow 0.15s;
             text-decoration: none;
             position: relative;
-            overflow: hidden;
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn:hover::after {
-            opacity: 1;
+            user-select: none;
         }
 
         .btn:hover {
             background: var(--chov);
             border-color: var(--act);
-            box-shadow: var(--shd);
             transform: translateY(-2px);
         }
 
@@ -151,33 +133,43 @@
 
         .btn.on {
             border-color: var(--act);
-            box-shadow: var(--shd), 0 0 12px var(--act);
+            box-shadow: var(--shd), 0 0 14px var(--act);
             background: var(--chov);
             color: var(--act);
         }
 
         .btn.ico {
             padding: 0;
-            width: 44px;
-            height: 44px;
-            aspect-ratio: 1 / 1;
-            border-radius: 8px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
             flex-shrink: 0;
         }
 
         .btn.sm {
-            padding: 8px 14px;
-            font-size: 0.88rem;
-            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+
+        .btn.danger {
+            background: rgba(255, 42, 85, 0.15);
+            border-color: rgba(255, 42, 85, 0.4);
+            color: #ff2a55;
+        }
+
+        .btn.danger:hover {
+            border-color: #ff2a55;
+            box-shadow: 0 0 15px rgba(255, 42, 85, 0.3);
         }
 
         body[data-aura="1"] .btn {
-            animation: aGlow 1.2s infinite alternate ease-in-out;
+            animation: aGlow 1.4s infinite alternate ease-in-out;
         }
 
         @keyframes aGlow {
             from { box-shadow: var(--shd); }
-            to { box-shadow: var(--shd), 0 0 40px var(--act); }
+            to { box-shadow: var(--shd), 0 0 30px var(--act); }
         }
 
         .prtc {
@@ -196,25 +188,26 @@
             100% { opacity: 0; transform: translate(var(--mx), var(--my)) scale(0.1); }
         }
 
+        /* HEADER */
         header {
-            height: 72px;
-            padding: 0 28px;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            height: 70px;
+            padding: 0 24px;
+            display: flex;
             align-items: center;
+            justify-content: space-between;
             background: var(--card);
             border-bottom: 1px solid var(--brd);
             box-shadow: var(--shd);
             position: sticky;
             top: 0;
             z-index: 50;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
         }
 
         .brnd {
             display: flex;
             align-items: center;
-            justify-self: start;
+            gap: 12px;
         }
 
         .titles {
@@ -223,284 +216,335 @@
         }
 
         .mtitl {
-            font-size: 1.45rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            letter-spacing: 0.5px;
             color: var(--act);
             line-height: 1;
-            transition: text-shadow 0.3s;
         }
 
         .stitl {
-            font-size: 0.78rem;
-            color: var(--mtxt);
+            font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.8px;
+            color: var(--mtxt);
+            letter-spacing: 0.5px;
             margin-top: 3px;
         }
 
         nav.cnav {
             display: flex;
+            gap: 8px;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            justify-self: center;
+        }
+
+        nav.cnav .nbtn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
         .hact {
-            justify-self: end;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .nbtn svg, .ico svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-            transition: transform 0.2s ease;
+        #oStg {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
         }
 
-        .btn:hover svg {
-            transform: scale(1.1);
+        #oStg:hover {
+            color: var(--act);
+            border-color: var(--act);
+            background: rgba(0, 255, 136, 0.14);
+            box-shadow: 0 0 18px var(--glow);
+            transform: rotate(60deg) scale(1.05);
         }
 
+        /* CONTENIDO PRINCIPAL */
         main {
             flex: 1;
-            width: 100%;
-            max-width: 1250px;
-            margin: 0 auto;
-            padding: 48px 24px;
             display: flex;
             flex-direction: column;
-            gap: 48px;
         }
 
         .tab {
             display: none;
             opacity: 0;
             transform: translateY(8px);
-            flex-direction: column;
-            gap: 36px;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            padding: 24px;
+            max-width: 1250px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .tab.on {
             display: flex;
-            animation: tabFadeIn 0.25s ease forwards;
-        }
-
-        @keyframes tabFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            flex-direction: column;
+            gap: 24px;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .hero {
             background: var(--card);
             border: 1px solid var(--brd);
-            border-radius: 18px;
-            padding: 56px 42px;
-            box-shadow: var(--shd);
-            position: relative;
-            overflow: hidden;
+            border-radius: 20px;
+            padding: 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 32px;
-            transition: transform 0.3s ease;
+            gap: 30px;
+            box-shadow: var(--shd);
+            position: relative;
+            overflow: hidden;
         }
 
-        #vInit > .hero::before {
+        .hero::before {
             content: "";
             position: absolute;
             top: -50%;
-            right: -10%;
+            right: -20%;
             width: 350px;
             height: 350px;
-            background: var(--act);
-            filter: blur(90px);
-            opacity: 0.22;
+            background: radial-gradient(circle, var(--brd) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
-            animation: pulseGlow 6s infinite alternate ease-in-out;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(0.9); opacity: 0.16; }
-            100% { transform: scale(1.1); opacity: 0.28; }
-        }
-
-        .hero:hover {
-            transform: translateY(-2px);
+            opacity: 0.6;
         }
 
         .hcnt {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            flex: 1;
+            gap: 12px;
+            max-width: 650px;
             z-index: 1;
         }
 
         .hero h1 {
-            font-size: 3.2rem;
+            font-size: 2.6rem;
             font-weight: 900;
-            color: var(--txt);
             line-height: 1.1;
+            letter-spacing: -0.5px;
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: var(--mtxt);
-            max-width: 750px;
-            line-height: 1.55;
+            line-height: 1.5;
         }
 
         .limg {
             max-width: 220px;
-            max-height: 220px;
             width: 100%;
+            height: auto;
             object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
             z-index: 1;
-            flex-shrink: 0;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .limg:hover {
-            transform: scale(1.08) rotate(3deg);
         }
 
         .csec {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .ssec {
             background: var(--card);
             border: 1px solid var(--brd);
-            border-radius: 18px;
-            padding: 32px 42px;
+            border-radius: 16px;
+            padding: 24px;
             box-shadow: var(--shd);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .ssec:hover {
-            transform: translateY(-2px);
-        }
-
-        .sttl {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--act);
-        }
-
-        .vlist {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .vlist .btn {
-            justify-content: flex-start;
-            width: 100%;
-        }
-
-        .clist {
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-        .citem {
+        .sttl {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--act);
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            background: var(--card);
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .citem {
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--brd);
-            padding: 14px 16px;
             border-radius: 12px;
-            box-shadow: var(--shd);
-            transition: transform 0.2s ease, border-color 0.2s;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 0.15s ease, border-color 0.15s ease;
         }
 
         .citem:hover {
-            transform: translateX(4px);
+            transform: translateY(-2px);
             border-color: var(--act);
         }
 
-        .citem.mcard {
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .chdr {
+        .cico {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--card);
+            border: 1px solid var(--brd);
             display: flex;
             align-items: center;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .citem svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--act);
+            justify-content: center;
             flex-shrink: 0;
+            color: var(--act);
         }
 
-        .cdat {
+        .cico svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .cdata {
             display: flex;
             flex-direction: column;
+            gap: 3px;
         }
 
         .clbl {
             font-size: 0.75rem;
-            color: var(--mtxt);
             font-weight: 700;
             text-transform: uppercase;
+            color: var(--mtxt);
+            letter-spacing: 0.5px;
         }
 
         .cval {
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--txt);
+            word-break: break-word;
+        }
+
+        .citem.mcard {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .chdr {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
         }
 
         .mpbx {
-            position: relative;
             width: 100%;
-            height: 160px;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--brd);
+            height: 180px;
+            background: #000;
         }
 
         .mpbx iframe {
             width: 100%;
             height: 100%;
             border: 0;
-            filter: blur(4px);
-            transform: scale(1.05);
-            transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .mpbx:hover iframe {
-            filter: blur(0);
-            transform: scale(1.12);
+        /* FILTROS Y BUSCADOR ESPORTS */
+        .esports-toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 8px;
         }
 
-        .sbtn svg {
+        .filter-chips {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .filter-chips::-webkit-scrollbar { display: none; }
+
+        .chip {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .chip:hover {
+            border-color: var(--act);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .chip.on {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: var(--act);
+            color: var(--act);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+        }
+
+        .chip-count {
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 0.72rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .srch-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .srch-inp {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: var(--card);
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            color: var(--txt);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .srch-inp:focus {
+            border-color: var(--act);
+            box-shadow: 0 0 15px var(--brd);
+        }
+
+        .srch-ico {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            fill: currentColor;
+            fill: var(--mtxt);
+            pointer-events: none;
         }
 
         .elist {
@@ -509,30 +553,157 @@
             gap: 16px;
         }
 
+        /* TARJETA DE TORNEO ESPORTS PRO */
         .ecard {
             background: var(--card);
             border: 1px solid var(--brd);
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 24px;
             box-shadow: var(--shd);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
-            animation: cardSlideUp 0.35s ease backwards;
+            flex-direction: column;
+            gap: 16px;
+            transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+            animation: cardSlideUp 0.3s ease backwards;
+            position: relative;
+            overflow: hidden;
         }
 
         @keyframes cardSlideUp {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .ecard:hover {
-            transform: translateY(-3px) scale(1.005);
+            transform: translateY(-3px);
             border-color: var(--act);
-            box-shadow: var(--shd);
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.2);
         }
 
+        .ecard-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .game-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-live {
+            background: rgba(255, 42, 85, 0.18);
+            border: 1px solid #ff2a55;
+            color: #ff2a55;
+            box-shadow: 0 0 12px rgba(255, 42, 85, 0.3);
+        }
+
+        .status-upcoming {
+            background: rgba(255, 170, 0, 0.15);
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+        }
+
+        .status-completed {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--act);
+            color: var(--act);
+        }
+
+        .live-dot-mini {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ff2a55;
+            box-shadow: 0 0 8px #ff2a55;
+            animation: livePulse 1.4s infinite ease-in-out;
+        }
+
+        .ecard-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ecard-title {
+            color: var(--act);
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+        }
+
+        .ecard-desc {
+            color: var(--mtxt);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .ecard-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            color: var(--txt);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--brd);
+            font-weight: 600;
+        }
+
+        .cd-ticker-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            background: rgba(255, 170, 0, 0.12);
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .ecard-foot {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+        }
+
+        /* VIEWPORT Y LIENZO DEL BRACKET */
         #bView {
             display: none;
             position: fixed;
@@ -546,7 +717,7 @@
             overflow: hidden;
             opacity: 0;
             transform: scale(0.98);
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #bView.show {
@@ -556,8 +727,8 @@
         }
 
         .bhdr {
-            height: 60px;
-            padding: 0 24px;
+            min-height: 68px;
+            padding: 10px 24px;
             background: var(--card);
             border-bottom: 1px solid var(--brd);
             display: flex;
@@ -565,18 +736,106 @@
             justify-content: space-between;
             user-select: none;
             z-index: 10;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0, 255, 136, 0.12);
+            border: 1px solid var(--act);
+            color: var(--act);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--act);
+            box-shadow: 0 0 8px var(--act);
+            animation: livePulse 1.6s infinite ease-in-out;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.4; }
+        }
+
+        /* BARRA DE NAVEGACIÓN RÁPIDA DE RONDAS */
+        .rnd-nav {
+            background: rgba(0, 0, 0, 0.35);
+            border-bottom: 1px solid var(--brd);
+            padding: 6px 20px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            z-index: 8;
+        }
+        .rnd-nav::-webkit-scrollbar { display: none; }
+
+        .rjump-btn {
+            background: var(--card);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+
+        .rjump-btn:hover {
+            border-color: var(--act);
+            color: var(--act);
+            transform: translateY(-1px);
+        }
+
+        .champ-banner {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.15), rgba(0, 255, 136, 0.2), rgba(255, 215, 0, 0.15));
+            border-bottom: 2px solid #ffd700;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffd700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: goldGlow 3s infinite alternate;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        @keyframes goldGlow {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.5); }
         }
 
         .bact {
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .zctl {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             padding: 4px;
             border: 1px solid var(--brd);
             border-radius: 10px;
@@ -584,11 +843,18 @@
         }
 
         .zlbl {
-            min-width: 52px;
+            min-width: 50px;
             color: var(--mtxt);
             font-size: 0.82rem;
             font-weight: 700;
             text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.15s;
+        }
+
+        .zlbl:hover {
+            color: var(--act);
         }
 
         .zbtn {
@@ -600,60 +866,65 @@
 
         .bcnt {
             flex: 1;
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.015) 0%, transparent 80%);
+            user-select: none;
+        }
+
+        .bcnt:active, .bcnt.is-dragging {
+            cursor: grabbing !important;
+        }
+
+        .btree-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             display: flex;
-            gap: 0;
-            padding: 40px;
-            overflow-x: auto;
-            overflow-y: auto;
             align-items: flex-start;
-            cursor: default;
+            padding: 30px 50px 80px 50px;
+            transform-origin: 0 0;
+            will-change: transform;
         }
 
-        .bcnt.is-dragging {
-            cursor: grabbing !important;
-            user-select: none !important;
-        }
-
-        .bcnt.is-dragging * {
-            cursor: grabbing !important;
-            pointer-events: none;
-        }
-
+        /* RONDAS Y MATCHES */
         .rnd {
             display: flex;
             flex-direction: column;
-            min-width: 210px;
+            width: 240px;
+            flex-shrink: 0;
             position: relative;
-            animation: fadeInRound 0.4s ease backwards;
-        }
-
-        @keyframes fadeInRound {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .rtitle {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: var(--act);
             text-transform: uppercase;
             text-align: center;
-            margin-bottom: 20px;
-            height: 30px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--brd);
+            margin-bottom: 10px;
         }
 
-        .mch-wrap {
+        .mch-slot {
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            width: 100%;
         }
 
         .mch {
             background: var(--card);
-            border: 2px solid var(--brd);
-            border-radius: 10px;
-            padding: 8px;
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             gap: 4px;
@@ -661,19 +932,104 @@
             width: 100%;
             z-index: 2;
             transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
         }
 
         .mch:hover {
-            transform: scale(1.02);
             border-color: var(--act);
-            box-shadow: var(--shd);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
+            transform: scale(1.02);
         }
 
+        .ply {
+            height: 38px;
+            padding: 0 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--txt);
+            user-select: none;
+            transition: all 0.15s ease;
+            gap: 8px;
+        }
+
+        .ply .seed-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--mtxt);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .ply .pname {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .ply.win {
+            border-color: var(--act);
+            color: var(--act);
+            font-weight: 800;
+            background: rgba(0, 255, 136, 0.12);
+        }
+
+        .ply.win .seed-badge {
+            background: var(--act);
+            color: #0b0716;
+        }
+
+        .ply.bye {
+            opacity: 0.45;
+            font-style: italic;
+            cursor: default;
+        }
+
+        .ply.empty {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .ply.path-highlight {
+            border-color: var(--act) !important;
+            box-shadow: 0 0 15px var(--act) !important;
+            background: rgba(0, 255, 136, 0.2) !important;
+        }
+
+        /* CAJA DE MARCADOR ESPORTS */
+        .pscore {
+            font-size: 0.82rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            min-width: 24px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .pscore.win {
+            border-color: var(--act);
+            color: var(--act);
+            background: rgba(0, 255, 136, 0.2);
+        }
+
+        /* CONECTORES BRACKET MATEMÁTICAMENTE EXACTOS */
         .conn-col {
             display: flex;
             flex-direction: column;
-            width: 40px;
-            position: relative;
+            width: 48px;
+            flex-shrink: 0;
             margin-top: 50px;
         }
 
@@ -682,69 +1038,97 @@
             width: 100%;
         }
 
-        .conn-line {
+        .conn-arm-top {
             position: absolute;
+            top: 25%;
             left: 0;
-            width: 20px;
-            border-right: 4px solid var(--brd);
-            border-top: 4px solid var(--brd);
-            border-bottom: 4px solid var(--brd);
+            width: 50%;
+            height: 25%;
+            border-top: 2px solid var(--brd);
+            border-right: 2px solid var(--brd);
         }
 
-        .conn-line.straight {
-            border-top: none;
-            border-bottom: none;
-            border-right: none;
-            background: var(--brd);
-            top: 50% !important;
-            height: 4px !important;
-            width: 40px;
-        }
-
-        .conn-line::after {
-            content: "";
+        .conn-arm-bot {
             position: absolute;
             top: 50%;
-            right: -24px;
-            width: 20px;
-            height: 4px;
-            background: var(--brd);
-            transform: translateY(-50%);
+            left: 0;
+            width: 50%;
+            height: 25%;
+            border-bottom: 2px solid var(--brd);
+            border-right: 2px solid var(--brd);
         }
 
-        .conn-line.straight::after {
-            display: none;
+        .conn-stem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 0;
+            border-top: 2px solid var(--brd);
         }
 
-        .ply {
-            padding: 8px 16px;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 8px;
-            font-size: 1rem;
+        /* MODAL DE DETALLES DE PARTIDA */
+        .hud-grid {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .hud-player {
+            display: flex;
             align-items: center;
-            color: var(--txt);
-            cursor: default;
-            transition: background 0.15s, transform 0.15s;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            font-weight: 700;
         }
 
-        .ply:not(.empty):not(.win):hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(2px);
-        }
-
-        .ply.win {
-            border: 1px solid var(--act);
+        .hud-player.winner {
+            border-color: var(--act);
+            background: rgba(0, 255, 136, 0.12);
             color: var(--act);
-            font-weight: 800;
-            background: rgba(0, 255, 136, 0.1);
         }
 
-        .ply.empty {
-            opacity: 0.5;
+        .hud-vs {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--mtxt);
+            letter-spacing: 2px;
         }
 
+        /* TOAST FLOTANTE */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: var(--card);
+            border: 1px solid var(--act);
+            color: var(--txt);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px var(--brd);
+            font-size: 0.95rem;
+            font-weight: 600;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* FOOTER & MODALES */
         footer {
             background: var(--card);
             border-top: 1px solid var(--brd);
@@ -781,15 +1165,16 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 200;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
+            padding: 20px;
         }
 
         .moly.on {
@@ -800,15 +1185,16 @@
         .mdl {
             background: var(--card);
             border: 1px solid var(--brd);
-            box-shadow: var(--shd), 0 20px 40px rgba(0,0,0,0.5);
-            border-radius: 16px;
-            width: 360px;
+            box-shadow: var(--shd), 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 440px;
             padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
             transform: scale(0.9) translateY(15px);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .moly.on .mdl {
@@ -849,54 +1235,37 @@
             font-weight: 600;
             outline: none;
             cursor: pointer;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s;
         }
 
         select:focus {
             border-color: var(--act);
-            box-shadow: 0 0 10px var(--act);
         }
 
-        nav.cnav .nbtn.on {
-            box-shadow: var(--shd), 0 0 16px var(--act);
-        }
-
-        @media (max-aspect-ratio: 1/1), (max-width: 680px) {
-            header nav.cnav .nbtn span {
-                display: none;
-            }
-
-            header nav.cnav .nbtn {
-                padding: 0;
-                width: 44px;
-                height: 44px;
-                aspect-ratio: 1 / 1;
-                border-radius: 8px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 680px) {
+        /* MEDIA QUERIES RESPONSIVE */
+        @media (max-width: 768px) {
             header {
-                padding: 0 14px;
+                padding: 0 16px;
                 height: 64px;
-            }
-
-            .mtitl {
-                font-size: 1.2rem;
             }
 
             .stitl {
                 display: none;
             }
 
-            nav.cnav {
-                gap: 6px;
+            .mtitl {
+                font-size: 1.25rem;
             }
 
-            .btn.ico, header nav.cnav .nbtn, #admBtn {
-                width: 38px;
-                height: 38px;
+            header nav.cnav .nbtn span {
+                display: none;
+            }
+
+            header nav.cnav .nbtn {
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                aspect-ratio: 1 / 1;
             }
 
             #admBtn span {
@@ -905,35 +1274,31 @@
 
             #admBtn {
                 padding: 0;
-                justify-content: center;
-                margin-right: 8px !important;
+                width: 38px;
+                height: 38px;
+                margin-right: 6px !important;
             }
 
             .hero {
-                padding: 32px 22px;
+                padding: 28px 20px;
                 flex-direction: column-reverse;
-                align-items: center;
                 text-align: center;
             }
 
             .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .hero p {
-                font-size: 1.05rem;
+                font-size: 2rem;
             }
 
             .limg {
-                max-width: 160px;
+                max-width: 150px;
             }
 
-            .csec {
-                grid-template-columns: 1fr;
+            .ecard {
+                padding: 18px;
             }
 
-            .ssec {
-                padding: 24px 22px;
+            .ecard-title {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -942,10 +1307,6 @@
 
     <header>
         <div class="brnd">
-            <a href="PanelAdmin/admin.html" class="btn sm" id="admBtn" title="Panel de Administración" style="margin-right: 14px; gap: 6px; text-decoration: none; color: var(--act);">
-                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/></svg>
-                <span>Admin</span>
-            </a>
             <div class="titles">
                 <span class="mtitl">LevelUP</span>
                 <span class="stitl">Unimar Gaming & E-Sports</span>
@@ -953,83 +1314,93 @@
         </div>
 
         <nav class="cnav">
-            <button class="btn nbtn on" data-tb="init">
+            <button class="btn nbtn on" data-tb="init" title="Página de inicio">
                 <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
                 <span>Inicio</span>
             </button>
-            <button class="btn nbtn" data-tb="evnt">
+            <button class="btn nbtn" data-tb="evnt" title="Eventos y Brackets">
                 <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
                 <span>Eventos</span>
             </button>
-            <button class="btn nbtn" data-tb="info">
+            <button class="btn nbtn" data-tb="info" title="Información y Reglamentos">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                <span>Relleno</span>
+                <span>Información</span>
             </button>
         </nav>
 
         <div class="hact">
-            <button class="btn ico" id="oStg">
-                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
+            <button class="btn ico" id="oStg" title="Configuración y Ajustes" aria-label="Configuración">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
             </button>
         </div>
     </header>
 
     <main>
+        <!-- PESTAÑA INICIO -->
         <section id="vInit" class="tab on">
             <div class="hero">
                 <div class="hcnt">
                     <h1><span class="acc">LevelUP</span>: Subiendo de Nivel</h1>
-                    <p>Desarrolladores de Eventos de Gaming y E-Sports en la Universidad de Margarita con +5000 de Aura</p>
+                    <p>Comunidad y organizadores de eventos de Gaming y E-Sports en la Universidad de Margarita (UNIMAR).</p>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+                        <span class="meta-pill" style="border-color:var(--act); color:var(--act); font-weight:700;">🎮 8+ Disciplinas E-Sports</span>
+                        <span class="meta-pill" style="border-color:rgba(56,189,248,0.4); color:#38bdf8; font-weight:700;">⚡ Brackets en Tiempo Real</span>
+                        <span class="meta-pill" style="border-color:rgba(255,215,0,0.4); color:#ffd700; font-weight:700;">🏆 Torneos & Competencias</span>
+                    </div>
                 </div>
-                <img src="pics/logo.png" alt="Logo" class="limg">
+                <img src="pics/a.png" class="limg" alt="Logo de LevelUP" onerror="this.style.display='none'">
             </div>
 
             <div class="csec">
                 <div class="ssec">
-                    <h2 class="sttl">Redes Sociales</h2>
-                    <div class="vlist">
-                        <a href="https://www.instagram.com/levelup.mgta/" target="_blank" rel="noopener" class="btn sbtn">
-                            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                            <span>Instagram</span>
-                        </a>
-                        <a href="https://www.tiktok.com/@levelup.ve" target="_blank" rel="noopener" class="btn sbtn">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-3.77V2h-3.4v13.67a2.88 2.88 0 1 1-2-2.74V9.46a6.28 6.28 0 1 0 5.4 6.21V8.83a8.16 8.16 0 0 0 4.77 1.52V6.96a4.84 4.84 0 0 1-1-.27z"/></svg>
-                            <span>TikTok</span>
-                        </a>
-                        <a href="https://discord.gg/uGJ6rjPJTq" target="_blank" rel="noopener" class="btn sbtn">
-                            <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                            <span>Discord</span>
-                        </a>
-                        <a href="https://whatsapp.com/channel/0029Vb9502p002TFqSA1y31L" target="_blank" rel="noopener" class="btn sbtn">
-                            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.285-.143-1.684-.832-1.945-.927-.261-.095-.451-.143-.641.143-.19.285-.736.927-.902 1.117-.166.19-.333.214-.618.071-.285-.143-1.204-.444-2.293-1.415-.848-.756-1.42-1.69-1.587-1.975-.166-.285-.018-.439.125-.581.129-.128.285-.333.428-.5.143-.167.19-.285.285-.476.095-.19.048-.357-.024-.5-.071-.143-.641-1.545-.878-2.116-.231-.557-.466-.481-.641-.49-.166-.008-.356-.01-.546-.01-.19 0-.5.071-.76.357-.261.285-.998.975-.998 2.38 0 1.405 1.023 2.76 1.166 2.951.143.19 2.013 3.074 4.877 4.31 2.864 1.237 2.864.825 3.387.773.523-.052 1.684-.689 1.922-1.355.238-.666.238-1.236.166-1.355-.072-.119-.262-.19-.547-.333z"/></svg>
-                            <span>WhatsApp</span>
-                        </a>
+                    <h2 class="sttl">Información General</h2>
+                    <div class="cgrid">
+                        <div class="citem">
+                            <div class="cico">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            </div>
+                            <div class="cdata">
+                                <span class="clbl">Sede</span>
+                                <span class="cval">Universidad de Margarita (UNIMAR)</span>
+                            </div>
+                        </div>
+
+                        <div class="citem">
+                            <div class="cico">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.5h-2v-2h2zm0-4.5h-2V7h2z"/></svg>
+                            </div>
+                            <div class="cdata">
+                                <span class="clbl">Organizador</span>
+                                <span class="cval">Zyrex LEVELUP</span>
+                            </div>
+                        </div>
+
+                        <div class="citem">
+                            <div class="cico">
+                                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            </div>
+                            <div class="cdata">
+                                <span class="clbl">Contacto Directo</span>
+                                <span class="cval">levelup.gaming.ve@gmail.com</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="ssec">
-                    <h2 class="sttl">Info. de Contacto</h2>
-                    <div class="clist">
-                        <div class="citem">
-                            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                            <div class="cdat">
-                                <span class="clbl">Correo</span>
-                                <span class="cval">levelup.gaming.ve@gmail.com</span>
-                            </div>
-                        </div>
-                        <div class="citem">
-                            <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                            <div class="cdat">
-                                <span class="clbl">Teléfono</span>
-                                <span class="cval">+58 412 350 4575</span>
-                            </div>
-                        </div>
-                        <div class="citem mcard">
+                    <h2 class="sttl">Ubicación</h2>
+                    <div class="cgrid">
+                        <div class="citem mcard" style="grid-column: 1 / -1;">
                             <div class="chdr">
-                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                                <div class="cdat">
-                                    <span class="clbl">Ubicación</span>
-                                    <span class="cval">Universidad de Margarita, El Valle del Espíritu Santo, Nueva Esparta, Venezuela</span>
+                                <div class="cico">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                </div>
+                                <div class="cdata">
+                                    <span class="clbl">Campus UNIMAR</span>
+                                    <span class="cval">El Valle del Espíritu Santo, Isla de Margarita, Venezuela</span>
                                 </div>
                             </div>
                             <div class="mpbx">
@@ -1041,48 +1412,152 @@
             </div>
         </section>
 
+        <!-- PESTAÑA EVENTOS -->
         <section id="vEvnt" class="tab">
             <div class="hero">
                 <div class="hcnt">
-                    <h1>Eventos</h1>
-                    <p>Mira la lista de eventos activos y explora sus brackets en tiempo real.</p>
+                    <h1>Torneos & Competencias</h1>
+                    <p>Sigue las fechas programadas, llaves eliminatorias en vivo y los resultados oficiales de la comunidad UNIMAR.</p>
                 </div>
             </div>
-            <div class="elist" id="eLst">Cargando eventos...</div>
+
+            <!-- TOOLBAR ESPORTS -->
+            <div class="esports-toolbar">
+                <div class="filter-chips" id="evtFilters">
+                    <button class="chip on" data-filter="all">Todos <span class="chip-count" id="cAll">0</span></button>
+                    <button class="chip" data-filter="live">🔴 En Vivo <span class="chip-count" id="cLive">0</span></button>
+                    <button class="chip" data-filter="upcoming">⏳ Próximos <span class="chip-count" id="cUpc">0</span></button>
+                    <button class="chip" data-filter="completed">🏆 Finalizados <span class="chip-count" id="cFin">0</span></button>
+                </div>
+
+                <div class="srch-box">
+                    <svg class="srch-ico" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" id="eSrch" class="srch-inp" placeholder="Buscar torneo por juego, título o fecha...">
+                </div>
+            </div>
+
+            <div class="elist" id="eLst">Cargando torneos...</div>
         </section>
 
+        <!-- PESTAÑA INFORMACIÓN -->
         <section id="vInfo" class="tab">
             <div class="hero">
                 <div class="hcnt">
-                    <h1>Relleno</h1>
-                    <p>Conoce más sobre nuestras iniciativas de E-Sports, reglamentos de torneos e información institucional.</p>
+                    <h1>Reglamento & Formato</h1>
+                    <p>Normas oficiales de participación para torneos de deportes electrónicos de LevelUP.</p>
+                </div>
+            </div>
+
+            <div class="csec">
+                <div class="ssec">
+                    <h2 class="sttl">1. Formato de Competencia</h2>
+                    <p style="color:var(--txt); line-height:1.6; font-size:0.95rem;">
+                        • Todos los torneos se disputan bajo el formato oficial de <strong>Eliminación Directa</strong> (Puede variar segun el organizador del torneo).<br>
+                        • Los números de Seed y emparejamientos iniciales se asignan por sorteo verificado por la administración.<br>
+                        • En torneos cuyo número de participantes no sea potencia de 2, las mejores cabezas de serie reciben <strong>Pase Libre (BYE)</strong> avanzando directamente a la siguiente fase.
+                    </p>
+                </div>
+
+                <div class="ssec">
+                    <h2 class="sttl">2. Juego Limpio & Puntualidad</h2>
+                    <p style="color:var(--txt); line-height:1.6; font-size:0.95rem;">
+                        • Tolerancia de espera máxima de 5 minutos desde el llamado de la partida. La no presentación implica Walkover (W.O.).<br>
+                        • Cero tolerancia al uso de hacks, scripts o lenguaje antideportivo. Los jueces se reservan el derecho de descalificación inmediata.<br>
+                        • Cualquier reclamo técnico debe ser presentado a los organizadores antes de reiniciar la partida.
+                    </p>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- VISTA FULLSCREEN DEL BRACKET -->
     <div id="bView">
         <div class="bhdr">
-            <h2 id="bTtl" style="color:var(--act);">Nombre</h2>
-            <div class="bact">
-                <div class="zctl" aria-label="Controles de zoom del bracket">
-                    <button class="btn ico zbtn" id="zOut" aria-label="Alejar bracket">−</button>
-                    <span class="zlbl" id="zLbl">100%</span>
-                    <button class="btn ico zbtn" id="zIn" aria-label="Acercar bracket">+</button>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; flex-direction:column;">
+                    <h2 id="bTtl" style="color:var(--act); font-size:1.25rem;">Torneo</h2>
+                    <div id="bMetaInfo" style="font-size:0.78rem; color:var(--mtxt); display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:2px;">
+                        <span id="bGamePill" class="game-badge" style="font-size:0.7rem; padding:2px 8px;">🎮 ESPORTS</span>
+                        <span id="bFormatPill" class="game-badge" style="font-size:0.7rem; padding:2px 8px; color:#38bdf8; border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.12);">⚡ Eliminación Directa</span>
+                        <span id="bDatePill">📅 Fecha por definir</span>
+                    </div>
                 </div>
-                <button class="btn" id="bClsB">Volver</button>
+                <div class="live-pill" id="livePill" title="Sincronización en vivo activa">
+                    <span class="live-dot"></span> EN VIVO
+                </div>
+            </div>
+            <div class="bact">
+                <div class="zctl" aria-label="Controles de zoom">
+                    <button class="btn ico zbtn sm" id="zOut" title="Alejar (−)">−</button>
+                    <span class="zlbl" id="zLbl" title="Clic para restablecer al 100%">100%</span>
+                    <button class="btn ico zbtn sm" id="zIn" title="Acercar (+)">+</button>
+                </div>
+                <button class="btn sm" id="bShr" title="Copiar enlace directo">
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+                    <span>Compartir</span>
+                </button>
+                <button class="btn sm" id="bPrint" title="Imprimir / Exportar Bracket">
+                    <span>📸 Captura</span>
+                </button>
+                <button class="btn ico sm" id="bFs" title="Pantalla completa">
+                    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor;"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                </button>
+                <button class="btn danger sm" id="bClsB">Volver</button>
             </div>
         </div>
-        <div class="bcnt" id="bTree"></div>
+
+        <!-- BARRA DE NAVEGACIÓN RÁPIDA DE RONDAS -->
+        <div class="rnd-nav" id="rndNav"></div>
+
+        <div class="champ-banner" id="champBanner" style="display:none;">
+            <span style="font-size:1.4rem;">🏆</span>
+            <span>¡CAMPEÓN DEL TORNEO: <strong id="champName" style="color:var(--act); text-transform:uppercase;"></strong>!</span>
+            <span style="font-size:1.4rem;">🏆</span>
+        </div>
+
+        <div class="bcnt" id="bTree">
+            <div class="btree-canvas" id="bTreeCanvas"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALLES DE PARTIDA (SPECTATOR) -->
+    <div class="moly" id="mchModal">
+        <div class="mdl" style="max-width:440px;">
+            <div class="mhd">
+                <span id="mdRoundName">Detalles de Partida</span>
+                <button id="cMchMod" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            <div class="hud-grid">
+                <div class="hud-player" id="hudP1">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="seed-badge" id="hudSeed1">#1</span>
+                        <span id="hudName1">Jugador 1</span>
+                    </div>
+                    <span class="pscore" id="hudScore1">-</span>
+                </div>
+                <div class="hud-vs">V E R S U S</div>
+                <div class="hud-player" id="hudP2">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="seed-badge" id="hudSeed2">#2</span>
+                        <span id="hudName2">Jugador 2</span>
+                    </div>
+                    <span class="pscore" id="hudScore2">-</span>
+                </div>
+            </div>
+            <div id="hudStatus" style="text-align:center; font-size:0.85rem; color:var(--mtxt); line-height:1.4;"></div>
+        </div>
     </div>
 
     <footer>
         <div class="fcontent">
-            <span class="fcopy">&copy; 2026 <span class="acc">LevelUP</span>. Todos los derechos reservados.</span>
-            <p class="fnotice">Proyecto estudiantil independiente. Las marcas y nombres de videojuegos mencionados pertenecen a sus respectivos propietarios. O bueno, eso creo.</p>
+            <span class="fcopy">&copy; 2026 <span class="acc">LevelUP</span>. Universidad de Margarita.</span>
+            <p class="fnotice">Elaborado junto con el proyecto Melon de cottongrass y el equipo de desarrollo de LevelUP.
+                Todos los derechos reservados. La información contenida en este sitio web es propiedad de LevelUP y está protegida por las leyes de derechos de autor y propiedad intelectual. Queda prohibida la reproducción, distribución o uso no autorizado de cualquier contenido sin el permiso expreso de LevelUP.
+            </p>
         </div>
     </footer>
 
+    <!-- MODAL DE AJUSTES -->
     <div class="moly" id="sMod">
         <div class="mdl">
             <div class="mhd">
@@ -1090,26 +1565,33 @@
                 <button id="cStg" style="width:32px; height:32px; font-size:0.9rem; background:var(--card); border:1px solid var(--brd); color:var(--txt); border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
             </div>
             <div class="sitm">
-                <span class="slbl">Temas</span>
+                <span class="slbl">Tema Visual</span>
                 <select id="thSel">
-                    <option value="light">Claro</option>
-                    <option value="dark">Oscuro</option>
-                    <option value="mllgt">LevelUP Claro</option>
                     <option value="lvl" selected>LevelUP Oscuro</option>
+                    <option value="mllgt">LevelUP Claro</option>
+                    <option value="dark">Modo Oscuro</option>
+                    <option value="light">Modo Claro</option>
                     <option value="crims">Crimson</option>
                     <option value="nebul">Nebula</option>
                     <option value="eybrn">Eyeburn</option>
                 </select>
             </div>
             <div class="sitm">
-                <span class="slbl">Guardianes del Aura</span>
+                <span class="slbl">Efectos de Sonido</span>
+                <select id="sfxSel">
+                    <option value="1" selected>Activados 🔊</option>
+                    <option value="0">Silenciado 🔇</option>
+                </select>
+            </div>
+            <div class="sitm">
+                <span class="slbl">Efectos de Aura</span>
                 <select id="auSel">
                     <option value="0" selected>Desactivado</option>
                     <option value="1">Activado</option>
                 </select>
             </div>
             <div class="sitm" style="margin-top:8px; padding-top:12px; border-top:1px solid var(--brd);">
-                <a href="admin.html" class="btn" style="width:100%; justify-content:center; gap:8px;">
+                <a href="PanelAdmin/admin.html" class="btn" style="width:100%; justify-content:center; gap:8px;">
                     <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/></svg>
                     <span>Panel de Administración</span>
                 </a>
@@ -1122,99 +1604,309 @@
         const SB_KEY = "sb_publishable_08r8vqojnUnaQDIKwUaUxw_T8-ZnukA";
         const sb = supabase.createClient(SB_URL, SB_KEY);
 
+        // Elementos DOM
         const sMod = document.getElementById("sMod");
         const oStg = document.getElementById("oStg");
         const cStg = document.getElementById("cStg");
         const thSel = document.getElementById("thSel");
         const auSel = document.getElementById("auSel");
+        const sfxSel = document.getElementById("sfxSel");
         const eLst = document.getElementById("eLst");
+        const eSrch = document.getElementById("eSrch");
         const bView = document.getElementById("bView");
         const bTtl = document.getElementById("bTtl");
+        const bGamePill = document.getElementById("bGamePill");
+        const bFormatPill = document.getElementById("bFormatPill");
+        const bDatePill = document.getElementById("bDatePill");
         const bTree = document.getElementById("bTree");
+        const bTreeCanvas = document.getElementById("bTreeCanvas");
         const bClsB = document.getElementById("bClsB");
+        const bShr = document.getElementById("bShr");
+        const bPrint = document.getElementById("bPrint");
+        const bFs = document.getElementById("bFs");
+        const champBanner = document.getElementById("champBanner");
+        const champName = document.getElementById("champName");
         const zIn = document.getElementById("zIn");
         const zOut = document.getElementById("zOut");
         const zLbl = document.getElementById("zLbl");
+        const rndNav = document.getElementById("rndNav");
+
+        // Modal Match Detalles
+        const mchModal = document.getElementById("mchModal");
+        const cMchMod = document.getElementById("cMchMod");
+        const mdRoundName = document.getElementById("mdRoundName");
+        const hudP1 = document.getElementById("hudP1");
+        const hudP2 = document.getElementById("hudP2");
+        const hudName1 = document.getElementById("hudName1");
+        const hudName2 = document.getElementById("hudName2");
+        const hudSeed1 = document.getElementById("hudSeed1");
+        const hudSeed2 = document.getElementById("hudSeed2");
+        const hudScore1 = document.getElementById("hudScore1");
+        const hudScore2 = document.getElementById("hudScore2");
+        const hudStatus = document.getElementById("hudStatus");
+
         let aTid = null;
         let currEvt = null;
         let winners = {};
-        let zoom = 1;
+        let allEvents = [];
+        let currentFilter = 'all';
+        let rtChannel = null;
 
-        // Variables para arrastrar con click derecho (Pan)
-        let isRightDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let dragStartScrollLeft = 0;
-        let dragStartScrollTop = 0;
+        // ESTADO PAN Y ZOOM
+        let panX = 40, panY = 40, zoom = 1;
+        let isPanning = false;
+        let startX = 0, startY = 0;
+        let initialPanX = 0, initialPanY = 0;
+        let pinchDist = 0, pinchStartZoom = 1;
 
-        oStg.addEventListener("click", () => sMod.classList.add("on"));
-        cStg.addEventListener("click", () => sMod.classList.remove("on"));
-        sMod.addEventListener("click", (e) => {
-            if (e.target === sMod) sMod.classList.remove("on");
-        });
-
-        bClsB.addEventListener("click", () => {
-            bView.classList.remove("show");
-            isRightDragging = false;
-            bTree.classList.remove("is-dragging");
-        });
-
-        function setZoom(value) {
-            zoom = Math.min(2, Math.max(0.5, value));
-            bTree.style.zoom = zoom;
-            zLbl.innerText = `${Math.round(zoom * 100)}%`;
+        // SINTETIZADOR DE AUDIO WEB AUDIO API (100% Nativo y Offline)
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
         }
 
-        zIn.addEventListener("click", () => setZoom(zoom + 0.1));
-        zOut.addEventListener("click", () => setZoom(zoom - 0.1));
+        function playSfx(type) {
+            if (localStorage.getItem("l_sfx") === "0") return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime;
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(650, now);
+                    osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'victory') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        gain.gain.setValueAtTime(0.14, now + idx * 0.12);
+                        gain.gain.linearRampToValueAtTime(0.01, now + idx * 0.12 + 0.45);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.12);
+                        osc.stop(now + idx * 0.12 + 0.45);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        sfxSel.addEventListener("change", (e) => {
+            localStorage.setItem("l_sfx", e.target.value);
+            if (e.target.value === "1") playSfx('click');
+        });
+        if (localStorage.getItem("l_sfx") === "0") sfxSel.value = "0";
+
+        // CONTROLES DE ZOOM Y PAN
+        function updateTransform() {
+            bTreeCanvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+            if (zLbl) zLbl.innerText = `${Math.round(zoom * 100)}%`;
+        }
+
+        function setZoom(newZoom, cursorClientX = null, cursorClientY = null) {
+            newZoom = Math.min(2.5, Math.max(0.35, Math.round(newZoom * 100) / 100));
+            if (newZoom === zoom) return;
+
+            const rect = bTree.getBoundingClientRect();
+            const factor = newZoom / zoom;
+            const pivotX = (cursorClientX !== null ? cursorClientX - rect.left : rect.width / 2);
+            const pivotY = (cursorClientY !== null ? cursorClientY - rect.top : rect.height / 2);
+
+            panX = pivotX - (pivotX - panX) * factor;
+            panY = pivotY - (pivotY - panY) * factor;
+            zoom = newZoom;
+            updateTransform();
+        }
+
+        function resetView() {
+            zoom = 1;
+            panX = 40;
+            panY = 40;
+            updateTransform();
+        }
+
+        zIn.addEventListener("click", () => { setZoom(zoom + 0.15); playSfx('click'); });
+        zOut.addEventListener("click", () => { setZoom(zoom - 0.15); playSfx('click'); });
+        zLbl.addEventListener("click", resetView);
+
         bTree.addEventListener("wheel", (e) => {
-            if (!bView.classList.contains("show")) return;
             e.preventDefault();
-            setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+            const delta = e.deltaY < 0 ? 0.12 : -0.12;
+            setZoom(zoom + delta, e.clientX, e.clientY);
         }, { passive: false });
 
-        // Arrastrar el bracket con click derecho
         bTree.addEventListener("mousedown", (e) => {
-            if (e.button === 2) { // 2 = Click derecho
-                isRightDragging = true;
-                dragStartX = e.clientX;
-                dragStartY = e.clientY;
-                dragStartScrollLeft = bTree.scrollLeft;
-                dragStartScrollTop = bTree.scrollTop;
+            if (e.button === 2 || e.button === 1 || (e.button === 0 && !e.target.closest('.ply') && !e.target.closest('button'))) {
+                isPanning = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialPanX = panX;
+                initialPanY = panY;
                 bTree.classList.add("is-dragging");
                 e.preventDefault();
             }
         });
 
         window.addEventListener("mousemove", (e) => {
-            if (!isRightDragging) return;
-            // Ajustamos el movimiento según el nivel de zoom para que sea 1:1 con el cursor
-            const currentZoom = zoom || 1;
-            const dx = (e.clientX - dragStartX) / currentZoom;
-            const dy = (e.clientY - dragStartY) / currentZoom;
-            bTree.scrollLeft = dragStartScrollLeft - dx;
-            bTree.scrollTop = dragStartScrollTop - dy;
+            if (!isPanning) return;
+            panX = initialPanX + (e.clientX - startX);
+            panY = initialPanY + (e.clientY - startY);
+            updateTransform();
         });
 
-        window.addEventListener("mouseup", (e) => {
-            if (isRightDragging && (e.button === 2 || e.buttons === 0)) {
-                isRightDragging = false;
+        window.addEventListener("mouseup", () => {
+            if (isPanning) {
+                isPanning = false;
                 bTree.classList.remove("is-dragging");
             }
         });
 
-        // Prevenir menú contextual del navegador al hacer click derecho en la vista de bracket
-        bView.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
+        // Soporte táctil
+        bTree.addEventListener("touchstart", (e) => {
+            if (e.touches.length === 1 && !e.target.closest('.ply')) {
+                isPanning = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                initialPanX = panX;
+                initialPanY = panY;
+            } else if (e.touches.length === 2) {
+                isPanning = false;
+                pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                pinchStartZoom = zoom;
+            }
+        }, { passive: true });
+
+        bTree.addEventListener("touchmove", (e) => {
+            if (isPanning && e.touches.length === 1) {
+                panX = initialPanX + (e.touches[0].clientX - startX);
+                panY = initialPanY + (e.touches[0].clientY - startY);
+                updateTransform();
+            } else if (e.touches.length === 2 && pinchDist > 0) {
+                const curDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const rect = bTree.getBoundingClientRect();
+                const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+                const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+                setZoom(pinchStartZoom * (curDist / pinchDist), midX, midY);
+            }
+        }, { passive: true });
+
+        bTree.addEventListener("touchend", () => {
+            isPanning = false;
+            pinchDist = 0;
         });
 
-        window.addEventListener("blur", () => {
-            if (isRightDragging) {
-                isRightDragging = false;
-                bTree.classList.remove("is-dragging");
+        bTree.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        // Toast de notificaciones
+        function showToast(msg) {
+            let t = document.getElementById("gToast");
+            if (!t) {
+                t = document.createElement("div");
+                t.id = "gToast";
+                t.className = "toast";
+                document.body.appendChild(t);
+            }
+            t.innerHTML = msg;
+            t.classList.add("show");
+            clearTimeout(t._tid);
+            t._tid = setTimeout(() => t.classList.remove("show"), 2800);
+        }
+
+        // Modales
+        oStg.addEventListener("click", () => { sMod.classList.add("on"); playSfx('click'); });
+        cStg.addEventListener("click", () => sMod.classList.remove("on"));
+        sMod.addEventListener("click", (e) => {
+            if (e.target === sMod) sMod.classList.remove("on");
+        });
+
+        cMchMod.addEventListener("click", () => mchModal.classList.remove("on"));
+        mchModal.addEventListener("click", (e) => {
+            if (e.target === mchModal) mchModal.classList.remove("on");
+        });
+
+        // Controles Bracket
+        bClsB.addEventListener("click", () => {
+            playSfx('click');
+            bView.classList.remove("show");
+            if (rtChannel) {
+                sb.removeChannel(rtChannel);
+                rtChannel = null;
+            }
+            if (window.history.replaceState) {
+                const url = new URL(window.location);
+                url.searchParams.delete('evento');
+                url.searchParams.delete('event');
+                window.history.replaceState({}, '', url);
             }
         });
 
+        bShr.addEventListener("click", async () => {
+            if (!currEvt) return;
+            playSfx('click');
+            const url = `${window.location.origin}${window.location.pathname}?evento=${currEvt.id}`;
+            try {
+                await navigator.clipboard.writeText(url);
+                showToast("📋 ¡Enlace copiado al portapapeles!");
+            } catch (err) {
+                prompt("Copia este enlace directo:", url);
+            }
+        });
+
+        bPrint.addEventListener("click", () => {
+            playSfx('click');
+            window.print();
+        });
+
+        bFs.addEventListener("click", () => {
+            playSfx('click');
+            if (!document.fullscreenElement) {
+                bView.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        });
+
+        // Navegación rápida entre rondas
+        function jumpToRound(roundIdx) {
+            playSfx('click');
+            const roundEls = bTreeCanvas.querySelectorAll(".rnd");
+            if (!roundEls[roundIdx]) return;
+            const rect = bTree.getBoundingClientRect();
+            const rOffset = roundEls[roundIdx].offsetLeft;
+            panX = (rect.width / 2) - ((rOffset + 120) * zoom);
+            updateTransform();
+        }
+
+        // Atajos de teclado
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (mchModal.classList.contains("on")) mchModal.classList.remove("on");
+                else if (bView.classList.contains("show")) bClsB.click();
+                else if (sMod.classList.contains("on")) cStg.click();
+            } else if (bView.classList.contains("show")) {
+                if (e.key === "+" || e.key === "=") setZoom(zoom + 0.15);
+                else if (e.key === "-" || e.key === "_") setZoom(zoom - 0.15);
+                else if (e.key === "0") resetView();
+            }
+        });
+
+        // Temas y Aura
         thSel.addEventListener("change", (e) => {
             document.documentElement.setAttribute("data-th", e.target.value);
             localStorage.setItem("l_thm", e.target.value);
@@ -1259,14 +1951,15 @@
         }
 
         auSel.addEventListener("change", (e) => sAura(e.target.value));
-
         const sAur = localStorage.getItem("l_aur");
         if (sAur) {
             auSel.value = sAur;
             sAura(sAur);
         }
 
+        // Navegación de pestañas
         function sTab(tId) {
+            playSfx('click');
             document.querySelectorAll(".tab").forEach(v => v.classList.remove("on"));
             document.querySelectorAll("nav .nbtn").forEach(b => b.classList.remove("on"));
 
@@ -1280,46 +1973,299 @@
         }
 
         document.querySelectorAll("nav .nbtn").forEach(b => {
-            b.addEventListener("click", () => {
-                sTab(b.getAttribute("data-tb"));
-            });
+            b.addEventListener("click", () => sTab(b.getAttribute("data-tb")));
         });
 
-        async function loadEvents() {
-            eLst.innerHTML = "Cargando...";
-            const { data, error } = await sb.from("events").select("id, title, description, max_players").order("created_at", { ascending: false });
-            if (error || !data) {
-                eLst.innerHTML = "La página se bugueó horrible. -200 de Aura";
+        // HELPERS DE METADATOS Y FORMATEO ESPORTS
+        const FORMAT_MAP = {
+            single: { label: "⚡ Eliminación Directa", short: "Single Elim", icon: "⚡" },
+            double: { label: "🔁 Doble Eliminación", short: "Double Elim", icon: "🔁" },
+            round_robin: { label: "🌐 Fase de Grupos", short: "Round Robin", icon: "🌐" },
+            swiss: { label: "🛡️ Sistema Suizo", short: "Suizo", icon: "🛡️" }
+        };
+
+        function getFormatInfo(fmt) {
+            return FORMAT_MAP[fmt] || FORMAT_MAP.single;
+        }
+
+        function getGameBadge(game) {
+            const g = (game || "GENERAL").toUpperCase();
+            if (g.includes("VALORANT")) return { name: "VALORANT", icon: "🎯", color: "#ff4655" };
+            if (g.includes("LEAGUE") || g.includes("LOL")) return { name: "LEAGUE OF LEGENDS", icon: "⚔️", color: "#c89b3c" };
+            if (g.includes("CS") || g.includes("STRIKE")) return { name: "COUNTER-STRIKE 2", icon: "💣", color: "#de9b35" };
+            if (g.includes("FC") || g.includes("FIFA")) return { name: "EA SPORTS FC", icon: "⚽", color: "#00ff88" };
+            if (g.includes("SMASH")) return { name: "SUPER SMASH BROS", icon: "🥊", color: "#e63946" };
+            if (g.includes("ROCKET")) return { name: "ROCKET LEAGUE", icon: "🚗", color: "#0099ff" };
+            if (g.includes("MORTAL") || g.includes("FIGHT")) return { name: "FIGHTING GAMES", icon: "🥋", color: "#b5179e" };
+            return { name: g || "ESPORTS", icon: "🎮", color: "var(--act)" };
+        }
+
+        function formatTournamentDate(meta) {
+            if (!meta || !meta.date) return null;
+            try {
+                const parts = meta.date.split("-").map(Number);
+                const d = parts[2], m = parts[1];
+                const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                const monthName = months[m - 1] || "";
+                let timeStr = "";
+                if (meta.time) {
+                    const tParts = meta.time.split(":").map(Number);
+                    const hh = tParts[0], mm = tParts[1];
+                    const period = hh >= 12 ? "PM" : "AM";
+                    const h12 = hh % 12 || 12;
+                    const minStr = String(mm).padStart(2, "0");
+                    timeStr = ` a las ${h12}:${minStr} ${period}`;
+                }
+                return `${d} de ${monthName}${timeStr}`;
+            } catch (e) {
+                return `${meta.date} ${meta.time || ""}`;
+            }
+        }
+
+        function getCountdown(meta) {
+            if (!meta || !meta.date) return null;
+            try {
+                const t = meta.time || "00:00";
+                const target = new Date(`${meta.date}T${t}:00`);
+                const now = new Date();
+                const diffMs = target - now;
+                if (diffMs <= 0) return { expired: true, text: "🔴 ¡Torneo en curso!" };
+                const totalSecs = Math.floor(diffMs / 1000);
+                const days = Math.floor(totalSecs / 86400);
+                const hours = Math.floor((totalSecs % 86400) / 3600);
+                const mins = Math.floor((totalSecs % 3600) / 60);
+                const secs = totalSecs % 60;
+                let str = "";
+                if (days > 0) str += `${days}d `;
+                str += `${String(hours).padStart(2, "0")}h ${String(mins).padStart(2, "0")}m ${String(secs).padStart(2, "0")}s`;
+                return { expired: false, text: str };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Ticker de cuenta regresiva en vivo cada 1 segundo
+        setInterval(() => {
+            document.querySelectorAll(".cd-ticker-pill").forEach(el => {
+                const d = el.getAttribute("data-date");
+                const t = el.getAttribute("data-time");
+                if (!d) return;
+                const cd = getCountdown({ date: d, time: t });
+                if (cd) {
+                    el.innerHTML = cd.expired ? cd.text : `⏳ Inicia en: <strong>${cd.text}</strong>`;
+                }
+            });
+        }, 1000);
+
+        // Deducción de estado del evento
+        function getEventStatus(evt) {
+            const bState = evt.bracket_state || {};
+            const meta = bState._meta || {};
+            if (meta.status) return meta.status; // 'live', 'upcoming', 'completed'
+
+            // Auto-deducción
+            const N = evt.max_players || 16;
+            let P = 2;
+            while (P < N) P *= 2;
+            const finalR = Math.log2(P) - 1;
+            const finalWin = bState[`${finalR}_0`];
+
+            if (finalWin && !finalWin.startsWith("Esperando") && finalWin !== "BYE") return 'completed';
+            const hasAnyWin = Object.keys(bState).some(k => !k.startsWith("_") && k !== "scores" && bState[k]);
+            if (hasAnyWin) return 'live';
+            return 'upcoming';
+        }
+
+        // RENDERIZADO DE LA LISTA DE TORNEOS
+        function renderEventsList(list) {
+            // Actualizar contadores de los filtros
+            const cAll = document.getElementById("cAll");
+            const cLive = document.getElementById("cLive");
+            const cUpc = document.getElementById("cUpc");
+            const cFin = document.getElementById("cFin");
+
+            if (allEvents.length) {
+                cAll.innerText = allEvents.length;
+                cLive.innerText = allEvents.filter(e => getEventStatus(e) === 'live').length;
+                cUpc.innerText = allEvents.filter(e => getEventStatus(e) === 'upcoming').length;
+                cFin.innerText = allEvents.filter(e => getEventStatus(e) === 'completed').length;
+            }
+
+            if (!list || list.length === 0) {
+                eLst.innerHTML = `<div style="text-align:center; padding:40px; color:var(--mtxt);">No se encontraron torneos en esta categoría.</div>`;
                 return;
             }
-            if (data.length === 0) {
-                eLst.innerHTML = "No hay eventos hoy.";
-                return;
-            }
+
             eLst.innerHTML = "";
-            data.forEach((evt, idx) => {
+            list.forEach((evt, idx) => {
+                const bState = evt.bracket_state || {};
+                const meta = bState._meta || {};
+                const status = getEventStatus(evt);
+                const gBadge = getGameBadge(meta.game);
+                const dateStr = formatTournamentDate(meta);
+                const cd = getCountdown(meta);
+
                 const card = document.createElement("div");
                 card.className = "ecard";
-                card.style.animationDelay = `${idx * 0.06}s`;
+                card.style.animationDelay = `${idx * 0.05}s`;
+
+                let statusHtml = '';
+                if (status === 'live') {
+                    statusHtml = `<span class="status-badge status-live"><span class="live-dot-mini"></span> EN VIVO</span>`;
+                } else if (status === 'completed') {
+                    statusHtml = `<span class="status-badge status-completed">🏆 FINALIZADO</span>`;
+                } else {
+                    statusHtml = `<span class="status-badge status-upcoming">⏳ PRÓXIMAMENTE</span>`;
+                }
+
+                const fmtInfo = getFormatInfo(meta.format);
+
                 card.innerHTML = `
-                    <div>
-                        <h3 style="color:var(--act); font-size:1.3rem;">${evt.title}</h3>
-                        <p style="color:var(--mtxt); font-size:0.95rem; margin-top:4px;">${evt.description || "No hay descripción? Que flojo anda Chris hoy"}</p>
-                        <span style="font-size:0.8rem; color:var(--act); display:inline-block; margin-top:8px;">${evt.max_players} Jugadores</span>
+                    <div class="ecard-top">
+                        <span class="game-badge" style="color:${gBadge.color}; border-color:${gBadge.color}40;">
+                            ${gBadge.icon} ${gBadge.name}
+                        </span>
+                        ${statusHtml}
                     </div>
-                    <button class="btn view-btn">Ver Bracket</button>
+
+                    <div class="ecard-body">
+                        <h3 class="ecard-title">${evt.title}</h3>
+                        <p class="ecard-desc">${evt.description || "Torneo oficial de deportes electrónicos de LevelUP en la Universidad de Margarita."}</p>
+                        
+                        <div class="ecard-meta">
+                            ${dateStr ? `<span class="meta-pill">📅 ${dateStr}</span>` : ''}
+                            <span class="meta-pill">⚔️ ${evt.max_players} Jugadores Máx.</span>
+                            <span class="meta-pill" style="color:#38bdf8; border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.12); font-weight:700;">${fmtInfo.label}</span>
+                            ${(status === 'upcoming' && meta.date && cd && !cd.expired) ? `
+                                <span class="cd-ticker-pill" data-date="${meta.date}" data-time="${meta.time || '00:00'}">
+                                    ⏳ Inicia en: <strong>${cd.text}</strong>
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <div class="ecard-foot">
+                        <button class="btn view-btn">Ver Bracket Oficial →</button>
+                    </div>
                 `;
+
                 card.querySelector(".view-btn").addEventListener("click", () => {
+                    playSfx('click');
                     fetchAndOpenBracket(evt.id);
                 });
                 eLst.appendChild(card);
             });
         }
 
+        // Filtros de torneos
+        document.querySelectorAll("#evtFilters .chip").forEach(btn => {
+            btn.addEventListener("click", () => {
+                playSfx('click');
+                document.querySelectorAll("#evtFilters .chip").forEach(b => b.classList.remove("on"));
+                btn.classList.add("on");
+                currentFilter = btn.getAttribute("data-filter");
+                applyEventFilters();
+            });
+        });
+
+        function applyEventFilters() {
+            const term = eSrch ? eSrch.value.trim().toLowerCase() : '';
+            let filtered = allEvents;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(e => getEventStatus(e) === currentFilter);
+            }
+
+            if (term) {
+                filtered = filtered.filter(ev => {
+                    const bState = ev.bracket_state || {};
+                    const meta = bState._meta || {};
+                    const gameStr = meta.game || '';
+                    const fmt = getFormatInfo(meta.format);
+                    return (ev.title && ev.title.toLowerCase().includes(term)) ||
+                           (ev.description && ev.description.toLowerCase().includes(term)) ||
+                           (gameStr.toLowerCase().includes(term)) ||
+                           (fmt.label.toLowerCase().includes(term)) ||
+                           (fmt.short.toLowerCase().includes(term));
+                });
+            }
+
+            renderEventsList(filtered);
+        }
+
+        async function loadEvents() {
+            eLst.innerHTML = `<div style="text-align:center; padding:36px; color:var(--mtxt);">Cargando torneos...</div>`;
+            const { data, error } = await sb.from("events").select("id, title, description, max_players, bracket_state, created_at").order("created_at", { ascending: false });
+            if (error || !data) {
+                eLst.innerHTML = `<div style="text-align:center; padding:36px; color:#ff2a55;">No se pudieron cargar los torneos. Revisa tu conexión.</div>`;
+                return;
+            }
+            allEvents = data;
+            applyEventFilters();
+        }
+
+        if (eSrch) {
+            eSrch.addEventListener("input", applyEventFilters);
+        }
+
         async function fetchAndOpenBracket(id) {
             const { data, error } = await sb.from("events").select("*").eq("id", id).single();
             if (!error && data) {
                 openBracket(data);
+            } else {
+                showToast("⚠️ No se encontró el torneo solicitado.");
+            }
+        }
+
+        // ALGORITMO OFICIAL DE SEEDING ESPORTS (ESTÁNDAR OLÍMPICO)
+        function getSeededOrder(power) {
+            let order = [1, 2];
+            while (order.length < power) {
+                const next = [];
+                const sum = (order.length * 2) + 1;
+                for (let i = 0; i < order.length; i++) {
+                    next.push(order[i]);
+                    next.push(sum - order[i]);
+                }
+                order = next;
+            }
+            return order;
+        }
+
+        // Suscripción Realtime en Supabase
+        function subscribeRealtime(eventId) {
+            if (rtChannel) {
+                sb.removeChannel(rtChannel);
+                rtChannel = null;
+            }
+            try {
+                rtChannel = sb.channel(`realtime_public_${eventId}`)
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'events',
+                        filter: `id=eq.${eventId}`
+                    }, (payload) => {
+                        if (payload.new && currEvt && currEvt.id === eventId) {
+                            currEvt = payload.new;
+                            winners = payload.new.bracket_state || {};
+                            renderTree();
+                            showToast("⚡ Bracket actualizado en tiempo real");
+                        }
+                    })
+                    .on('postgres_changes', {
+                        event: '*',
+                        schema: 'public',
+                        table: 'participants',
+                        filter: `event_id=eq.${eventId}`
+                    }, () => {
+                        if (currEvt && currEvt.id === eventId) {
+                            renderTree();
+                        }
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.warn("Realtime fallback:", err);
             }
         }
 
@@ -1327,90 +2273,117 @@
             currEvt = evt;
             winners = evt.bracket_state || {};
             bTtl.innerText = evt.title;
-            setZoom(1);
-            bTree.scrollLeft = 0;
-            bTree.scrollTop = 0;
+
+            // Actualizar metadatos en el header del bracket
+            const meta = winners._meta || {};
+            const gBadge = getGameBadge(meta.game);
+            const dateStr = formatTournamentDate(meta);
+            const fmtInfo = getFormatInfo(meta.format);
+
+            bGamePill.innerHTML = `${gBadge.icon} ${gBadge.name}`;
+            bGamePill.style.color = gBadge.color;
+            bGamePill.style.borderColor = `${gBadge.color}40`;
+            if (bFormatPill) {
+                bFormatPill.innerText = fmtInfo.label;
+            }
+            bDatePill.innerText = dateStr ? `📅 ${dateStr}` : '📅 Fecha por confirmar';
+
+            resetView();
             bView.classList.add("show");
+            subscribeRealtime(evt.id);
             renderTree();
+
+            if (window.history.replaceState) {
+                const url = new URL(window.location);
+                url.searchParams.set('evento', evt.id);
+                window.history.replaceState({}, '', url);
+            }
         };
 
+        // RENDERIZADO DEL BRACKET
         async function renderTree() {
-            bTree.innerHTML = "";
+            bTreeCanvas.innerHTML = "";
+            rndNav.innerHTML = "";
             const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id).order("seed", { ascending: true });
 
-            const N = currEvt.max_players;
-            let targetPower = 2;
-            while (targetPower * 2 <= N) targetPower *= 2;
-            if (targetPower === N) targetPower = N;
+            const N = currEvt.max_players || 16;
+            let P = 2;
+            while (P < N) P *= 2;
 
-            const numPrelimMatches = N - targetPower;
-            const numDirectPlayers = N - (numPrelimMatches * 2);
+            const totalRounds = Math.log2(P);
+            const seededOrder = getSeededOrder(P);
+            const scores = (winners && winners.scores) ? winners.scores : {};
 
             let pMap = {};
-            if (players) players.forEach(p => pMap[p.seed] = p.name);
+            if (players) {
+                players.forEach(p => pMap[p.seed] = p.name);
+            }
 
-            const mainRoundsCount = Math.log2(targetPower);
-            const totalRounds = numPrelimMatches > 0 ? mainRoundsCount + 1 : mainRoundsCount;
+            // Detección automática de Campeón
+            const finalKey = `${totalRounds - 1}_0`;
+            const champ = winners[finalKey];
+            if (champ && !champ.startsWith("Esperando") && !champ.startsWith("Seed") && champ !== "BYE") {
+                champName.innerText = champ;
+                champBanner.style.display = "flex";
+                playSfx('victory');
+            } else {
+                champBanner.style.display = "none";
+            }
 
-            const MATCH_HEIGHT = 90;
-            const BASE_GAP = 20;
+            const BASE_SLOT_HEIGHT = 120;
 
             for (let r = 0; r < totalRounds; r++) {
+                const matchesInRound = P / Math.pow(2, r + 1);
+                const currentSlotHeight = BASE_SLOT_HEIGHT * Math.pow(2, r);
+
                 const rDiv = document.createElement("div");
                 rDiv.className = "rnd";
-                rDiv.style.animationDelay = `${r * 0.08}s`;
 
-                const isPrelimRound = (numPrelimMatches > 0 && r === 0);
-                const mainRoundIndex = numPrelimMatches > 0 ? r - 1 : r;
-
-                let matchesInRound = isPrelimRound ? numPrelimMatches : targetPower / Math.pow(2, mainRoundIndex + 1);
-
+                // Nombres de Ronda
                 let rName = "";
-                if (isPrelimRound) {
-                    rName = `Ronda de ${N}`;
-                } else {
-                    const playersInRound = matchesInRound * 2;
-                    if (playersInRound === 2) rName = "Final";
-                    else if (playersInRound === 4) rName = "Semifinales";
-                    else if (playersInRound === 8) rName = "Cuartos";
-                    else if (playersInRound === 16) rName = "Octavos";
-                    else if (playersInRound === 32) rName = "Ronda de 32";
-                    else if (playersInRound === 64) rName = "Ronda de 64";
-                    else rName = `Ronda de ${playersInRound}`;
-                }
+                const playersInRound = matchesInRound * 2;
+                if (playersInRound === 2) rName = "Gran Final 🏆";
+                else if (playersInRound === 4) rName = "Semifinales";
+                else if (playersInRound === 8) rName = "Cuartos de Final";
+                else if (playersInRound === 16) rName = "Octavos de Final";
+                else if (playersInRound === 32) rName = "Ronda de 32";
+                else rName = `Ronda de ${playersInRound}`;
 
                 const rHdr = document.createElement("div");
                 rHdr.className = "rtitle";
                 rHdr.innerText = rName;
                 rDiv.appendChild(rHdr);
 
-                const currentSlotHeight = (MATCH_HEIGHT + BASE_GAP) * Math.pow(2, isPrelimRound ? 0 : mainRoundIndex);
+                // Botón de salto rápido en barra de rondas
+                const jumpBtn = document.createElement("button");
+                jumpBtn.className = "rjump-btn";
+                jumpBtn.innerText = rName;
+                jumpBtn.addEventListener("click", () => jumpToRound(r));
+                rndNav.appendChild(jumpBtn);
 
                 for (let m = 0; m < matchesInRound; m++) {
-                    const mWrap = document.createElement("div");
-                    mWrap.className = "mch-wrap";
-                    mWrap.style.height = `${currentSlotHeight}px`;
+                    const mSlot = document.createElement("div");
+                    mSlot.className = "mch-slot";
+                    mSlot.style.height = `${currentSlotHeight}px`;
 
                     const mBox = document.createElement("div");
                     mBox.className = "mch";
 
                     let p1 = "", p2 = "";
+                    let seed1 = null, seed2 = null;
 
-                    if (isPrelimRound) {
-                        let s1 = numDirectPlayers + (m * 2) + 1;
-                        let s2 = numDirectPlayers + (m * 2) + 2;
-                        p1 = pMap[s1] || `Seed ${s1}`;
-                        p2 = pMap[s2] || `Seed ${s2}`;
-                    } else if (r === (numPrelimMatches > 0 ? 1 : 0)) {
-                        if (numPrelimMatches > 0 && m < numPrelimMatches) {
-                            let s1 = (m * 2) + 1;
-                            p1 = pMap[s1] || `Seed ${s1}`;
-                            p2 = winners[`0_${m}`] || `Ganador Prelim M${m+1}`;
-                        } else {
-                            let s1 = (m * 2) + 1;
-                            let s2 = (m * 2) + 2;
-                            p1 = pMap[s1] || `Seed ${s1}`;
-                            p2 = pMap[s2] || `Seed ${s2}`;
+                    if (r === 0) {
+                        seed1 = seededOrder[m * 2];
+                        seed2 = seededOrder[m * 2 + 1];
+
+                        p1 = (seed1 <= N) ? (pMap[seed1] || `Seed ${seed1}`) : "BYE";
+                        p2 = (seed2 <= N) ? (pMap[seed2] || `Seed ${seed2}`) : "BYE";
+
+                        // Auto-resolución de BYEs
+                        if (p2 === "BYE" && p1 !== "BYE") {
+                            if (!winners[`0_${m}`]) winners[`0_${m}`] = p1;
+                        } else if (p1 === "BYE" && p2 !== "BYE") {
+                            if (!winners[`0_${m}`]) winners[`0_${m}`] = p2;
                         }
                     } else {
                         p1 = winners[`${r-1}_${m*2}`] || `Esperando M${m*2+1}`;
@@ -1419,54 +2392,120 @@
 
                     const mKey = `${r}_${m}`;
                     const curWin = winners[mKey];
+                    const mScore = scores[mKey];
 
-                    let p1Class = `ply ${!p1 || p1.startsWith('Esperando') || p1.startsWith('Ganador') ? 'empty' : ''} ${curWin && curWin === p1 ? 'win' : ''}`;
-                    let p2Class = `ply ${!p2 || p2.startsWith('Esperando') || p2.startsWith('Ganador') ? 'empty' : ''} ${curWin && curWin === p2 ? 'win' : ''}`;
+                    const sc1 = (mScore && mScore.p1 !== undefined) ? mScore.p1 : '';
+                    const sc2 = (mScore && mScore.p2 !== undefined) ? mScore.p2 : '';
+
+                    const isP1Bye = p1 === "BYE";
+                    const isP2Bye = p2 === "BYE";
+                    const isP1Empty = !p1 || p1.startsWith("Esperando");
+                    const isP2Empty = !p2 || p2.startsWith("Esperando");
+
+                    const p1Class = `ply ${isP1Bye ? 'bye' : ''} ${isP1Empty ? 'empty' : ''} ${curWin && curWin === p1 ? 'win' : ''}`;
+                    const p2Class = `ply ${isP2Bye ? 'bye' : ''} ${isP2Empty ? 'empty' : ''} ${curWin && curWin === p2 ? 'win' : ''}`;
 
                     mBox.innerHTML = `
-                        <div class="${p1Class}"><span>${p1}</span></div>
-                        <div class="${p2Class}"><span>${p2}</span></div>
+                        <div class="${p1Class}" data-player="${encodeURIComponent(p1)}">
+                            ${(r === 0 && seed1 && seed1 <= N) ? `<span class="seed-badge">#${seed1}</span>` : ''}
+                            <span class="pname">${isP1Bye ? 'Pase Libre (BYE)' : p1}</span>
+                            ${sc1 !== '' ? `<span class="pscore ${curWin === p1 ? 'win' : ''}">${sc1}</span>` : ''}
+                            ${curWin && curWin === p1 && sc1 === '' ? '<span style="font-weight:900;">✓</span>' : ''}
+                        </div>
+                        <div class="${p2Class}" data-player="${encodeURIComponent(p2)}">
+                            ${(r === 0 && seed2 && seed2 <= N) ? `<span class="seed-badge">#${seed2}</span>` : ''}
+                            <span class="pname">${isP2Bye ? 'Pase Libre (BYE)' : p2}</span>
+                            ${sc2 !== '' ? `<span class="pscore ${curWin === p2 ? 'win' : ''}">${sc2}</span>` : ''}
+                            ${curWin && curWin === p2 && sc2 === '' ? '<span style="font-weight:900;">✓</span>' : ''}
+                        </div>
                     `;
-                    mWrap.appendChild(mBox);
-                    rDiv.appendChild(mWrap);
-                }
-                bTree.appendChild(rDiv);
 
+                    // Al hacer clic en un match, abrir el HUD de detalles de partida
+                    mBox.addEventListener("click", () => {
+                        playSfx('click');
+                        openMatchHud(rName, p1, p2, seed1, seed2, sc1, sc2, curWin);
+                    });
+
+                    mSlot.appendChild(mBox);
+                    rDiv.appendChild(mSlot);
+                }
+
+                bTreeCanvas.appendChild(rDiv);
+
+                // Conectores entre rondas
                 if (r < totalRounds - 1) {
                     const cDiv = document.createElement("div");
                     cDiv.className = "conn-col";
 
-                    if (isPrelimRound) {
-                        for (let c = 0; c < numPrelimMatches; c++) {
-                            const block = document.createElement("div");
-                            block.className = "conn-block";
-                            block.style.height = `${currentSlotHeight}px`;
+                    const pairsInRound = matchesInRound / 2;
+                    for (let c = 0; c < pairsInRound; c++) {
+                        const block = document.createElement("div");
+                        block.className = "conn-block";
+                        block.style.height = `${currentSlotHeight * 2}px`;
 
-                            const line = document.createElement("div");
-                            line.className = "conn-line straight";
-                            block.appendChild(line);
-                            cDiv.appendChild(block);
-                        }
-                    } else {
-                        const nextMatches = matchesInRound / 2;
-                        for (let c = 0; c < nextMatches; c++) {
-                            const block = document.createElement("div");
-                            block.className = "conn-block";
-                            block.style.height = `${currentSlotHeight * 2}px`;
-
-                            const line = document.createElement("div");
-                            line.className = "conn-line";
-                            line.style.top = `${currentSlotHeight / 2}px`;
-                            line.style.height = `${currentSlotHeight}px`;
-
-                            block.appendChild(line);
-                            cDiv.appendChild(block);
-                        }
+                        block.innerHTML = `
+                            <div class="conn-arm-top"></div>
+                            <div class="conn-arm-bot"></div>
+                            <div class="conn-stem"></div>
+                        `;
+                        cDiv.appendChild(block);
                     }
-                    bTree.appendChild(cDiv);
+                    bTreeCanvas.appendChild(cDiv);
                 }
             }
+
+            // Trazador interactivo de camino (Path Tracer)
+            bTreeCanvas.querySelectorAll(".ply").forEach(node => {
+                const p = decodeURIComponent(node.getAttribute("data-player") || "");
+                if (!p || p === "BYE" || p.startsWith("Seed") || p.startsWith("Esperando")) return;
+
+                node.addEventListener("mouseenter", () => {
+                    bTreeCanvas.querySelectorAll(`.ply[data-player="${encodeURIComponent(p)}"]`).forEach(el => {
+                        el.classList.add("path-highlight");
+                    });
+                });
+
+                node.addEventListener("mouseleave", () => {
+                    bTreeCanvas.querySelectorAll(".ply.path-highlight").forEach(el => {
+                        el.classList.remove("path-highlight");
+                    });
+                });
+            });
         }
+
+        // MODAL HUD DE DETALLES DE PARTIDA
+        function openMatchHud(rName, p1, p2, s1, s2, sc1, sc2, winner) {
+            mdRoundName.innerText = rName;
+            hudName1.innerText = p1;
+            hudName2.innerText = p2;
+            hudSeed1.innerText = s1 ? `#${s1}` : '';
+            hudSeed2.innerText = s2 ? `#${s2}` : '';
+            hudScore1.innerText = sc1 !== '' ? sc1 : '-';
+            hudScore2.innerText = sc2 !== '' ? sc2 : '-';
+
+            hudP1.className = `hud-player ${winner && winner === p1 ? 'winner' : ''}`;
+            hudP2.className = `hud-player ${winner && winner === p2 ? 'winner' : ''}`;
+
+            if (winner) {
+                hudStatus.innerHTML = `🏆 Ganador declarado: <strong style="color:var(--act);">${winner}</strong>`;
+            } else if (p1.startsWith("Esperando") || p2.startsWith("Esperando")) {
+                hudStatus.innerHTML = `⏳ Esperando a que concluyan los enfrentamientos previos.`;
+            } else {
+                hudStatus.innerHTML = `⚔️ Partida lista para disputarse.`;
+            }
+
+            mchModal.classList.add("on");
+        }
+
+        // Soporte de enlace directo al cargar página (?evento=ID)
+        window.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const evtId = params.get("evento") || params.get("event");
+            if (evtId) {
+                sTab("evnt");
+                fetchAndOpenBracket(evtId);
+            }
+        });
     </script>
 </body>
 </html>
