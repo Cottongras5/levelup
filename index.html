@@ -245,6 +245,7 @@
             justify-self: end;
             display: flex;
             align-items: center;
+            gap: 8px;
         }
 
         .nbtn svg, .ico svg {
@@ -556,6 +557,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            user-select: none;
+            z-index: 10;
         }
 
         .bact {
@@ -597,6 +600,17 @@
             overflow-x: auto;
             overflow-y: auto;
             align-items: flex-start;
+            cursor: default;
+        }
+
+        .bcnt.is-dragging {
+            cursor: grabbing !important;
+            user-select: none !important;
+        }
+
+        .bcnt.is-dragging * {
+            cursor: grabbing !important;
+            pointer-events: none;
         }
 
         .rnd {
@@ -1074,6 +1088,12 @@
                     <option value="1">Activado</option>
                 </select>
             </div>
+            <div class="sitm" style="margin-top:8px; padding-top:12px; border-top:1px solid var(--brd);">
+                <a href="admin.html" class="btn" style="width:100%; justify-content:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/></svg>
+                    <span>Panel de Administración</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -1100,6 +1120,13 @@
         let winners = {};
         let zoom = 1;
 
+        // Variables para arrastrar con click derecho (Pan)
+        let isRightDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragStartScrollLeft = 0;
+        let dragStartScrollTop = 0;
+
         oStg.addEventListener("click", () => sMod.classList.add("on"));
         cStg.addEventListener("click", () => sMod.classList.remove("on"));
         sMod.addEventListener("click", (e) => {
@@ -1108,6 +1135,8 @@
 
         bClsB.addEventListener("click", () => {
             bView.classList.remove("show");
+            isRightDragging = false;
+            bTree.classList.remove("is-dragging");
         });
 
         function setZoom(value) {
@@ -1123,6 +1152,48 @@
             e.preventDefault();
             setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
         }, { passive: false });
+
+        // Arrastrar el bracket con click derecho
+        bTree.addEventListener("mousedown", (e) => {
+            if (e.button === 2) { // 2 = Click derecho
+                isRightDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                dragStartScrollLeft = bTree.scrollLeft;
+                dragStartScrollTop = bTree.scrollTop;
+                bTree.classList.add("is-dragging");
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            if (!isRightDragging) return;
+            // Ajustamos el movimiento según el nivel de zoom para que sea 1:1 con el cursor
+            const currentZoom = zoom || 1;
+            const dx = (e.clientX - dragStartX) / currentZoom;
+            const dy = (e.clientY - dragStartY) / currentZoom;
+            bTree.scrollLeft = dragStartScrollLeft - dx;
+            bTree.scrollTop = dragStartScrollTop - dy;
+        });
+
+        window.addEventListener("mouseup", (e) => {
+            if (isRightDragging && (e.button === 2 || e.buttons === 0)) {
+                isRightDragging = false;
+                bTree.classList.remove("is-dragging");
+            }
+        });
+
+        // Prevenir menú contextual del navegador al hacer click derecho en la vista de bracket
+        bView.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        });
+
+        window.addEventListener("blur", () => {
+            if (isRightDragging) {
+                isRightDragging = false;
+                bTree.classList.remove("is-dragging");
+            }
+        });
 
         thSel.addEventListener("change", (e) => {
             document.documentElement.setAttribute("data-th", e.target.value);
@@ -1237,6 +1308,8 @@
             winners = evt.bracket_state || {};
             bTtl.innerText = evt.title;
             setZoom(1);
+            bTree.scrollLeft = 0;
+            bTree.scrollTop = 0;
             bView.classList.add("show");
             renderTree();
         };
