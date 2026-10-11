@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="es" data-th="lvl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudo LevelUP</title>
+    <link rel="icon" type="image/png" href="pics/a.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg: #160e29;
+            --card: linear-gradient(180deg, #2d1c4c 0%, #21133b 100%);
+            --txt: #f3e8ff;
+            --act: #00ff88;
+            --brd: rgba(0, 255, 136, 0.25);
+            --sbar: linear-gradient(180deg, #241440 0%, #190c30 100%);
+            --mtxt: #a88acb;
+            --glow: rgba(0, 255, 136, 0.4);
+            --shd: 0 5px 20px rgba(0, 255, 136, 0.15);
+        }
+
+        [data-th="light"] {
+            --bg: #daeaff;
+            --card: #ffffff;
+            --txt: #1c2038;
+            --act: #00aaee;
+            --brd: #ffffff;
+            --sbar: #ffffff;
+            --mtxt: #697896;
+            --glow: rgba(0, 170, 238, 0.3);
+            --shd: 0 5px 18px rgba(0, 100, 200, 0.12);
+        }
+
+        [data-th="dark"] {
+            --bg: #14161c;
+            --card: #21252b;
+            --txt: #abb2bf;
+            --act: #00aaee;
+            --brd: #3b4048;
+            --sbar: #21252b;
+            --mtxt: #5c6370;
+            --glow: rgba(0, 170, 238, 0.3);
+            --shd: 0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-th="mllgt"] {
+            --bg: #9ef5ff;
+            --card: #e3fbff;
+            --txt: #224248;
+            --act: #ff9a00;
+            --brd: #e3fbff;
+            --sbar: #e3fbff;
+            --mtxt: #5d838a;
+            --glow: rgba(255, 154, 0, 0.35);
+            --shd: 0 5px 18px rgba(0, 100, 200, 0.18);
+        }
+
+        [data-th="mldrk"] {
+            --bg: #204044;
+            --card: rgba(50, 94, 106, 0.95);
+            --txt: #e3fbff;
+            --act: #ff9a00;
+            --brd: #2f4a4f;
+            --sbar: rgba(50, 94, 106, 0.95);
+            --mtxt: #83a5ac;
+            --glow: rgba(255, 154, 0, 0.35);
+            --shd: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-th="crims"] {
+            --bg: #0d0204;
+            --card: #1a050a;
+            --txt: #f0cfd5;
+            --act: #ff2a55;
+            --brd: #5e0f1d;
+            --sbar: #1a050a;
+            --mtxt: #9e6470;
+            --glow: rgba(255, 42, 85, 0.35);
+            --shd: 0 5px 20px rgba(255, 0, 50, 0.15);
+        }
+
+        [data-th="nebul"] {
+            --bg: #090312;
+            --card: #130826;
+            --txt: #dcd0f5;
+            --act: #a855f7;
+            --brd: #4c1d95;
+            --sbar: #0e051c;
+            --mtxt: #816aab;
+            --glow: rgba(168, 85, 247, 0.35);
+            --shd: 0 5px 20px rgba(120, 40, 200, 0.2);
+        }
+
+        [data-th="eybrn"] {
+            --bg: #000000;
+            --card: #111113;
+            --txt: #ffffff;
+            --act: #666666;
+            --brd: #000000;
+            --sbar: #111113;
+            --mtxt: #777777;
+            --glow: rgba(255, 255, 255, 0.2);
+            --shd: 0 5px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--txt);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            overflow-x: hidden;
+            transition: background-color 0.25s, color 0.25s;
+        }
+
+        .box {
+            background: var(--card);
+            border: 2px solid var(--brd);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shd);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        h1 {
+            color: var(--act);
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        form, .vgrp {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .fgrp {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--act);
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: var(--card);
+            border: 2px solid var(--brd);
+            color: var(--act);
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shd);
+            transition: transform 0.15s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--glow);
+            border-color: var(--act);
+        }
+
+        .btn:active {
+            transform: scale(0.95) translateY(0);
+        }
+
+        .btn.sm {
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            border-radius: 8px;
+        }
+
+        .sbtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 16px;
+            background: var(--card);
+            border: 2px solid var(--brd);
+            color: var(--txt);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .sbtn:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .sbtn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .moly {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .moly.on {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mdl {
+            background: var(--sbar);
+            border: 2px solid var(--brd);
+            box-shadow: var(--shd), 0 20px 40px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            width: 340px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .moly.on .mdl {
+            transform: scale(1) translateY(0);
+        }
+
+        .mhd {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--act);
+            border-bottom: 1px solid var(--brd);
+            padding-bottom: 12px;
+        }
+
+        .danger {
+            background: rgba(255, 42, 85, 0.15);
+            border-color: rgba(255, 42, 85, 0.4);
+            color: #ff2a55;
+        }
+
+        .danger:hover {
+            box-shadow: 0 8px 25px rgba(255, 42, 85, 0.3);
+            border-color: #ff2a55;
+        }
+
+        body.err {
+            animation: flash 0.1s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% { background-color: #ff0000; color: #ffffff; }
+            50% { background-color: #000000; color: #ff0000; }
+        }
+
+        .warn {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 20px #000;
+            text-align: center;
+            z-index: 100;
+            width: 100%;
+        }
+
+        body.err .warn {
+            display: block;
+        }
+
+        body.err .box, body.err #bView {
+            opacity: 0;
+        }
+
+        #bView {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg);
+            z-index: 10;
+            flex-direction: column;
+            overflow: hidden;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .bhdr {
+            height: 60px;
+            padding: 0 24px;
+            background: var(--sbar);
+            border-bottom: 1px solid var(--brd);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .zctl {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px;
+            border: 1px solid var(--brd);
+            border-radius: 10px;
+            background: var(--card);
+        }
+
+        .zlbl {
+            min-width: 48px;
+            color: var(--mtxt);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .zbtn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+
+        .bcnt {
+            flex: 1;
+            display: flex;
+            gap: 0;
+            padding: 40px;
+            overflow-x: auto;
+            overflow-y: auto;
+            align-items: flex-start;
+            cursor: default;
+        }
+
+        .bcnt.is-dragging {
+            cursor: grabbing !important;
+            user-select: none !important;
+        }
+
+        .bcnt.is-dragging * {
+            cursor: grabbing !important;
+            pointer-events: none;
+        }
+
+        .rnd {
+            display: flex;
+            flex-direction: column;
+            min-width: 210px;
+            position: relative;
+        }
+
+        .rtitle {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--act);
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 20px;
+            height: 30px;
+        }
+
+        .mch-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .mch {
+            background: var(--card);
+            border: 2px solid var(--brd);
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shd);
+            width: 100%;
+            z-index: 2;
+            transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .mch:hover {
+            transform: scale(1.02);
+            border-color: var(--act);
+            box-shadow: 0 5px 25px var(--glow);
+        }
+
+        .mch.illegal {
+            border-color: #ff2a55 !important;
+            box-shadow: 0 0 20px rgba(255, 42, 85, 0.8) !important;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .conn-col {
+            display: flex;
+            flex-direction: column;
+            width: 40px;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .conn-block {
+            position: relative;
+            width: 100%;
+        }
+
+        .conn-line {
+            position: absolute;
+            left: 0;
+            width: 20px;
+            border-right: 4px solid var(--brd);
+            border-top: 4px solid var(--brd);
+            border-bottom: 4px solid var(--brd);
+        }
+
+        .conn-line.straight {
+            border-top: none;
+            border-bottom: none;
+            border-right: none;
+            background: var(--brd);
+            top: 50% !important;
+            height: 4px !important;
+            width: 40px;
+        }
+
+        .conn-line::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -24px;
+            width: 20px;
+            height: 4px;
+            background: var(--brd);
+            transform: translateY(-50%);
+        }
+
+        .conn-line.straight::after {
+            display: none;
+        }
+
+        .ply {
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--txt);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+        }
+
+        .ply:hover:not(.bye):not(.empty) {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(2px);
+        }
+
+        .ply.win {
+            border: 1px solid var(--act);
+            color: var(--act);
+            font-weight: 800;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .ply.bye {
+            background: transparent;
+            border: 0px dashed rgba(255, 255, 255, 0.08);
+            min-height: 32px;
+            cursor: default;
+        }
+
+        .ply.empty {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #ff2a55;
+            color: #fff;
+            padding: 18px 20px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(255, 42, 85, 0.4);
+            z-index: 200;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .elist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .eitem {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--brd);
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .eitem:hover {
+            border-color: var(--act);
+            background: rgba(0,0,0,0.35);
+        }
+
+        .cmod {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .cmod.on {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cbox {
+            background: var(--sbar);
+            border: 2px solid var(--act);
+            box-shadow: 0 0 50px var(--glow), var(--shd);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cmod.on .cbox {
+            transform: scale(1);
+        }
+
+        .cicon {
+            font-size: 5rem;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); filter: drop-shadow(0 0 10px var(--act)); }
+            to { transform: scale(1.15); filter: drop-shadow(0 0 25px var(--act)); }
+        }
+
+        .cttl {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--txt);
+        }
+
+        .cname {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--act);
+            text-shadow: 0 0 20px var(--glow);
+        }
+
+        #cCanv {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="warn">Jumpscare</div>
+    <div class="toast" id="tstMsg">Chamo tu eres marico? No puedes hacer eso!</div>
+
+    <canvas id="cCanv"></canvas>
+
+    <div class="cmod" id="cMod">
+        <div class="cbox">
+            <div class="cicon">👑</div>
+            <div class="cttl">¡Tenemos a un campeón!</div>
+            <div class="cname"><span class="acc" id="cWin"></span> ha subido de Nivel</div>
+            <button class="btn" id="cCls" style="margin-top:10px;">¡Qué fino!</button>
+        </div>
+    </div>
+
+    <!-- TARJETA DE LOGIN -->
+    <div class="box" id="lCard">
+        <h1>Sudo LevelUP</h1>
+        <form id="lFrm" autocomplete="off">
+            <div class="fgrp">
+                <label for="uInp">Correo</label>
+                <input type="email" id="uInp" name="username" placeholder="cotton@levelup.com" autocomplete="off" required>
+            </div>
+            <div class="fgrp">
+                <label for="pInp">Contraseña</label>
+                <input type="password" id="pInp" name="password" placeholder="••••••••" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn" id="lBtn">Entrar</button>
+        </form>
+    </div>
+
+    <!-- MENU PRINCIPAL DE ADMINISTRADOR -->
+    <div class="box" id="mCard" style="display:none;">
+        <button class="sbtn" id="oStg" title="Ajustes">
+            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
+        </button>
+        <h1>Administrador</h1>
+        <button class="btn" id="bCrt">Crear Evento</button>
+        <button class="btn" id="bMng">Manejar Eventos</button>
+        <a href="index.html" class="btn" style="border-color:var(--act); color:var(--txt);">Ir al Sitio Público →</a>
+    </div>
+
+    <!-- CREAR NUEVO EVENTO -->
+    <div class="box" id="cCard" style="display:none;">
+        <h1>Nuevo Evento</h1>
+        <form id="eFrm">
+            <div class="fgrp">
+                <label>Nombre del Evento</label>
+                <input type="text" id="eTtl" required>
+            </div>
+            <div class="fgrp">
+                <label>Descripción</label>
+                <textarea id="eDsc"></textarea>
+            </div>
+            <div class="fgrp">
+                <label>Cantidad de Jugadores</label>
+                <select id="eCap">
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="16" selected>16</option>
+                    <option value="20">20</option>
+                    <option value="24">24</option>
+                    <option value="28">28</option>
+                    <option value="32">32</option>
+                    <option value="36">36</option>
+                    <option value="40">40</option>
+                    <option value="44">44</option>
+                    <option value="48">48</option>
+                    <option value="52">52</option>
+                    <option value="56">56</option>
+                    <option value="60">60</option>
+                    <option value="64">64</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Correctisimo!</button>
+            <button type="button" class="btn danger" id="bCnlCrt">Bodrio</button>
+        </form>
+    </div>
+
+    <!-- LISTA DE EVENTOS -->
+    <div class="box" id="mListCard" style="display:none;">
+        <h1>Eventos Planificados</h1>
+        <div class="elist" id="eLst"></div>
+        <button type="button" class="btn danger" id="bCnlMng">Volver</button>
+    </div>
+
+    <!-- VISTA Y CONTROL DEL BRACKET -->
+    <div id="bView">
+        <div class="bhdr">
+            <h2 id="bTtl" style="color:var(--act);">Nombre</h2>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <!-- Controles de Zoom -->
+                <div class="zctl" aria-label="Controles de zoom">
+                    <button class="btn ico zbtn sm" id="zOut" aria-label="Alejar">−</button>
+                    <span class="zlbl" id="zLbl">100%</span>
+                    <button class="btn ico zbtn sm" id="zIn" aria-label="Acercar">+</button>
+                </div>
+                <button class="btn sm" id="bAddP">+ Añadir</button>
+                <button class="btn sm" id="bShf">Mezclar</button>
+                <button class="btn danger sm" id="bClsB">Irse</button>
+            </div>
+        </div>
+        <div class="bcnt" id="bTree"></div>
+    </div>
+
+    <!-- MODAL DE AJUSTES -->
+    <div class="moly" id="sMod">
+        <div class="mdl">
+            <div class="mhd">
+                <span>Ajustes</span>
+                <button id="cStg" style="width:32px; height:32px; font-size:0.9rem; background:var(--card); border:1px solid var(--brd); color:var(--txt); border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+            </div>
+            <div class="fgrp">
+                <label style="color:var(--mtxt);">Temas</label>
+                <select id="thSel">
+                    <option value="lvl" selected>LevelUP</option>
+                    <option value="light">Claro</option>
+                    <option value="dark">Oscuro</option>
+                    <option value="mllgt">Melon Claro</option>
+                    <option value="mldrk">Melon Oscuro</option>
+                    <option value="crims">Crimson</option>
+                    <option value="nebul">Nebula</option>
+                    <option value="eybrn">Eyeburn</option>
+                </select>
+            </div>
+            <button class="btn danger" id="lgOut">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = "https://mbteomzgcinjxuvualte.supabase.co";
+        const SB_KEY = "sb_publishable_FoR1C7KBX980x3TNbblzsw_9hGOLgqB";
+        const sb = supabase.createClient(SB_URL, SB_KEY);
+
+        // Credenciales Maestras de Administrador (compatibles con GitHub Pages)
+        const MASTER_ADMIN = {
+            email: "chris1976xd@gmail.com",
+            pass: "Chris14*$_"
+        };
+
+        let currEvt = null;
+        let winners = {};
+        let zoom = 1;
+
+        // Variables para arrastrar con click derecho (Pan)
+        let isRightDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragStartScrollLeft = 0;
+        let dragStartScrollTop = 0;
+
+        const lFrm = document.getElementById("lFrm");
+        const uInp = document.getElementById("uInp");
+        const pInp = document.getElementById("pInp");
+        const lCard = document.getElementById("lCard");
+        const mCard = document.getElementById("mCard");
+        const cCard = document.getElementById("cCard");
+        const mListCard = document.getElementById("mListCard");
+        const bView = document.getElementById("bView");
+        const eFrm = document.getElementById("eFrm");
+        const eLst = document.getElementById("eLst");
+        const bTree = document.getElementById("bTree");
+        const bTtl = document.getElementById("bTtl");
+        const sMod = document.getElementById("sMod");
+        const oStg = document.getElementById("oStg");
+        const cStg = document.getElementById("cStg");
+        const thSel = document.getElementById("thSel");
+        const lgOut = document.getElementById("lgOut");
+        const tstMsg = document.getElementById("tstMsg");
+        const cMod = document.getElementById("cMod");
+        const cWin = document.getElementById("cWin");
+        const cCls = document.getElementById("cCls");
+        const cCanv = document.getElementById("cCanv");
+        const zIn = document.getElementById("zIn");
+        const zOut = document.getElementById("zOut");
+        const zLbl = document.getElementById("zLbl");
+        const ctx = cCanv.getContext("2d");
+        let parts = [], animId = null;
+
+        thSel.addEventListener("change", (e) => {
+            document.documentElement.setAttribute("data-th", e.target.value);
+            localStorage.setItem("l_thm", e.target.value);
+        });
+
+        const sThm = localStorage.getItem("l_thm");
+        if (sThm) {
+            document.documentElement.setAttribute("data-th", sThm);
+            thSel.value = sThm;
+        }
+
+        oStg.addEventListener("click", () => sMod.classList.add("on"));
+        cStg.addEventListener("click", () => sMod.classList.remove("on"));
+        cCls.addEventListener("click", () => {
+            cMod.classList.remove("on");
+            cancelAnimationFrame(animId);
+            ctx.clearRect(0, 0, cCanv.width, cCanv.height);
+        });
+
+        // Controles de Zoom del Bracket
+        function setZoom(value) {
+            zoom = Math.min(2, Math.max(0.5, value));
+            bTree.style.zoom = zoom;
+            zLbl.innerText = `${Math.round(zoom * 100)}%`;
+        }
+
+        zIn.addEventListener("click", () => setZoom(zoom + 0.1));
+        zOut.addEventListener("click", () => setZoom(zoom - 0.1));
+        bTree.addEventListener("wheel", (e) => {
+            if (bView.style.display !== "flex") return;
+            e.preventDefault();
+            setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+        }, { passive: false });
+
+        // Arrastrar el bracket con click derecho (Pan) sincronizado con el zoom
+        bTree.addEventListener("mousedown", (e) => {
+            if (e.button === 2) { // 2 = Click derecho
+                isRightDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                dragStartScrollLeft = bTree.scrollLeft;
+                dragStartScrollTop = bTree.scrollTop;
+                bTree.classList.add("is-dragging");
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            if (!isRightDragging) return;
+            const currentZoom = zoom || 1;
+            const dx = (e.clientX - dragStartX) / currentZoom;
+            const dy = (e.clientY - dragStartY) / currentZoom;
+            bTree.scrollLeft = dragStartScrollLeft - dx;
+            bTree.scrollTop = dragStartScrollTop - dy;
+        });
+
+        window.addEventListener("mouseup", (e) => {
+            if (isRightDragging && (e.button === 2 || e.buttons === 0)) {
+                isRightDragging = false;
+                bTree.classList.remove("is-dragging");
+            }
+        });
+
+        bView.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        });
+
+        window.addEventListener("blur", () => {
+            if (isRightDragging) {
+                isRightDragging = false;
+                bTree.classList.remove("is-dragging");
+            }
+        });
+
+        function renderSession(session) {
+            if (session) {
+                lCard.style.display = "none";
+                mCard.style.display = "flex";
+            } else {
+                lCard.style.display = "flex";
+                mCard.style.display = "none";
+                cCard.style.display = "none";
+                mListCard.style.display = "none";
+                bView.style.display = "none";
+            }
+        }
+
+        // Limpiar cualquier sesión persistida previa para que SIEMPRE pida credenciales al entrar
+        localStorage.removeItem("sudo_levelup_auth");
+        sessionStorage.removeItem("sudo_levelup_auth");
+        renderSession(null);
+
+        // Manejador del Login con soporte para Chris1976xd@gmail.com / Chris14*$_
+        lFrm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const emailVal = uInp.value.trim().toLowerCase();
+            const passVal = pInp.value;
+
+            // 1. Verificación directa del perfil administrador
+            if (emailVal === MASTER_ADMIN.email.toLowerCase() && passVal === MASTER_ADMIN.pass) {
+                renderSession({ user: { email: MASTER_ADMIN.email } });
+                uInp.value = "";
+                pInp.value = "";
+                return;
+            }
+
+            // 2. Si no coincide localmente, intentamos autenticación con Supabase Auth
+            const { data, error } = await sb.auth.signInWithPassword({
+                email: uInp.value,
+                password: pInp.value
+            });
+
+            if (!error && data && data.user) {
+                renderSession(data.session);
+                uInp.value = "";
+                pInp.value = "";
+            } else {
+                // Credenciales incorrectas -> Jumpscare
+                document.body.classList.add("err");
+                setTimeout(() => document.body.classList.remove("err"), 3000);
+            }
+        });
+
+        lgOut.addEventListener("click", async () => {
+            sMod.classList.remove("on");
+            uInp.value = "";
+            pInp.value = "";
+            await sb.auth.signOut();
+            renderSession(null);
+        });
+
+        document.getElementById("bCrt").addEventListener("click", () => {
+            mCard.style.display = "none";
+            cCard.style.display = "flex";
+        });
+
+        document.getElementById("bCnlCrt").addEventListener("click", () => {
+            cCard.style.display = "none";
+            mCard.style.display = "flex";
+        });
+
+        document.getElementById("bCnlMng").addEventListener("click", () => {
+            mListCard.style.display = "none";
+            mCard.style.display = "flex";
+        });
+
+        document.getElementById("bClsB").addEventListener("click", () => {
+            bView.style.display = "none";
+            mCard.style.display = "flex";
+            isRightDragging = false;
+            bTree.classList.remove("is-dragging");
+        });
+
+        eFrm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const title = document.getElementById("eTtl").value.trim();
+            const description = document.getElementById("eDsc").value.trim();
+            const max_players = parseInt(document.getElementById("eCap").value);
+
+            const { data, error } = await sb.from("events").insert([{
+                title, description, max_players, bracket_state: {}
+            }]).select().single();
+
+            if (!error && data) {
+                cCard.style.display = "none";
+                openBracket(data);
+            } else if (error) {
+                alert("Error al crear evento: " + error.message);
+            }
+        });
+
+        document.getElementById("bMng").addEventListener("click", async () => {
+            mCard.style.display = "none";
+            mListCard.style.display = "flex";
+            loadEvents();
+        });
+
+        async function loadEvents() {
+            eLst.innerHTML = "Cargando...";
+            const { data, error } = await sb.from("events").select("*").order("created_at", { ascending: false });
+            if (error || !data) {
+                eLst.innerHTML = "Error al cargar eventos";
+                return;
+            }
+            if (data.length === 0) {
+                eLst.innerHTML = "No hay eventos creados.";
+                return;
+            }
+            eLst.innerHTML = "";
+            data.forEach(evt => {
+                const item = document.createElement("div");
+                item.className = "eitem";
+                item.innerHTML = `
+                    <div>
+                        <strong style="color:var(--act);">${evt.title}</strong>
+                        <div style="font-size:0.75rem; color:var(--mtxt);">${evt.max_players} Jugadores</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn sm" onclick='viewEvt(${JSON.stringify(evt)})'>Ver</button>
+                        <button class="btn danger sm" onclick='delEvt("${evt.id}")'>✕</button>
+                    </div>
+                `;
+                eLst.appendChild(item);
+            });
+        }
+
+        window.viewEvt = (evt) => {
+            mListCard.style.display = "none";
+            openBracket(evt);
+        };
+
+        window.delEvt = async (id) => {
+            if (!confirm("¿Seguro que deseas eliminar este evento?")) return;
+            await sb.from("participants").delete().eq("event_id", id);
+            await sb.from("events").delete().eq("id", id);
+            loadEvents();
+        };
+
+        async function openBracket(evt) {
+            currEvt = evt;
+            winners = evt.bracket_state || {};
+            bTtl.innerText = `${evt.title}`;
+            setZoom(1);
+            bTree.scrollLeft = 0;
+            bTree.scrollTop = 0;
+            bView.style.display = "flex";
+            renderTree();
+        }
+
+        async function renderTree() {
+            bTree.innerHTML = "";
+            const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id).order("seed", { ascending: true });
+
+            const N = currEvt.max_players;
+
+            let targetPower = 2;
+            while (targetPower * 2 <= N) {
+                targetPower *= 2;
+            }
+            if (targetPower === N) targetPower = N;
+
+            const numPrelimMatches = N - targetPower;
+            const numDirectPlayers = N - (numPrelimMatches * 2);
+
+            let pMap = {};
+            if (players) {
+                players.forEach(p => pMap[p.seed] = p.name);
+            }
+
+            const mainRoundsCount = Math.log2(targetPower);
+            const totalRounds = numPrelimMatches > 0 ? mainRoundsCount + 1 : mainRoundsCount;
+
+            const MATCH_HEIGHT = 90;
+            const BASE_GAP = 20;
+
+            for (let r = 0; r < totalRounds; r++) {
+                const rDiv = document.createElement("div");
+                rDiv.className = "rnd";
+
+                const isPrelimRound = (numPrelimMatches > 0 && r === 0);
+                const mainRoundIndex = numPrelimMatches > 0 ? r - 1 : r;
+
+                let matchesInRound = isPrelimRound ? numPrelimMatches : targetPower / Math.pow(2, mainRoundIndex + 1);
+
+                let rName = "";
+                if (isPrelimRound) {
+                    rName = `Ronda de ${N}`;
+                } else {
+                    const playersInRound = matchesInRound * 2;
+                    if (playersInRound === 2) rName = "Final";
+                    else if (playersInRound === 4) rName = "Semifinales";
+                    else if (playersInRound === 8) rName = "Cuartos";
+                    else if (playersInRound === 16) rName = "Octavos";
+                    else if (playersInRound === 32) rName = "Ronda de 32";
+                    else if (playersInRound === 64) rName = "Ronda de 64";
+                    else rName = `Ronda de ${playersInRound}`;
+                }
+
+                const rHdr = document.createElement("div");
+                rHdr.className = "rtitle";
+                rHdr.innerText = rName;
+                rDiv.appendChild(rHdr);
+
+                const currentSlotHeight = (MATCH_HEIGHT + BASE_GAP) * Math.pow(2, isPrelimRound ? 0 : mainRoundIndex);
+
+                for (let m = 0; m < matchesInRound; m++) {
+                    const mWrap = document.createElement("div");
+                    mWrap.className = "mch-wrap";
+                    mWrap.style.height = `${currentSlotHeight}px`;
+
+                    const mBox = document.createElement("div");
+                    mBox.className = "mch";
+                    mBox.id = `mch_${r}_${m}`;
+
+                    let p1 = "", p2 = "";
+
+                    if (isPrelimRound) {
+                        let s1 = numDirectPlayers + (m * 2) + 1;
+                        let s2 = numDirectPlayers + (m * 2) + 2;
+                        p1 = pMap[s1] || `Seed ${s1}`;
+                        p2 = pMap[s2] || `Seed ${s2}`;
+                    } else if (r === (numPrelimMatches > 0 ? 1 : 0)) {
+                        if (numPrelimMatches > 0 && m < numPrelimMatches) {
+                            let s1 = (m * 2) + 1;
+                            let s2 = (m * 2) + 2;
+                            p1 = pMap[s1] || `Seed ${s1}`;
+                            p2 = winners[`0_${m}`] || `Ganador Prelim M${m+1}`;
+                        } else {
+                            let s1 = (m * 2) + 1;
+                            let s2 = (m * 2) + 2;
+                            p1 = pMap[s1] || `Seed ${s1}`;
+                            p2 = pMap[s2] || `Seed ${s2}`;
+                        }
+                    } else {
+                        p1 = winners[`${r-1}_${m*2}`] || `Esperando M${m*2+1}`;
+                        p2 = winners[`${r-1}_${m*2+1}`] || `Esperando M${m*2+2}`;
+                    }
+
+                    const mKey = `${r}_${m}`;
+                    const curWin = winners[mKey];
+
+                    let p1Class = `ply ${!p1 || p1.startsWith('Esperando') || p1.startsWith('Ganador') ? 'empty' : ''} ${curWin && curWin === p1 ? 'win' : ''}`;
+                    let p2Class = `ply ${!p2 || p2.startsWith('Esperando') || p2.startsWith('Ganador') ? 'empty' : ''} ${curWin && curWin === p2 ? 'win' : ''}`;
+
+                    mBox.innerHTML = `
+                        <div class="${p1Class}" onclick="pickWinner('${r}', '${m}', '${p1}', '${p2}')"><span>${p1}</span></div>
+                        <div class="${p2Class}" onclick="pickWinner('${r}', '${m}', '${p2}', '${p1}')"><span>${p2}</span></div>
+                    `;
+                    mWrap.appendChild(mBox);
+                    rDiv.appendChild(mWrap);
+                }
+                bTree.appendChild(rDiv);
+
+                if (r < totalRounds - 1) {
+                    const cDiv = document.createElement("div");
+                    cDiv.className = "conn-col";
+
+                    if (isPrelimRound) {
+                        for (let c = 0; c < numPrelimMatches; c++) {
+                            const block = document.createElement("div");
+                            block.className = "conn-block";
+                            block.style.height = `${currentSlotHeight}px`;
+
+                            const line = document.createElement("div");
+                            line.className = "conn-line straight";
+                            block.appendChild(line);
+                            cDiv.appendChild(block);
+                        }
+                    } else {
+                        const nextMatches = matchesInRound / 2;
+                        for (let c = 0; c < nextMatches; c++) {
+                            const block = document.createElement("div");
+                            block.className = "conn-block";
+                            block.style.height = `${currentSlotHeight * 2}px`;
+
+                            const line = document.createElement("div");
+                            line.className = "conn-line";
+                            line.style.top = `${currentSlotHeight / 2}px`;
+                            line.style.height = `${currentSlotHeight}px`;
+
+                            block.appendChild(line);
+                            cDiv.appendChild(block);
+                        }
+                    }
+                    bTree.appendChild(cDiv);
+                }
+            }
+        }
+
+        function showIllegalWarning(r, m) {
+            const mBox = document.getElementById(`mch_${r}_${m}`);
+            if (mBox) {
+                mBox.classList.add("illegal");
+                setTimeout(() => mBox.classList.remove("illegal"), 300);
+            }
+            tstMsg.classList.add("show");
+            setTimeout(() => tstMsg.classList.remove("show"), 2500);
+        }
+
+        function launchConfetti() {
+            cCanv.width = window.innerWidth;
+            cCanv.height = window.innerHeight;
+            parts = [];
+            const clrs = ['#00ff88', '#00aaee', '#ff9a00', '#ff2a55', '#a855f7', '#ffffff'];
+            for (let i = 0; i < 120; i++) {
+                parts.push({
+                    x: Math.random() * cCanv.width,
+                    y: Math.random() * cCanv.height + cCanv.height,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: -(Math.random() * 4 + 2),
+                    sz: Math.random() * 8 + 4,
+                    clr: clrs[Math.floor(Math.random() * clrs.length)]
+                });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, cCanv.width, cCanv.height);
+                parts.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.y < -10) p.y = cCanv.height + 10;
+                    ctx.fillStyle = p.clr;
+                    ctx.fillRect(p.x, p.y, p.sz, p.sz);
+                });
+                animId = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        window.pickWinner = async (r, m, selected, opponent) => {
+            const isValid = (p) => p && p !== "" && !p.startsWith("Seed") && !p.startsWith("Esperando") && !p.startsWith("Ganador");
+
+            if (!isValid(selected) || !isValid(opponent)) {
+                showIllegalWarning(r, m);
+                return;
+            }
+
+            const mKey = `${r}_${m}`;
+            const N = currEvt.max_players;
+            let targetPower = 2;
+            while (targetPower * 2 <= N) targetPower *= 2;
+            if (targetPower === N) targetPower = N;
+            const numPrelimMatches = N - targetPower;
+            const finalRoundIndex = numPrelimMatches > 0 ? Math.log2(targetPower) : Math.log2(targetPower) - 1;
+
+            if (winners[mKey] === selected) {
+                delete winners[mKey];
+            } else {
+                winners[mKey] = selected;
+                if (parseInt(r) === finalRoundIndex) {
+                    cWin.innerText = selected;
+                    cMod.classList.add("on");
+                    launchConfetti();
+                }
+            }
+
+            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+            renderTree();
+        };
+
+        document.getElementById("bAddP").addEventListener("click", async () => {
+            const { data: players } = await sb.from("participants").select("seed").eq("event_id", currEvt.id);
+
+            const count = players ? players.length : 0;
+            if (count >= currEvt.max_players) {
+                alert("El evento ya está lleno.");
+                return;
+            }
+
+            const pName = prompt("Nombre del participante:");
+            if (!pName || !pName.trim()) return;
+            const usedSeeds = players ? players.map(p => p.seed) : [];
+            let nextSeed = 1;
+            while (usedSeeds.includes(nextSeed)) {
+                nextSeed++;
+            }
+
+            const { error } = await sb.from("participants").insert([{
+                event_id: currEvt.id,
+                name: pName.trim(),
+                seed: nextSeed
+            }]);
+
+            if (!error) {
+                renderTree();
+            }
+        });
+
+        document.getElementById("bShf").addEventListener("click", async () => {
+            const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id);
+            if (!players || players.length < 2) return;
+            winners = {};
+            await sb.from("events").update({ bracket_state: {} }).eq("id", currEvt.id);
+            let seeds = players.map(p => p.seed);
+            for (let i = seeds.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [seeds[i], seeds[j]] = [seeds[j], seeds[i]];
+            }
+            const updates = players.map((p, idx) => ({
+                id: p.id,
+                event_id: p.event_id,
+                name: p.name,
+                seed: seeds[idx]
+            }));
+            const { error } = await sb.from("participants").upsert(updates);
+            if (!error) {
+                renderTree();
+            }
+        });
+    </script>
+</body>
+</html>

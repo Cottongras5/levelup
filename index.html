@@ -165,6 +165,12 @@
             flex-shrink: 0;
         }
 
+        .btn.sm {
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            border-radius: 10px;
+        }
+
         body[data-aura="1"] .btn {
             animation: aGlow 1.2s infinite alternate ease-in-out;
         }
@@ -888,9 +894,19 @@
                 gap: 6px;
             }
 
-            .btn.ico, header nav.cnav .nbtn {
+            .btn.ico, header nav.cnav .nbtn, #admBtn {
                 width: 38px;
                 height: 38px;
+            }
+
+            #admBtn span {
+                display: none;
+            }
+
+            #admBtn {
+                padding: 0;
+                justify-content: center;
+                margin-right: 8px !important;
             }
 
             .hero {
@@ -926,6 +942,10 @@
 
     <header>
         <div class="brnd">
+            <a href="admin.html" class="btn sm" id="admBtn" title="Panel de Administración" style="margin-right: 14px; gap: 6px; text-decoration: none; color: var(--act);">
+                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/></svg>
+                <span>Admin</span>
+            </a>
             <div class="titles">
                 <span class="mtitl">LevelUP</span>
                 <span class="stitl">Unimar Gaming & E-Sports</span>
