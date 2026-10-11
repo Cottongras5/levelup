@@ -2,14 +2,15 @@
 <html lang="es" data-th="lvl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudo LevelUP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sudo LevelUP - Panel de Control Esports</title>
     <link rel="icon" type="image/png" href="../pics/a.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg: #160e29;
             --card: linear-gradient(180deg, #2d1c4c 0%, #21133b 100%);
+            --chov: linear-gradient(180deg, #38235e 0%, #3f154a 100%);
             --txt: #f3e8ff;
             --act: #00ff88;
             --brd: rgba(0, 255, 136, 0.25);
@@ -22,9 +23,10 @@
         [data-th="light"] {
             --bg: #daeaff;
             --card: #ffffff;
+            --chov: #f0f7ff;
             --txt: #1c2038;
             --act: #00aaee;
-            --brd: #ffffff;
+            --brd: #c0d8f0;
             --sbar: #ffffff;
             --mtxt: #697896;
             --glow: rgba(0, 170, 238, 0.3);
@@ -34,30 +36,33 @@
         [data-th="dark"] {
             --bg: #14161c;
             --card: #21252b;
+            --chov: #2a2f37;
             --txt: #abb2bf;
-            --act: #00aaee;
+            --act: #00ff88;
             --brd: #3b4048;
             --sbar: #21252b;
             --mtxt: #5c6370;
-            --glow: rgba(0, 170, 238, 0.3);
+            --glow: rgba(0, 255, 136, 0.3);
             --shd: 0 5px 20px rgba(0, 0, 0, 0.4);
         }
 
         [data-th="mllgt"] {
             --bg: #9ef5ff;
             --card: #e3fbff;
+            --chov: #c8f5fc;
             --txt: #224248;
             --act: #ff9a00;
-            --brd: #e3fbff;
+            --brd: #a2e2ec;
             --sbar: #e3fbff;
             --mtxt: #5d838a;
             --glow: rgba(255, 154, 0, 0.35);
-            --shd: 0 5px 18px rgba(0, 100, 200, 0.18);
+            --shd: 0 5px 18px rgba(0, 180, 200, 0.18);
         }
 
         [data-th="mldrk"] {
             --bg: #204044;
             --card: rgba(50, 94, 106, 0.95);
+            --chov: rgba(65, 115, 128, 0.95);
             --txt: #e3fbff;
             --act: #ff9a00;
             --brd: #2f4a4f;
@@ -70,6 +75,7 @@
         [data-th="crims"] {
             --bg: #0d0204;
             --card: #1a050a;
+            --chov: #2c0911;
             --txt: #f0cfd5;
             --act: #ff2a55;
             --brd: #5e0f1d;
@@ -82,6 +88,7 @@
         [data-th="nebul"] {
             --bg: #090312;
             --card: #130826;
+            --chov: #220e42;
             --txt: #dcd0f5;
             --act: #a855f7;
             --brd: #4c1d95;
@@ -94,9 +101,10 @@
         [data-th="eybrn"] {
             --bg: #000000;
             --card: #111113;
+            --chov: #1e1e21;
             --txt: #ffffff;
-            --act: #666666;
-            --brd: #000000;
+            --act: #888888;
+            --brd: #28282c;
             --sbar: #111113;
             --mtxt: #777777;
             --glow: rgba(255, 255, 255, 0.2);
@@ -107,8 +115,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-            user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -119,24 +127,53 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 25px;
+            padding: 20px;
             overflow-x: hidden;
             transition: background-color 0.25s, color 0.25s;
+        }
+
+        /* Jumpscare para credenciales inválidas */
+        .warn {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ff0033;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            animation: flash 0.15s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% { background: #ff0033; color: #fff; }
+            50% { background: #000; color: #ff0033; }
+        }
+
+        body.err .warn {
+            display: flex;
         }
 
         .box {
             background: var(--card);
             border: 2px solid var(--brd);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 32px;
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             box-shadow: var(--shd);
             display: flex;
             flex-direction: column;
             gap: 20px;
             position: relative;
             animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
         }
 
         @keyframes popIn {
@@ -148,123 +185,179 @@
             color: var(--act);
             font-size: 2rem;
             text-align: center;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 15px var(--glow);
         }
 
-        form, .vgrp {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .fgrp {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        label {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--brd);
-            color: var(--txt);
-            outline: none;
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--act);
-            box-shadow: 0 0 10px var(--glow);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+        .subtitle {
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--mtxt);
+            margin-top: -12px;
+            line-height: 1.4;
         }
 
         .btn {
             background: var(--card);
-            border: 2px solid var(--brd);
-            color: var(--act);
-            padding: 16px 20px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            border-radius: 12px;
             box-shadow: var(--shd);
-            transition: transform 0.15s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            padding: 11px 18px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.15s, border-color 0.15s, box-shadow 0.15s;
             text-decoration: none;
+            user-select: none;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--glow);
+            background: var(--chov);
             border-color: var(--act);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow);
         }
 
         .btn:active {
-            transform: scale(0.95) translateY(0);
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .btn.primary {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: var(--act);
+            color: var(--act);
+        }
+
+        .btn.danger {
+            background: rgba(255, 42, 85, 0.15);
+            border-color: rgba(255, 42, 85, 0.4);
+            color: #ff2a55;
+        }
+
+        .btn.danger:hover {
+            border-color: #ff2a55;
+            box-shadow: 0 0 15px rgba(255, 42, 85, 0.35);
         }
 
         .btn.sm {
-            padding: 8px 14px;
-            font-size: 0.88rem;
+            padding: 6px 12px;
+            font-size: 0.82rem;
             border-radius: 8px;
+        }
+
+        .btn.ico {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 10px;
+            flex-shrink: 0;
         }
 
         .sbtn {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border-radius: 16px;
-            background: var(--card);
-            border: 2px solid var(--brd);
-            color: var(--txt);
+            background: transparent;
+            border: none;
             cursor: pointer;
+            color: var(--mtxt);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 6px;
+            border-radius: 50%;
+            transition: color 0.2s, transform 0.2s;
         }
 
         .sbtn:hover {
-            transform: rotate(90deg) scale(1.1);
+            color: var(--act);
+            transform: rotate(45deg);
         }
 
         .sbtn svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             fill: currentColor;
         }
 
+        .fgrp {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .frow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        label {
+            font-size: 0.82rem;
+            color: var(--mtxt);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        select,
+        textarea {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--brd);
+            border-radius: 10px;
+            padding: 11px 13px;
+            color: var(--txt);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--act);
+            box-shadow: 0 0 12px var(--glow);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        select option {
+            background: #1a1030;
+            color: #fff;
+        }
+
+        /* MODALES */
         .moly {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 250;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s ease;
+            padding: 20px;
         }
 
         .moly.on {
@@ -275,199 +368,207 @@
         .mdl {
             background: var(--sbar);
             border: 2px solid var(--brd);
-            box-shadow: var(--shd), 0 20px 40px rgba(0,0,0,0.5);
-            border-radius: 16px;
-            width: 340px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 26px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: var(--shd);
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            transform: scale(0.9) translateY(20px);
+            gap: 16px;
+            transform: scale(0.95);
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .moly.on .mdl {
-            transform: scale(1) translateY(0);
+            transform: scale(1);
         }
 
         .mhd {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 1.2rem;
             font-weight: 800;
-            font-size: 1.4rem;
             color: var(--act);
             border-bottom: 1px solid var(--brd);
             padding-bottom: 12px;
         }
 
-        .danger {
-            background: rgba(255, 42, 85, 0.15);
-            border-color: rgba(255, 42, 85, 0.4);
-            color: #ff2a55;
-        }
-
-        .danger:hover {
-            box-shadow: 0 8px 25px rgba(255, 42, 85, 0.3);
-            border-color: #ff2a55;
-        }
-
-        body.err {
-            animation: flash 0.1s infinite;
-        }
-
-        @keyframes flash {
-            0%, 100% { background-color: #ff0000; color: #ffffff; }
-            50% { background-color: #000000; color: #ff0000; }
-        }
-
-        .warn {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 0 0 20px #000;
-            text-align: center;
-            z-index: 100;
-            width: 100%;
-        }
-
-        body.err .warn {
-            display: block;
-        }
-
-        body.err .box, body.err #bView {
-            opacity: 0;
-        }
-
+        /* VISTA FULLSCREEN DEL BRACKET */
         #bView {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: var(--bg);
-            z-index: 10;
+            background-color: var(--bg);
+            z-index: 100;
+            display: none;
             flex-direction: column;
             overflow: hidden;
-            animation: fadeIn 0.2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .bhdr {
-            height: 60px;
-            padding: 0 24px;
-            background: var(--sbar);
-            border-bottom: 1px solid var(--brd);
+            padding: 10px 22px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            user-select: none;
-            z-index: 10;
+            align-items: center;
+            background: var(--card);
+            border-bottom: 1px solid var(--brd);
+            box-shadow: var(--shd);
+            z-index: 20;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .rnd-nav {
+            background: rgba(0, 0, 0, 0.35);
+            border-bottom: 1px solid var(--brd);
+            padding: 5px 20px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            z-index: 15;
+        }
+        .rnd-nav::-webkit-scrollbar { display: none; }
+
+        .rjump-btn {
+            background: var(--card);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+
+        .rjump-btn:hover {
+            border-color: var(--act);
+            color: var(--act);
         }
 
         .zctl {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px;
+            background: rgba(0, 0, 0, 0.35);
             border: 1px solid var(--brd);
             border-radius: 10px;
-            background: var(--card);
-        }
-
-        .zlbl {
-            min-width: 48px;
-            color: var(--mtxt);
-            font-size: 0.82rem;
-            font-weight: 700;
-            text-align: center;
+            padding: 2px;
+            gap: 4px;
         }
 
         .zbtn {
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            font-size: 1.2rem;
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            font-weight: 800;
+            font-size: 1.1rem;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--txt);
+            cursor: pointer;
         }
 
+        .zbtn:hover {
+            color: var(--act);
+            transform: none !important;
+        }
+
+        .zlbl {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--act);
+            min-width: 44px;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* VIEWPORT Y CANVAS TRANSFORMABLE */
         .bcnt {
             flex: 1;
-            display: flex;
-            gap: 0;
-            padding: 40px;
-            overflow-x: auto;
-            overflow-y: auto;
-            align-items: flex-start;
-            cursor: default;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 28px 28px;
+            cursor: grab;
+            user-select: none;
         }
 
         .bcnt.is-dragging {
             cursor: grabbing !important;
-            user-select: none !important;
         }
 
-        .bcnt.is-dragging * {
-            cursor: grabbing !important;
-            pointer-events: none;
+        .btree-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: 0 0;
+            display: flex;
+            padding: 40px 60px 100px 60px;
+            gap: 0;
+            will-change: transform;
         }
 
         .rnd {
             display: flex;
             flex-direction: column;
-            min-width: 210px;
-            position: relative;
+            width: 250px;
+            flex-shrink: 0;
         }
 
         .rtitle {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 800;
             color: var(--act);
-            text-transform: uppercase;
             text-align: center;
-            margin-bottom: 20px;
-            height: 30px;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--brd);
+            box-shadow: var(--shd);
         }
 
-        .mch-wrap {
+        .mch-slot {
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            box-sizing: border-box;
         }
 
         .mch {
             background: var(--card);
             border: 2px solid var(--brd);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             box-shadow: var(--shd);
             width: 100%;
             z-index: 2;
-            transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
         }
 
         .mch:hover {
-            transform: scale(1.02);
             border-color: var(--act);
-            box-shadow: 0 5px 25px var(--glow);
+            box-shadow: 0 6px 25px var(--glow);
         }
 
         .mch.illegal {
             border-color: #ff2a55 !important;
-            box-shadow: 0 0 20px rgba(255, 42, 85, 0.8) !important;
+            box-shadow: 0 0 25px rgba(255, 42, 85, 0.8) !important;
             animation: shake 0.3s ease-in-out;
         }
 
@@ -477,12 +578,99 @@
             75% { transform: translateX(6px); }
         }
 
+        .ply {
+            padding: 8px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            font-size: 0.92rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--txt);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+            border: 1px solid transparent;
+            min-height: 38px;
+            gap: 6px;
+        }
+
+        .ply:hover:not(.bye):not(.empty) {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--act);
+            transform: translateX(2px);
+        }
+
+        .ply.win {
+            border: 1.5px solid var(--act) !important;
+            color: var(--act) !important;
+            font-weight: 800;
+            background: rgba(0, 255, 136, 0.14) !important;
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .ply.bye {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            color: var(--mtxt);
+            font-style: italic;
+            cursor: default;
+        }
+
+        .ply.empty {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .ply.path-highlight {
+            border-color: var(--act) !important;
+            box-shadow: 0 0 14px var(--act) !important;
+            background: rgba(0, 255, 136, 0.18) !important;
+        }
+
+        .seed-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--act);
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--brd);
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .pname {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .pscore {
+            font-size: 0.82rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            min-width: 24px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .pscore.win {
+            border-color: var(--act);
+            color: var(--act);
+            background: rgba(0, 255, 136, 0.2);
+        }
+
         .conn-col {
             display: flex;
             flex-direction: column;
-            width: 40px;
-            position: relative;
-            margin-top: 50px;
+            width: 48px;
+            flex-shrink: 0;
+            margin-top: 57px;
         }
 
         .conn-block {
@@ -490,124 +678,52 @@
             width: 100%;
         }
 
-        .conn-line {
+        .conn-arm-top {
             position: absolute;
+            top: 25%;
             left: 0;
-            width: 20px;
-            border-right: 4px solid var(--brd);
-            border-top: 4px solid var(--brd);
-            border-bottom: 4px solid var(--brd);
+            width: 50%;
+            height: 25%;
+            border-top: 2px solid var(--brd);
+            border-right: 2px solid var(--brd);
         }
 
-        .conn-line.straight {
-            border-top: none;
-            border-bottom: none;
-            border-right: none;
-            background: var(--brd);
-            top: 50% !important;
-            height: 4px !important;
-            width: 40px;
-        }
-
-        .conn-line::after {
-            content: "";
+        .conn-arm-bot {
             position: absolute;
             top: 50%;
-            right: -24px;
-            width: 20px;
-            height: 4px;
+            left: 0;
+            width: 50%;
+            height: 25%;
+            border-bottom: 2px solid var(--brd);
+            border-right: 2px solid var(--brd);
+        }
+
+        .conn-stem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 2px;
             background: var(--brd);
             transform: translateY(-50%);
         }
 
-        .conn-line.straight::after {
-            display: none;
-        }
-
-        .ply {
-            padding: 8px 16px;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 8px;
-            font-size: 1rem;
+        .champ-banner {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.15), rgba(0, 255, 136, 0.2), rgba(255, 215, 0, 0.15));
+            border-bottom: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 10px 24px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            color: var(--txt);
-            cursor: pointer;
-            transition: background 0.15s, border-color 0.15s, transform 0.1s;
-        }
-
-        .ply:hover:not(.bye):not(.empty) {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateX(2px);
-        }
-
-        .ply.win {
-            border: 1px solid var(--act);
-            color: var(--act);
-            font-weight: 800;
-            background: rgba(0, 255, 136, 0.1);
-        }
-
-        .ply.bye {
-            background: transparent;
-            border: 0px dashed rgba(255, 255, 255, 0.08);
-            min-height: 32px;
-            cursor: default;
-        }
-
-        .ply.empty {
-            opacity: 0.5;
-            cursor: default;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            background: #ff2a55;
-            color: #fff;
-            padding: 18px 20px;
-            border-radius: 16px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            box-shadow: 0 10px 30px rgba(255, 42, 85, 0.4);
-            z-index: 200;
-            opacity: 0;
-            transform: translateY(20px) scale(0.9);
-            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .elist {
-            display: flex;
-            flex-direction: column;
+            justify-content: center;
             gap: 12px;
-            max-height: 300px;
-            overflow-y: auto;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+            z-index: 15;
         }
 
-        .eitem {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--brd);
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: border-color 0.2s, background 0.2s;
-        }
-
-        .eitem:hover {
-            border-color: var(--act);
-            background: rgba(0,0,0,0.35);
-        }
-
+        /* MODAL CAMPEON */
         .cmod {
             position: fixed;
             top: 0;
@@ -641,8 +757,9 @@
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            transform: scale(0.8);
+            transform: scale(0.85);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 480px;
         }
 
         .cmod.on .cbox {
@@ -650,7 +767,7 @@
         }
 
         .cicon {
-            font-size: 5rem;
+            font-size: 4.5rem;
             animation: pulse 1.5s infinite alternate;
         }
 
@@ -660,13 +777,14 @@
         }
 
         .cttl {
-            font-size: 3rem;
+            font-size: 2.4rem;
             font-weight: 900;
             color: var(--txt);
+            line-height: 1.1;
         }
 
         .cname {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 800;
             color: var(--act);
             text-shadow: 0 0 20px var(--glow);
@@ -681,36 +799,111 @@
             pointer-events: none;
             z-index: 999;
         }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card);
+            border: 1px solid var(--act);
+            color: var(--txt);
+            padding: 14px 22px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: var(--shd), 0 8px 30px rgba(0, 0, 0, 0.5);
+            z-index: 400;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .toast.err {
+            background: #2a0b12;
+            border-color: #ff2a55;
+            color: #ff708d;
+        }
+
+        .elist {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 340px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .eitem {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--brd);
+            padding: 14px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .eitem:hover {
+            border-color: var(--act);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .game-tag-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
-    <div class="warn">Jumpscare</div>
-    <div class="toast" id="tstMsg">Chamo tu eres marico? No puedes hacer eso!</div>
+    <div class="warn">Acceso Denegado</div>
+    <div class="toast" id="tstMsg">Notificación</div>
 
     <canvas id="cCanv"></canvas>
 
+    <!-- MODAL DE CAMPEÓN -->
     <div class="cmod" id="cMod">
         <div class="cbox">
             <div class="cicon">👑</div>
-            <div class="cttl">¡Tenemos a un campeón!</div>
-            <div class="cname"><span class="acc" id="cWin"></span> ha subido de Nivel</div>
-            <button class="btn" id="cCls" style="margin-top:10px;">¡Qué fino!</button>
+            <div class="cttl">¡Tenemos a un Campeón!</div>
+            <div class="cname"><span id="cWin"></span></div>
+            <p style="color:var(--mtxt); font-size:0.95rem;">Ha dominado el torneo y subido de Nivel en LevelUP.</p>
+            <button class="btn primary" id="cCls" style="margin-top:10px; width:100%;">¡Excelente!</button>
         </div>
     </div>
 
     <!-- TARJETA DE LOGIN -->
     <div class="box" id="lCard">
         <h1>Sudo LevelUP</h1>
+        <p class="subtitle">Panel de Control de Torneos & Llaves E-Sports</p>
         <form id="lFrm" autocomplete="off">
             <div class="fgrp">
-                <label for="uInp">Correo</label>
-                <input type="email" id="uInp" name="username" placeholder="cotton@levelup.com" autocomplete="off" required>
+                <label for="uInp">Correo de Administrador</label>
+                <input type="email" id="uInp" name="username" placeholder="admin@levelup.com" autocomplete="off" required>
             </div>
             <div class="fgrp">
                 <label for="pInp">Contraseña</label>
                 <input type="password" id="pInp" name="password" placeholder="••••••••" autocomplete="new-password" required>
             </div>
-            <button type="submit" class="btn" id="lBtn">Entrar</button>
+            <button type="submit" class="btn primary" id="lBtn" style="margin-top:8px;">Iniciar Sesión</button>
         </form>
     </div>
 
@@ -720,97 +913,297 @@
             <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
         </button>
         <h1>Administrador</h1>
-        <button class="btn" id="bCrt">Crear Evento</button>
-        <button class="btn" id="bMng">Manejar Eventos</button>
-        <a href="https://levelupve.github.io/levelup/index.html" class="btn" style="border-color:var(--act); color:var(--txt);">Ir al Sitio Público →</a>
+        <p class="subtitle">Gestión Oficial de Competencias LevelUP</p>
+        <button class="btn primary" id="bCrt">➕ Crear Nuevo Torneo</button>
+        <button class="btn" id="bMng">📋 Manejar Torneos Existentes</button>
+        <a href="../index.html" class="btn" id="bHomePub" style="border-color:var(--act); color:var(--txt);">Ir al Sitio Público →</a>
     </div>
 
     <!-- CREAR NUEVO EVENTO -->
-    <div class="box" id="cCard" style="display:none;">
-        <h1>Nuevo Evento</h1>
+    <div class="box" id="cCard" style="display:none; max-width:550px;">
+        <h1>Nuevo Torneo</h1>
+        <p class="subtitle">Define la fecha, disciplina y formato de la competencia</p>
         <form id="eFrm">
             <div class="fgrp">
-                <label>Nombre del Evento</label>
-                <input type="text" id="eTtl" required>
+                <label>Nombre del Torneo</label>
+                <input type="text" id="eTtl" placeholder="Ej: Torneo Valorant UNIMAR Clausura" required>
             </div>
-            <div class="fgrp">
-                <label>Descripción</label>
-                <textarea id="eDsc"></textarea>
+
+            <div class="frow">
+                <div class="fgrp">
+                    <label>Disciplina / Juego</label>
+                    <select id="eGame">
+                        <option value="VALORANT" selected>🎯 VALORANT</option>
+                        <option value="LEAGUE OF LEGENDS">⚔️ League of Legends</option>
+                        <option value="COUNTER-STRIKE 2">💣 Counter-Strike 2</option>
+                        <option value="EA SPORTS FC">⚽ EA Sports FC 25 / FIFA</option>
+                        <option value="SUPER SMASH BROS">🥊 Super Smash Bros</option>
+                        <option value="ROCKET LEAGUE">🚗 Rocket League</option>
+                        <option value="MORTAL KOMBAT">🥋 Mortal Kombat / Fighting</option>
+                        <option value="GENERAL">🎮 General / Otro</option>
+                    </select>
+                </div>
+                <div class="fgrp">
+                    <label>Estado Inicial</label>
+                    <select id="eStatus">
+                        <option value="upcoming" selected>🟡 Próximamente</option>
+                        <option value="live">🔴 En Vivo / En Curso</option>
+                        <option value="completed">🏆 Finalizado</option>
+                    </select>
+                </div>
             </div>
+
+            <div class="frow">
+                <div class="fgrp">
+                    <label>Fecha del Torneo</label>
+                    <input type="date" id="eDate" required>
+                </div>
+                <div class="fgrp">
+                    <label>Hora del Torneo</label>
+                    <input type="time" id="eTime" value="14:00" required>
+                </div>
+            </div>
+
             <div class="fgrp">
-                <label>Cantidad de Jugadores</label>
+                <label>Capacidad de Jugadores</label>
                 <select id="eCap">
-                    <option value="8">8</option>
-                    <option value="10">10</option>
-                    <option value="12">12</option>
-                    <option value="14">14</option>
-                    <option value="16" selected>16</option>
-                    <option value="20">20</option>
-                    <option value="24">24</option>
-                    <option value="28">28</option>
-                    <option value="32">32</option>
-                    <option value="36">36</option>
-                    <option value="40">40</option>
-                    <option value="44">44</option>
-                    <option value="48">48</option>
-                    <option value="52">52</option>
-                    <option value="56">56</option>
-                    <option value="60">60</option>
-                    <option value="64">64</option>
+                    <option value="4">4 Jugadores (Semifinales)</option>
+                    <option value="8">8 Jugadores (Cuartos)</option>
+                    <option value="10">10 Jugadores (Top 6 BYEs)</option>
+                    <option value="12">12 Jugadores (Top 4 BYEs)</option>
+                    <option value="14">14 Jugadores (Top 2 BYEs)</option>
+                    <option value="16" selected>16 Jugadores (Octavos completos)</option>
+                    <option value="20">20 Jugadores</option>
+                    <option value="24">24 Jugadores</option>
+                    <option value="28">28 Jugadores</option>
+                    <option value="32">32 Jugadores</option>
+                    <option value="48">48 Jugadores</option>
+                    <option value="64">64 Jugadores</option>
                 </select>
             </div>
-            <button type="submit" class="btn">Correctisimo!</button>
-            <button type="button" class="btn danger" id="bCnlCrt">Bodrio</button>
+
+            <div class="fgrp">
+                <label>Descripción / Reglas Breves</label>
+                <textarea id="eDsc" placeholder="Detalles de mapas, premios, tolerancia de espera..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:8px;">
+                <button type="submit" class="btn primary" style="flex:1;">Guardar y Crear</button>
+                <button type="button" class="btn danger" id="bCnlCrt">Cancelar</button>
+            </div>
         </form>
     </div>
 
     <!-- LISTA DE EVENTOS -->
-    <div class="box" id="mListCard" style="display:none;">
-        <h1>Eventos Planificados</h1>
+    <div class="box" id="mListCard" style="display:none; max-width:600px;">
+        <h1>Torneos Planificados</h1>
+        <div style="position:relative; width:100%;">
+            <input type="text" id="mEvtSrch" placeholder="Buscar torneo por nombre o juego...">
+        </div>
         <div class="elist" id="eLst"></div>
-        <button type="button" class="btn danger" id="bCnlMng">Volver</button>
+        <button type="button" class="btn danger" id="bCnlMng">Volver al Menú</button>
     </div>
 
-    <!-- VISTA Y CONTROL DEL BRACKET -->
+    <!-- VISTA FULLSCREEN Y CONTROL DEL BRACKET -->
     <div id="bView">
         <div class="bhdr">
-            <h2 id="bTtl" style="color:var(--act);">Nombre</h2>
-            <div style="display:flex; gap:10px; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; flex-direction:column;">
+                    <h2 id="bTtl" style="color:var(--act); font-size:1.25rem;">Torneo</h2>
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:2px;">
+                        <span id="bGameBadge" class="game-tag-sm">🎮 ESPORTS</span>
+                        <span id="bDateDisplay" style="font-size:0.78rem; color:var(--mtxt);">📅 Fecha</span>
+                    </div>
+                </div>
+                <span id="pCountBadge" style="font-size:0.8rem; background:rgba(0,255,136,0.15); border:1px solid var(--act); color:var(--act); padding:3px 10px; border-radius:12px; font-weight:700;">0 / 16 Jugadores</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                 <!-- Controles de Zoom -->
                 <div class="zctl" aria-label="Controles de zoom">
-                    <button class="btn ico zbtn sm" id="zOut" aria-label="Alejar">−</button>
-                    <span class="zlbl" id="zLbl">100%</span>
-                    <button class="btn ico zbtn sm" id="zIn" aria-label="Acercar">+</button>
+                    <button class="zbtn" id="zOut" title="Alejar (−)">−</button>
+                    <span class="zlbl" id="zLbl" title="Clic para restablecer vista" style="cursor:pointer;">100%</span>
+                    <button class="zbtn" id="zIn" title="Acercar (+)">+</button>
                 </div>
-                <button class="btn sm" id="bAddP">+ Añadir</button>
-                <button class="btn sm" id="bShf">Mezclar</button>
-                <button class="btn danger sm" id="bClsB">Irse</button>
+                <button class="btn sm" id="bEditEvt" title="Editar fecha, juego o estado del torneo">✏️ Editar Info</button>
+                <button class="btn sm" id="bAddP" title="Añadir jugador individual">+ Añadir</button>
+                <button class="btn sm" id="bBulkP" title="Cargar participantes en masa">+ Masivo</button>
+                <button class="btn sm" id="bMngP" title="Ver lista y editar participantes">👥 Jugadores</button>
+                <button class="btn sm" id="bShf" title="Mezclar posiciones de forma segura">🎲 Mezclar</button>
+                <button class="btn sm" id="bRstB" title="Limpiar todos los resultados">🔄 Reset</button>
+                <button class="btn sm" id="bShrAdm" title="Copiar enlace público del torneo">🔗 Link</button>
+                <button class="btn sm" id="bPrintAdm" title="Imprimir o capturar bracket">📸 Captura</button>
+                <button class="btn danger sm" id="bClsB">Salir</button>
             </div>
         </div>
-        <div class="bcnt" id="bTree"></div>
+
+        <!-- Barra de navegación rápida de rondas -->
+        <div class="rnd-nav" id="rndNavAdm"></div>
+
+        <div class="champ-banner" id="champBanner" style="display:none;">
+            <span>🏆</span>
+            <span>CAMPEÓN DECLARADO: <strong id="champName" style="color:var(--act); text-transform:uppercase;"></strong></span>
+            <span>🏆</span>
+        </div>
+
+        <div class="bcnt" id="bTree">
+            <div class="btree-canvas" id="bTreeCanvas"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDICIÓN DE TORNEO -->
+    <div class="moly" id="editEvtMod">
+        <div class="mdl">
+            <div class="mhd">
+                <span>Editar Información del Torneo</span>
+                <button id="cEditEvt" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            <form id="editEvtFrm">
+                <div class="fgrp">
+                    <label>Título del Torneo</label>
+                    <input type="text" id="edTtl" required>
+                </div>
+                <div class="frow">
+                    <div class="fgrp">
+                        <label>Disciplina / Juego</label>
+                        <select id="edGame">
+                            <option value="VALORANT">🎯 VALORANT</option>
+                            <option value="LEAGUE OF LEGENDS">⚔️ League of Legends</option>
+                            <option value="COUNTER-STRIKE 2">💣 Counter-Strike 2</option>
+                            <option value="EA SPORTS FC">⚽ EA Sports FC 25 / FIFA</option>
+                            <option value="SUPER SMASH BROS">🥊 Super Smash Bros</option>
+                            <option value="ROCKET LEAGUE">🚗 Rocket League</option>
+                            <option value="MORTAL KOMBAT">🥋 Mortal Kombat / Fighting</option>
+                            <option value="GENERAL">🎮 General / Otro</option>
+                        </select>
+                    </div>
+                    <div class="fgrp">
+                        <label>Estado del Torneo</label>
+                        <select id="edStatus">
+                            <option value="upcoming">🟡 Próximamente</option>
+                            <option value="live">🔴 En Vivo / En Curso</option>
+                            <option value="completed">🏆 Finalizado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="frow">
+                    <div class="fgrp">
+                        <label>Fecha</label>
+                        <input type="date" id="edDate">
+                    </div>
+                    <div class="fgrp">
+                        <label>Hora</label>
+                        <input type="time" id="edTime">
+                    </div>
+                </div>
+                <div class="fgrp">
+                    <label>Descripción / Reglas</label>
+                    <textarea id="edDsc"></textarea>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                    <button type="submit" class="btn primary" style="flex:1;">Guardar Cambios</button>
+                    <button type="button" class="btn danger" id="cEditEvtBtn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE GESTIÓN Y MARCADOR DE PARTIDA -->
+    <div class="moly" id="mchScoreMod">
+        <div class="mdl" style="max-width:440px;">
+            <div class="mhd">
+                <span id="mchScRoundTitle">Gestionar Partida</span>
+                <button id="cMchScore" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; margin:8px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:10px; border:1px solid var(--brd);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="seed-badge" id="mchScSeed1">#1</span>
+                        <strong id="mchScP1Name" style="font-size:1rem;">Jugador 1</strong>
+                    </div>
+                    <input type="number" id="mchScInp1" min="0" max="99" style="width:65px; text-align:center; font-weight:800; font-size:1.1rem; padding:6px;" placeholder="0">
+                </div>
+
+                <div style="text-align:center; font-weight:900; color:var(--mtxt); font-size:0.85rem; letter-spacing:2px;">V S</div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:10px; border:1px solid var(--brd);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="seed-badge" id="mchScSeed2">#2</span>
+                        <strong id="mchScP2Name" style="font-size:1rem;">Jugador 2</strong>
+                    </div>
+                    <input type="number" id="mchScInp2" min="0" max="99" style="width:65px; text-align:center; font-weight:800; font-size:1.1rem; padding:6px;" placeholder="0">
+                </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+                <button class="btn primary" id="bWinP1">🏆 Declarar Victoria para <span id="winP1Label">P1</span></button>
+                <button class="btn primary" id="bWinP2">🏆 Declarar Victoria para <span id="winP2Label">P2</span></button>
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                    <button class="btn" id="bSaveOnlyScore" style="flex:1;">💾 Guardar Marcador</button>
+                    <button class="btn danger" id="bClearMatch" style="flex:1;">🔄 Limpiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CARGA MASIVA DE PARTICIPANTES -->
+    <div class="moly" id="bulkMod">
+        <div class="mdl" style="max-width:460px;">
+            <div class="mhd">
+                <span>Carga Masiva de Jugadores</span>
+                <button id="cBulk" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            <p style="font-size:0.85rem; color:var(--mtxt); line-height:1.4;">
+                Pega la lista de jugadores (uno por línea o separados por comas). Se asignarán las posiciones de Seed automáticamente.
+            </p>
+            <div class="fgrp">
+                <textarea id="bulkInp" rows="8" placeholder="Faker&#10;Simple&#10;Shroud&#10;TenZ..." style="font-family:monospace;"></textarea>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span id="bulkAvailLbl" style="font-size:0.82rem; color:var(--act); font-weight:700;"></span>
+                <button class="btn primary" id="bDoBulk">Importar Jugadores</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE GESTIÓN DE PARTICIPANTES -->
+    <div class="moly" id="playersMod">
+        <div class="mdl" style="max-width:520px; max-height:85vh; display:flex; flex-direction:column;">
+            <div class="mhd">
+                <span>Roster de Participantes</span>
+                <button id="cPlayers" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            <div style="position:relative; margin-top:4px;">
+                <input type="text" id="pFilterInp" placeholder="Buscar jugador en el roster..." style="padding:8px 12px; font-size:0.88rem;">
+            </div>
+            <div id="playersList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin:10px 0; max-height:360px; padding-right:4px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--brd); padding-top:12px;">
+                <button class="btn sm" id="pAddDirect">+ Añadir Jugador</button>
+                <button class="btn danger sm" id="cPlayersBtn">Cerrar</button>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL DE AJUSTES -->
     <div class="moly" id="sMod">
         <div class="mdl">
             <div class="mhd">
-                <span>Ajustes</span>
-                <button id="cStg" style="width:32px; height:32px; font-size:0.9rem; background:var(--card); border:1px solid var(--brd); color:var(--txt); border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+                <span>Ajustes del Sistema</span>
+                <button id="cStg" class="btn ico sm" style="width:30px;height:30px;">✕</button>
             </div>
             <div class="fgrp">
-                <label style="color:var(--mtxt);">Temas</label>
+                <label>Tema Visual</label>
                 <select id="thSel">
-                    <option value="lvl" selected>LevelUP</option>
-                    <option value="light">Claro</option>
-                    <option value="dark">Oscuro</option>
-                    <option value="mllgt">Melon Claro</option>
-                    <option value="mldrk">Melon Oscuro</option>
+                    <option value="lvl" selected>LevelUP Oscuro</option>
+                    <option value="mllgt">LevelUP Claro</option>
+                    <option value="dark">Modo Oscuro</option>
+                    <option value="light">Modo Claro</option>
                     <option value="crims">Crimson</option>
                     <option value="nebul">Nebula</option>
                     <option value="eybrn">Eyeburn</option>
                 </select>
             </div>
-            <button class="btn danger" id="lgOut">Cerrar sesión</button>
+            <button class="btn danger" id="lgOut" style="margin-top:8px;">Cerrar Sesión</button>
         </div>
     </div>
 
@@ -819,7 +1212,7 @@
         const SB_KEY = "sb_publishable_08r8vqojnUnaQDIKwUaUxw_T8-ZnukA";
         const sb = supabase.createClient(SB_URL, SB_KEY);
 
-        // Credenciales Maestras de Administrador (compatibles con GitHub Pages)
+        // Credenciales Maestras de Administrador
         const MASTER_ADMIN = {
             email: "chris1976xd@gmail.com",
             pass: "Chris14*$_"
@@ -827,15 +1220,18 @@
 
         let currEvt = null;
         let winners = {};
-        let zoom = 1;
+        let allAdminEvents = [];
+        let rtChannel = null;
+        let activeMatchContext = null;
 
-        // Variables para arrastrar con click derecho (Pan)
-        let isRightDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let dragStartScrollLeft = 0;
-        let dragStartScrollTop = 0;
+        // Estado del Pan y Zoom
+        let panX = 40, panY = 40, zoom = 1;
+        let isPanning = false;
+        let startX = 0, startY = 0;
+        let initialPanX = 0, initialPanY = 0;
+        let pinchDist = 0, pinchStartZoom = 1;
 
+        // Elementos DOM
         const lFrm = document.getElementById("lFrm");
         const uInp = document.getElementById("uInp");
         const pInp = document.getElementById("pInp");
@@ -846,8 +1242,12 @@
         const bView = document.getElementById("bView");
         const eFrm = document.getElementById("eFrm");
         const eLst = document.getElementById("eLst");
+        const mEvtSrch = document.getElementById("mEvtSrch");
         const bTree = document.getElementById("bTree");
+        const bTreeCanvas = document.getElementById("bTreeCanvas");
         const bTtl = document.getElementById("bTtl");
+        const bGameBadge = document.getElementById("bGameBadge");
+        const bDateDisplay = document.getElementById("bDateDisplay");
         const sMod = document.getElementById("sMod");
         const oStg = document.getElementById("oStg");
         const cStg = document.getElementById("cStg");
@@ -858,12 +1258,57 @@
         const cWin = document.getElementById("cWin");
         const cCls = document.getElementById("cCls");
         const cCanv = document.getElementById("cCanv");
+        const champBanner = document.getElementById("champBanner");
+        const champName = document.getElementById("champName");
         const zIn = document.getElementById("zIn");
         const zOut = document.getElementById("zOut");
         const zLbl = document.getElementById("zLbl");
+        const pCountBadge = document.getElementById("pCountBadge");
+        const bHomePub = document.getElementById("bHomePub");
+        const rndNavAdm = document.getElementById("rndNavAdm");
+
+        // Modal de Edición de Torneo
+        const editEvtMod = document.getElementById("editEvtMod");
+        const editEvtFrm = document.getElementById("editEvtFrm");
+        const bEditEvt = document.getElementById("bEditEvt");
+        const cEditEvt = document.getElementById("cEditEvt");
+        const cEditEvtBtn = document.getElementById("cEditEvtBtn");
+        const edTtl = document.getElementById("edTtl");
+        const edGame = document.getElementById("edGame");
+        const edStatus = document.getElementById("edStatus");
+        const edDate = document.getElementById("edDate");
+        const edTime = document.getElementById("edTime");
+        const edDsc = document.getElementById("edDsc");
+
+        // Modal de Gestión de Marcador
+        const mchScoreMod = document.getElementById("mchScoreMod");
+        const cMchScore = document.getElementById("cMchScore");
+        const mchScRoundTitle = document.getElementById("mchScRoundTitle");
+        const mchScSeed1 = document.getElementById("mchScSeed1");
+        const mchScSeed2 = document.getElementById("mchScSeed2");
+        const mchScP1Name = document.getElementById("mchScP1Name");
+        const mchScP2Name = document.getElementById("mchScP2Name");
+        const mchScInp1 = document.getElementById("mchScInp1");
+        const mchScInp2 = document.getElementById("mchScInp2");
+        const bWinP1 = document.getElementById("bWinP1");
+        const bWinP2 = document.getElementById("bWinP2");
+        const winP1Label = document.getElementById("winP1Label");
+        const winP2Label = document.getElementById("winP2Label");
+        const bSaveOnlyScore = document.getElementById("bSaveOnlyScore");
+        const bClearMatch = document.getElementById("bClearMatch");
+
+        // Partículas Confetti
         const ctx = cCanv.getContext("2d");
         let parts = [], animId = null;
 
+        // Fecha predeterminada de hoy para inputs
+        const todayStr = new Date().toISOString().split("T")[0];
+        document.getElementById("eDate").value = todayStr;
+
+        // Navegación universal relativa
+        if (bHomePub) bHomePub.href = "../index.html";
+
+        // Temas
         thSel.addEventListener("change", (e) => {
             document.documentElement.setAttribute("data-th", e.target.value);
             localStorage.setItem("l_thm", e.target.value);
@@ -877,67 +1322,135 @@
 
         oStg.addEventListener("click", () => sMod.classList.add("on"));
         cStg.addEventListener("click", () => sMod.classList.remove("on"));
+        sMod.addEventListener("click", (e) => {
+            if (e.target === sMod) sMod.classList.remove("on");
+        });
+
         cCls.addEventListener("click", () => {
             cMod.classList.remove("on");
-            cancelAnimationFrame(animId);
+            if (animId) cancelAnimationFrame(animId);
             ctx.clearRect(0, 0, cCanv.width, cCanv.height);
         });
 
-        // Controles de Zoom del Bracket
-        function setZoom(value) {
-            zoom = Math.min(2, Math.max(0.5, value));
-            bTree.style.zoom = zoom;
-            zLbl.innerText = `${Math.round(zoom * 100)}%`;
+        function showAdminToast(msg, isErr = false) {
+            tstMsg.innerText = msg;
+            if (isErr) tstMsg.classList.add("err");
+            else tstMsg.classList.remove("err");
+            tstMsg.classList.add("show");
+            clearTimeout(tstMsg._tid);
+            tstMsg._tid = setTimeout(() => tstMsg.classList.remove("show"), 2800);
         }
 
-        zIn.addEventListener("click", () => setZoom(zoom + 0.1));
-        zOut.addEventListener("click", () => setZoom(zoom - 0.1));
+        // CONTROLES DE ZOOM Y PAN
+        function updateTransform() {
+            bTreeCanvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+            if (zLbl) zLbl.innerText = `${Math.round(zoom * 100)}%`;
+        }
+
+        function setZoom(newZoom, cursorClientX = null, cursorClientY = null) {
+            newZoom = Math.min(2.5, Math.max(0.35, Math.round(newZoom * 100) / 100));
+            if (newZoom === zoom) return;
+
+            const rect = bTree.getBoundingClientRect();
+            const factor = newZoom / zoom;
+            const pivotX = (cursorClientX !== null ? cursorClientX - rect.left : rect.width / 2);
+            const pivotY = (cursorClientY !== null ? cursorClientY - rect.top : rect.height / 2);
+
+            panX = pivotX - (pivotX - panX) * factor;
+            panY = pivotY - (pivotY - panY) * factor;
+            zoom = newZoom;
+            updateTransform();
+        }
+
+        function resetView() {
+            zoom = 1;
+            panX = 40;
+            panY = 40;
+            updateTransform();
+        }
+
+        zIn.addEventListener("click", () => setZoom(zoom + 0.15));
+        zOut.addEventListener("click", () => setZoom(zoom - 0.15));
+        zLbl.addEventListener("click", resetView);
+
         bTree.addEventListener("wheel", (e) => {
-            if (bView.style.display !== "flex") return;
             e.preventDefault();
-            setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+            const delta = e.deltaY < 0 ? 0.12 : -0.12;
+            setZoom(zoom + delta, e.clientX, e.clientY);
         }, { passive: false });
 
-        // Arrastrar el bracket con click derecho (Pan) sincronizado con el zoom
         bTree.addEventListener("mousedown", (e) => {
-            if (e.button === 2) { // 2 = Click derecho
-                isRightDragging = true;
-                dragStartX = e.clientX;
-                dragStartY = e.clientY;
-                dragStartScrollLeft = bTree.scrollLeft;
-                dragStartScrollTop = bTree.scrollTop;
+            if (e.button === 2 || e.button === 1 || (e.button === 0 && !e.target.closest('.ply') && !e.target.closest('button'))) {
+                isPanning = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialPanX = panX;
+                initialPanY = panY;
                 bTree.classList.add("is-dragging");
                 e.preventDefault();
             }
         });
 
         window.addEventListener("mousemove", (e) => {
-            if (!isRightDragging) return;
-            const currentZoom = zoom || 1;
-            const dx = (e.clientX - dragStartX) / currentZoom;
-            const dy = (e.clientY - dragStartY) / currentZoom;
-            bTree.scrollLeft = dragStartScrollLeft - dx;
-            bTree.scrollTop = dragStartScrollTop - dy;
+            if (!isPanning) return;
+            panX = initialPanX + (e.clientX - startX);
+            panY = initialPanY + (e.clientY - startY);
+            updateTransform();
         });
 
-        window.addEventListener("mouseup", (e) => {
-            if (isRightDragging && (e.button === 2 || e.buttons === 0)) {
-                isRightDragging = false;
+        window.addEventListener("mouseup", () => {
+            if (isPanning) {
+                isPanning = false;
                 bTree.classList.remove("is-dragging");
             }
         });
 
-        bView.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-        });
-
-        window.addEventListener("blur", () => {
-            if (isRightDragging) {
-                isRightDragging = false;
-                bTree.classList.remove("is-dragging");
+        // Táctil
+        bTree.addEventListener("touchstart", (e) => {
+            if (e.touches.length === 1 && !e.target.closest('.ply')) {
+                isPanning = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                initialPanX = panX;
+                initialPanY = panY;
+            } else if (e.touches.length === 2) {
+                isPanning = false;
+                pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                pinchStartZoom = zoom;
             }
+        }, { passive: true });
+
+        bTree.addEventListener("touchmove", (e) => {
+            if (isPanning && e.touches.length === 1) {
+                panX = initialPanX + (e.touches[0].clientX - startX);
+                panY = initialPanY + (e.touches[0].clientY - startY);
+                updateTransform();
+            } else if (e.touches.length === 2 && pinchDist > 0) {
+                const curDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const rect = bTree.getBoundingClientRect();
+                const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+                const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+                setZoom(pinchStartZoom * (curDist / pinchDist), midX, midY);
+            }
+        }, { passive: true });
+
+        bTree.addEventListener("touchend", () => {
+            isPanning = false;
+            pinchDist = 0;
         });
 
+        bTree.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        function jumpToRoundAdm(rIndex) {
+            const roundEls = bTreeCanvas.querySelectorAll(".rnd");
+            if (!roundEls[rIndex]) return;
+            const rect = bTree.getBoundingClientRect();
+            const rOffset = roundEls[rIndex].offsetLeft;
+            panX = (rect.width / 2) - ((rOffset + 125) * zoom);
+            updateTransform();
+        }
+
+        // Sesión
         function renderSession(session) {
             if (session) {
                 lCard.style.display = "none";
@@ -950,27 +1463,21 @@
                 bView.style.display = "none";
             }
         }
-
-        // Limpiar cualquier sesión persistida previa para que SIEMPRE pida credenciales al entrar
-        localStorage.removeItem("sudo_levelup_auth");
-        sessionStorage.removeItem("sudo_levelup_auth");
         renderSession(null);
 
-        // Manejador del Login con soporte para Chris1976xd@gmail.com / Chris14*$_
         lFrm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const emailVal = uInp.value.trim().toLowerCase();
             const passVal = pInp.value;
 
-            // 1. Verificación directa del perfil administrador
             if (emailVal === MASTER_ADMIN.email.toLowerCase() && passVal === MASTER_ADMIN.pass) {
                 renderSession({ user: { email: MASTER_ADMIN.email } });
                 uInp.value = "";
                 pInp.value = "";
+                showAdminToast("Bienvenido, Super Administrador");
                 return;
             }
 
-            // 2. Si no coincide localmente, intentamos autenticación con Supabase Auth
             const { data, error } = await sb.auth.signInWithPassword({
                 email: uInp.value,
                 password: pInp.value
@@ -980,10 +1487,10 @@
                 renderSession(data.session);
                 uInp.value = "";
                 pInp.value = "";
+                showAdminToast("Sesión iniciada");
             } else {
-                // Credenciales incorrectas -> Jumpscare
                 document.body.classList.add("err");
-                setTimeout(() => document.body.classList.remove("err"), 3000);
+                setTimeout(() => document.body.classList.remove("err"), 2500);
             }
         });
 
@@ -993,6 +1500,7 @@
             pInp.value = "";
             await sb.auth.signOut();
             renderSession(null);
+            showAdminToast("Sesión cerrada");
         });
 
         document.getElementById("bCrt").addEventListener("click", () => {
@@ -1013,169 +1521,328 @@
         document.getElementById("bClsB").addEventListener("click", () => {
             bView.style.display = "none";
             mCard.style.display = "flex";
-            isRightDragging = false;
-            bTree.classList.remove("is-dragging");
+            if (rtChannel) {
+                sb.removeChannel(rtChannel);
+                rtChannel = null;
+            }
         });
 
+        // Crear Torneo con Fecha y Metadatos
         eFrm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const title = document.getElementById("eTtl").value.trim();
             const description = document.getElementById("eDsc").value.trim();
             const max_players = parseInt(document.getElementById("eCap").value);
+            const game = document.getElementById("eGame").value;
+            const date = document.getElementById("eDate").value;
+            const time = document.getElementById("eTime").value;
+            const status = document.getElementById("eStatus").value;
+
+            const bracket_state = {
+                _meta: { game, date, time, status },
+                scores: {}
+            };
 
             const { data, error } = await sb.from("events").insert([{
-                title, description, max_players, bracket_state: {}
+                title, description, max_players, bracket_state
             }]).select().single();
 
             if (!error && data) {
                 cCard.style.display = "none";
+                document.getElementById("eTtl").value = "";
+                document.getElementById("eDsc").value = "";
+                showAdminToast("¡Torneo programado exitosamente!");
                 openBracket(data);
-            } else if (error) {
-                alert("Error al crear evento: " + error.message);
+            } else {
+                alert("Error al crear evento: " + (error ? error.message : "Error desconocido"));
             }
         });
 
-        document.getElementById("bMng").addEventListener("click", async () => {
+        // Editar Torneo Modal
+        bEditEvt.addEventListener("click", () => {
+            if (!currEvt) return;
+            const meta = (currEvt.bracket_state && currEvt.bracket_state._meta) ? currEvt.bracket_state._meta : {};
+            edTtl.value = currEvt.title || '';
+            edDsc.value = currEvt.description || '';
+            edGame.value = meta.game || 'VALORANT';
+            edStatus.value = meta.status || 'upcoming';
+            edDate.value = meta.date || todayStr;
+            edTime.value = meta.time || '14:00';
+            editEvtMod.classList.add("on");
+        });
+
+        cEditEvt.addEventListener("click", () => editEvtMod.classList.remove("on"));
+        cEditEvtBtn.addEventListener("click", () => editEvtMod.classList.remove("on"));
+
+        editEvtFrm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!currEvt) return;
+
+            const updatedTitle = edTtl.value.trim();
+            const updatedDsc = edDsc.value.trim();
+            const updatedGame = edGame.value;
+            const updatedStatus = edStatus.value;
+            const updatedDate = edDate.value;
+            const updatedTime = edTime.value;
+
+            if (!winners._meta) winners._meta = {};
+            winners._meta.game = updatedGame;
+            winners._meta.status = updatedStatus;
+            winners._meta.date = updatedDate;
+            winners._meta.time = updatedTime;
+
+            const { error } = await sb.from("events").update({
+                title: updatedTitle,
+                description: updatedDsc,
+                bracket_state: winners
+            }).eq("id", currEvt.id);
+
+            if (!error) {
+                currEvt.title = updatedTitle;
+                currEvt.description = updatedDsc;
+                currEvt.bracket_state = winners;
+                bTtl.innerText = updatedTitle;
+                bGameBadge.innerText = `🎮 ${updatedGame}`;
+                bDateDisplay.innerText = `📅 ${updatedDate} a las ${updatedTime}`;
+                editEvtMod.classList.remove("on");
+                showAdminToast("✅ Datos del torneo actualizados");
+            } else {
+                alert("Error al actualizar: " + error.message);
+            }
+        });
+
+        // Cargar Eventos
+        document.getElementById("bMng").addEventListener("click", () => {
             mCard.style.display = "none";
             mListCard.style.display = "flex";
             loadEvents();
         });
 
-        async function loadEvents() {
-            eLst.innerHTML = "Cargando...";
-            const { data, error } = await sb.from("events").select("*").order("created_at", { ascending: false });
-            if (error || !data) {
-                eLst.innerHTML = "Error al cargar eventos";
-                return;
-            }
-            if (data.length === 0) {
-                eLst.innerHTML = "No hay eventos creados.";
+        function renderAdminEventsList(list) {
+            if (!list || list.length === 0) {
+                eLst.innerHTML = "<div style='text-align:center; padding:24px; color:var(--mtxt);'>No se encontraron torneos registrados.</div>";
                 return;
             }
             eLst.innerHTML = "";
-            data.forEach(evt => {
+            list.forEach(evt => {
+                const meta = (evt.bracket_state && evt.bracket_state._meta) ? evt.bracket_state._meta : {};
+                const gameName = meta.game || "ESPORTS";
+                const dateStr = meta.date ? `${meta.date} ${meta.time || ''}` : 'Sin fecha';
+
                 const item = document.createElement("div");
                 item.className = "eitem";
                 item.innerHTML = `
-                    <div>
-                        <strong style="color:var(--act);">${evt.title}</strong>
-                        <div style="font-size:0.75rem; color:var(--mtxt);">${evt.max_players} Jugadores</div>
+                    <div style="overflow:hidden;">
+                        <strong style="color:var(--act); font-size:1.05rem; display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${evt.title}</strong>
+                        <div style="font-size:0.78rem; color:var(--mtxt); margin-top:3px; display:flex; gap:8px; align-items:center;">
+                            <span class="game-tag-sm">${gameName}</span>
+                            <span>📅 ${dateStr}</span>
+                            <span>⚔️ ${evt.max_players} Jug.</span>
+                        </div>
                     </div>
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn sm" onclick='viewEvt(${JSON.stringify(evt)})'>Ver</button>
-                        <button class="btn danger sm" onclick='delEvt("${evt.id}")'>✕</button>
+                    <div style="display:flex; gap:8px; flex-shrink:0;">
+                        <button class="btn sm primary open-btn">Abrir</button>
+                        <button class="btn danger sm del-btn" title="Eliminar torneo">✕</button>
                     </div>
                 `;
+                item.querySelector(".open-btn").addEventListener("click", () => {
+                    mListCard.style.display = "none";
+                    openBracket(evt);
+                });
+                item.querySelector(".del-btn").addEventListener("click", () => delEvt(evt.id, evt.title));
                 eLst.appendChild(item);
             });
         }
 
-        window.viewEvt = (evt) => {
-            mListCard.style.display = "none";
-            openBracket(evt);
-        };
+        async function loadEvents() {
+            eLst.innerHTML = "<div style='text-align:center; padding:24px; color:var(--mtxt);'>Cargando torneos...</div>";
+            const { data, error } = await sb.from("events").select("*").order("created_at", { ascending: false });
+            if (error || !data) {
+                eLst.innerHTML = "<div style='text-align:center; padding:24px; color:#ff2a55;'>Error al cargar torneos.</div>";
+                return;
+            }
+            allAdminEvents = data;
+            renderAdminEventsList(allAdminEvents);
+        }
 
-        window.delEvt = async (id) => {
-            if (!confirm("¿Seguro que deseas eliminar este evento?")) return;
+        if (mEvtSrch) {
+            mEvtSrch.addEventListener("input", (e) => {
+                const term = e.target.value.trim().toLowerCase();
+                if (!term) {
+                    renderAdminEventsList(allAdminEvents);
+                    return;
+                }
+                renderAdminEventsList(allAdminEvents.filter(ev => {
+                    const meta = (ev.bracket_state && ev.bracket_state._meta) ? ev.bracket_state._meta : {};
+                    const g = meta.game || '';
+                    return (ev.title && ev.title.toLowerCase().includes(term)) || g.toLowerCase().includes(term);
+                }));
+            });
+        }
+
+        async function delEvt(id, title) {
+            if (!confirm(`¿Estás seguro de que deseas eliminar permanentemente el torneo "${title}" y todos sus participantes?`)) return;
             await sb.from("participants").delete().eq("event_id", id);
             await sb.from("events").delete().eq("id", id);
+            showAdminToast("Torneo eliminado");
             loadEvents();
-        };
+        }
+
+        // ALGORITMO OFICIAL DE SEEDING ESPORTS (ESTÁNDAR OLÍMPICO)
+        function getSeededOrder(power) {
+            let order = [1, 2];
+            while (order.length < power) {
+                const next = [];
+                const sum = (order.length * 2) + 1;
+                for (let i = 0; i < order.length; i++) {
+                    next.push(order[i]);
+                    next.push(sum - order[i]);
+                }
+                order = next;
+            }
+            return order;
+        }
+
+        function subscribeRealtime(eventId) {
+            if (rtChannel) {
+                sb.removeChannel(rtChannel);
+                rtChannel = null;
+            }
+            try {
+                rtChannel = sb.channel(`realtime_admin_${eventId}`)
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'events',
+                        filter: `id=eq.${eventId}`
+                    }, (payload) => {
+                        if (payload.new && currEvt && currEvt.id === eventId) {
+                            currEvt = payload.new;
+                            winners = payload.new.bracket_state || {};
+                            renderTree();
+                        }
+                    })
+                    .on('postgres_changes', {
+                        event: '*',
+                        schema: 'public',
+                        table: 'participants',
+                        filter: `event_id=eq.${eventId}`
+                    }, () => {
+                        if (currEvt && currEvt.id === eventId) {
+                            renderTree();
+                        }
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.warn("Realtime error:", err);
+            }
+        }
 
         async function openBracket(evt) {
             currEvt = evt;
             winners = evt.bracket_state || {};
-            bTtl.innerText = `${evt.title}`;
-            setZoom(1);
-            bTree.scrollLeft = 0;
-            bTree.scrollTop = 0;
+            bTtl.innerText = evt.title;
+
+            const meta = winners._meta || {};
+            bGameBadge.innerText = `🎮 ${meta.game || 'ESPORTS'}`;
+            bDateDisplay.innerText = meta.date ? `📅 ${meta.date} a las ${meta.time || '14:00'}` : '📅 Fecha no asignada';
+
+            resetView();
             bView.style.display = "flex";
+            subscribeRealtime(evt.id);
             renderTree();
         }
 
+        // RENDERIZADO DEL BRACKET
         async function renderTree() {
-            bTree.innerHTML = "";
+            bTreeCanvas.innerHTML = "";
+            rndNavAdm.innerHTML = "";
             const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id).order("seed", { ascending: true });
 
-            const N = currEvt.max_players;
+            const N = currEvt.max_players || 16;
+            let P = 2;
+            while (P < N) P *= 2;
 
-            let targetPower = 2;
-            while (targetPower * 2 <= N) {
-                targetPower *= 2;
-            }
-            if (targetPower === N) targetPower = N;
-
-            const numPrelimMatches = N - targetPower;
-            const numDirectPlayers = N - (numPrelimMatches * 2);
+            const totalRounds = Math.log2(P);
+            const seededOrder = getSeededOrder(P);
+            const scores = (winners && winners.scores) ? winners.scores : {};
 
             let pMap = {};
             if (players) {
                 players.forEach(p => pMap[p.seed] = p.name);
             }
 
-            const mainRoundsCount = Math.log2(targetPower);
-            const totalRounds = numPrelimMatches > 0 ? mainRoundsCount + 1 : mainRoundsCount;
+            if (pCountBadge) {
+                pCountBadge.innerText = `${players ? players.length : 0} / ${N} Jugadores`;
+            }
 
-            const MATCH_HEIGHT = 90;
-            const BASE_GAP = 20;
+            // Detección de Campeón
+            const finalKey = `${totalRounds - 1}_0`;
+            const champ = winners[finalKey];
+            if (champ && !champ.startsWith("Esperando") && !champ.startsWith("Seed") && champ !== "BYE") {
+                champName.innerText = champ;
+                champBanner.style.display = "flex";
+            } else {
+                champBanner.style.display = "none";
+            }
+
+            const BASE_SLOT_HEIGHT = 120;
+            let stateMutated = false;
 
             for (let r = 0; r < totalRounds; r++) {
+                const matchesInRound = P / Math.pow(2, r + 1);
+                const currentSlotHeight = BASE_SLOT_HEIGHT * Math.pow(2, r);
+
                 const rDiv = document.createElement("div");
                 rDiv.className = "rnd";
 
-                const isPrelimRound = (numPrelimMatches > 0 && r === 0);
-                const mainRoundIndex = numPrelimMatches > 0 ? r - 1 : r;
-
-                let matchesInRound = isPrelimRound ? numPrelimMatches : targetPower / Math.pow(2, mainRoundIndex + 1);
-
                 let rName = "";
-                if (isPrelimRound) {
-                    rName = `Ronda de ${N}`;
-                } else {
-                    const playersInRound = matchesInRound * 2;
-                    if (playersInRound === 2) rName = "Final";
-                    else if (playersInRound === 4) rName = "Semifinales";
-                    else if (playersInRound === 8) rName = "Cuartos";
-                    else if (playersInRound === 16) rName = "Octavos";
-                    else if (playersInRound === 32) rName = "Ronda de 32";
-                    else if (playersInRound === 64) rName = "Ronda de 64";
-                    else rName = `Ronda de ${playersInRound}`;
-                }
+                const playersInRound = matchesInRound * 2;
+                if (playersInRound === 2) rName = "Gran Final 🏆";
+                else if (playersInRound === 4) rName = "Semifinales";
+                else if (playersInRound === 8) rName = "Cuartos de Final";
+                else if (playersInRound === 16) rName = "Octavos de Final";
+                else if (playersInRound === 32) rName = "Ronda de 32";
+                else rName = `Ronda de ${playersInRound}`;
 
                 const rHdr = document.createElement("div");
                 rHdr.className = "rtitle";
                 rHdr.innerText = rName;
                 rDiv.appendChild(rHdr);
 
-                const currentSlotHeight = (MATCH_HEIGHT + BASE_GAP) * Math.pow(2, isPrelimRound ? 0 : mainRoundIndex);
+                // Botón de salto de ronda
+                const jumpBtn = document.createElement("button");
+                jumpBtn.className = "rjump-btn";
+                jumpBtn.innerText = rName;
+                jumpBtn.addEventListener("click", () => jumpToRoundAdm(r));
+                rndNavAdm.appendChild(jumpBtn);
 
                 for (let m = 0; m < matchesInRound; m++) {
-                    const mWrap = document.createElement("div");
-                    mWrap.className = "mch-wrap";
-                    mWrap.style.height = `${currentSlotHeight}px`;
+                    const mSlot = document.createElement("div");
+                    mSlot.className = "mch-slot";
+                    mSlot.style.height = `${currentSlotHeight}px`;
 
                     const mBox = document.createElement("div");
                     mBox.className = "mch";
                     mBox.id = `mch_${r}_${m}`;
 
                     let p1 = "", p2 = "";
+                    let seed1 = null, seed2 = null;
 
-                    if (isPrelimRound) {
-                        let s1 = numDirectPlayers + (m * 2) + 1;
-                        let s2 = numDirectPlayers + (m * 2) + 2;
-                        p1 = pMap[s1] || `Seed ${s1}`;
-                        p2 = pMap[s2] || `Seed ${s2}`;
-                    } else if (r === (numPrelimMatches > 0 ? 1 : 0)) {
-                        if (numPrelimMatches > 0 && m < numPrelimMatches) {
-                            let s1 = (m * 2) + 1;
-                            let s2 = (m * 2) + 2;
-                            p1 = pMap[s1] || `Seed ${s1}`;
-                            p2 = winners[`0_${m}`] || `Ganador Prelim M${m+1}`;
-                        } else {
-                            let s1 = (m * 2) + 1;
-                            let s2 = (m * 2) + 2;
-                            p1 = pMap[s1] || `Seed ${s1}`;
-                            p2 = pMap[s2] || `Seed ${s2}`;
+                    if (r === 0) {
+                        seed1 = seededOrder[m * 2];
+                        seed2 = seededOrder[m * 2 + 1];
+
+                        p1 = (seed1 <= N) ? (pMap[seed1] || `Seed ${seed1}`) : "BYE";
+                        p2 = (seed2 <= N) ? (pMap[seed2] || `Seed ${seed2}`) : "BYE";
+
+                        const mKey = `0_${m}`;
+                        if (p2 === "BYE" && p1 !== "BYE" && !winners[mKey]) {
+                            winners[mKey] = p1;
+                            stateMutated = true;
+                        } else if (p1 === "BYE" && p2 !== "BYE" && !winners[mKey]) {
+                            winners[mKey] = p2;
+                            stateMutated = true;
                         }
                     } else {
                         p1 = winners[`${r-1}_${m*2}`] || `Esperando M${m*2+1}`;
@@ -1184,76 +1851,265 @@
 
                     const mKey = `${r}_${m}`;
                     const curWin = winners[mKey];
+                    const mScore = scores[mKey];
 
-                    let p1Class = `ply ${!p1 || p1.startsWith('Esperando') || p1.startsWith('Ganador') ? 'empty' : ''} ${curWin && curWin === p1 ? 'win' : ''}`;
-                    let p2Class = `ply ${!p2 || p2.startsWith('Esperando') || p2.startsWith('Ganador') ? 'empty' : ''} ${curWin && curWin === p2 ? 'win' : ''}`;
+                    const sc1 = (mScore && mScore.p1 !== undefined) ? mScore.p1 : '';
+                    const sc2 = (mScore && mScore.p2 !== undefined) ? mScore.p2 : '';
+
+                    const isP1Bye = p1 === "BYE";
+                    const isP2Bye = p2 === "BYE";
+                    const isP1Empty = !p1 || p1.startsWith("Esperando");
+                    const isP2Empty = !p2 || p2.startsWith("Esperando");
+
+                    const p1Class = `ply ${isP1Bye ? 'bye' : ''} ${isP1Empty ? 'empty' : ''} ${curWin && curWin === p1 ? 'win' : ''}`;
+                    const p2Class = `ply ${isP2Bye ? 'bye' : ''} ${isP2Empty ? 'empty' : ''} ${curWin && curWin === p2 ? 'win' : ''}`;
 
                     mBox.innerHTML = `
-                        <div class="${p1Class}" onclick="pickWinner('${r}', '${m}', '${p1}', '${p2}')"><span>${p1}</span></div>
-                        <div class="${p2Class}" onclick="pickWinner('${r}', '${m}', '${p2}', '${p1}')"><span>${p2}</span></div>
+                        <div class="${p1Class}" data-player="${encodeURIComponent(p1)}" onclick="event.stopPropagation(); pickWinner(${r}, ${m}, '${encodeURIComponent(p1)}', '${encodeURIComponent(p2)}')">
+                            ${(r === 0 && seed1 && seed1 <= N) ? `<span class="seed-badge">#${seed1}</span>` : ''}
+                            <span class="pname">${isP1Bye ? 'Pase Libre (BYE)' : p1}</span>
+                            ${sc1 !== '' ? `<span class="pscore ${curWin === p1 ? 'win' : ''}">${sc1}</span>` : ''}
+                            ${curWin && curWin === p1 && sc1 === '' ? '<span style="font-weight:900;">✓</span>' : ''}
+                        </div>
+                        <div class="${p2Class}" data-player="${encodeURIComponent(p2)}" onclick="event.stopPropagation(); pickWinner(${r}, ${m}, '${encodeURIComponent(p2)}', '${encodeURIComponent(p1)}')">
+                            ${(r === 0 && seed2 && seed2 <= N) ? `<span class="seed-badge">#${seed2}</span>` : ''}
+                            <span class="pname">${isP2Bye ? 'Pase Libre (BYE)' : p2}</span>
+                            ${sc2 !== '' ? `<span class="pscore ${curWin === p2 ? 'win' : ''}">${sc2}</span>` : ''}
+                            ${curWin && curWin === p2 && sc2 === '' ? '<span style="font-weight:900;">✓</span>' : ''}
+                        </div>
                     `;
-                    mWrap.appendChild(mBox);
-                    rDiv.appendChild(mWrap);
-                }
-                bTree.appendChild(rDiv);
 
+                    // Al hacer clic en la caja de partida, abrir el gestor de marcador
+                    mBox.addEventListener("click", () => {
+                        openMatchScoreModal(r, m, rName, p1, p2, seed1, seed2, sc1, sc2, curWin);
+                    });
+
+                    mSlot.appendChild(mBox);
+                    rDiv.appendChild(mSlot);
+                }
+
+                bTreeCanvas.appendChild(rDiv);
+
+                // Conectores entre rondas
                 if (r < totalRounds - 1) {
                     const cDiv = document.createElement("div");
                     cDiv.className = "conn-col";
 
-                    if (isPrelimRound) {
-                        for (let c = 0; c < numPrelimMatches; c++) {
-                            const block = document.createElement("div");
-                            block.className = "conn-block";
-                            block.style.height = `${currentSlotHeight}px`;
+                    const pairsInRound = matchesInRound / 2;
+                    for (let c = 0; c < pairsInRound; c++) {
+                        const block = document.createElement("div");
+                        block.className = "conn-block";
+                        block.style.height = `${currentSlotHeight * 2}px`;
 
-                            const line = document.createElement("div");
-                            line.className = "conn-line straight";
-                            block.appendChild(line);
-                            cDiv.appendChild(block);
-                        }
-                    } else {
-                        const nextMatches = matchesInRound / 2;
-                        for (let c = 0; c < nextMatches; c++) {
-                            const block = document.createElement("div");
-                            block.className = "conn-block";
-                            block.style.height = `${currentSlotHeight * 2}px`;
-
-                            const line = document.createElement("div");
-                            line.className = "conn-line";
-                            line.style.top = `${currentSlotHeight / 2}px`;
-                            line.style.height = `${currentSlotHeight}px`;
-
-                            block.appendChild(line);
-                            cDiv.appendChild(block);
-                        }
+                        block.innerHTML = `
+                            <div class="conn-arm-top"></div>
+                            <div class="conn-arm-bot"></div>
+                            <div class="conn-stem"></div>
+                        `;
+                        cDiv.appendChild(block);
                     }
-                    bTree.appendChild(cDiv);
+                    bTreeCanvas.appendChild(cDiv);
+                }
+            }
+
+            if (stateMutated) {
+                await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+            }
+
+            // Path Tracer
+            bTreeCanvas.querySelectorAll(".ply").forEach(node => {
+                const p = decodeURIComponent(node.getAttribute("data-player") || "");
+                if (!p || p === "BYE" || p.startsWith("Seed") || p.startsWith("Esperando")) return;
+
+                node.addEventListener("mouseenter", () => {
+                    bTreeCanvas.querySelectorAll(`.ply[data-player="${encodeURIComponent(p)}"]`).forEach(el => {
+                        el.classList.add("path-highlight");
+                    });
+                });
+
+                node.addEventListener("mouseleave", () => {
+                    bTreeCanvas.querySelectorAll(".ply.path-highlight").forEach(el => {
+                        el.classList.remove("path-highlight");
+                    });
+                });
+            });
+        }
+
+        // MODAL DE MARCADOR Y GESTIÓN DE PARTIDA (ADMIN)
+        function openMatchScoreModal(r, m, rName, p1, p2, s1, s2, sc1, sc2, curWin) {
+            activeMatchContext = { r, m, p1, p2, curWin };
+            mchScRoundTitle.innerText = `${rName} - Partida ${m + 1}`;
+            mchScP1Name.innerText = p1;
+            mchScP2Name.innerText = p2;
+            mchScSeed1.innerText = s1 ? `#${s1}` : '';
+            mchScSeed2.innerText = s2 ? `#${s2}` : '';
+            winP1Label.innerText = p1;
+            winP2Label.innerText = p2;
+            mchScInp1.value = sc1 !== '' ? sc1 : '';
+            mchScInp2.value = sc2 !== '' ? sc2 : '';
+            mchScoreMod.classList.add("on");
+        }
+
+        cMchScore.addEventListener("click", () => mchScoreMod.classList.remove("on"));
+        mchScoreMod.addEventListener("click", (e) => {
+            if (e.target === mchScoreMod) mchScoreMod.classList.remove("on");
+        });
+
+        // Guardar marcador sin declarar ganador
+        bSaveOnlyScore.addEventListener("click", async () => {
+            if (!activeMatchContext) return;
+            const { r, m } = activeMatchContext;
+            const mKey = `${r}_${m}`;
+            const sc1 = mchScInp1.value.trim();
+            const sc2 = mchScInp2.value.trim();
+
+            if (!winners.scores) winners.scores = {};
+            winners.scores[mKey] = {
+                p1: sc1 !== '' ? parseInt(sc1) : '',
+                p2: sc2 !== '' ? parseInt(sc2) : ''
+            };
+
+            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+            mchScoreMod.classList.remove("on");
+            showAdminToast("💾 Marcador registrado");
+            renderTree();
+        });
+
+        // Victoria para P1 desde modal de marcador
+        bWinP1.addEventListener("click", async () => {
+            if (!activeMatchContext) return;
+            const { r, m, p1, p2 } = activeMatchContext;
+            saveScoreInputs(r, m);
+            mchScoreMod.classList.remove("on");
+            await pickWinner(r, m, encodeURIComponent(p1), encodeURIComponent(p2));
+        });
+
+        // Victoria para P2 desde modal de marcador
+        bWinP2.addEventListener("click", async () => {
+            if (!activeMatchContext) return;
+            const { r, m, p1, p2 } = activeMatchContext;
+            saveScoreInputs(r, m);
+            mchScoreMod.classList.remove("on");
+            await pickWinner(r, m, encodeURIComponent(p2), encodeURIComponent(p1));
+        });
+
+        // Limpiar partida desde modal
+        bClearMatch.addEventListener("click", async () => {
+            if (!activeMatchContext) return;
+            const { r, m, curWin } = activeMatchContext;
+            const mKey = `${r}_${m}`;
+            delete winners[mKey];
+            if (winners.scores) delete winners.scores[mKey];
+            if (curWin) invalidateDownstreamWinners(r, m, curWin);
+
+            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+            mchScoreMod.classList.remove("on");
+            showAdminToast("🔄 Resultado de partida reseteado");
+            renderTree();
+        });
+
+        function saveScoreInputs(r, m) {
+            const mKey = `${r}_${m}`;
+            const sc1 = mchScInp1.value.trim();
+            const sc2 = mchScInp2.value.trim();
+            if (!winners.scores) winners.scores = {};
+            if (sc1 !== '' || sc2 !== '') {
+                winners.scores[mKey] = {
+                    p1: sc1 !== '' ? parseInt(sc1) : '',
+                    p2: sc2 !== '' ? parseInt(sc2) : ''
+                };
+            }
+        }
+
+        // INVALIDACIÓN EN CASCADA
+        function invalidateDownstreamWinners(startR, startM, oldWinner) {
+            if (!oldWinner || oldWinner === "BYE" || oldWinner.startsWith("Esperando")) return;
+            const N = currEvt.max_players || 16;
+            let P = 2;
+            while (P < N) P *= 2;
+            const totalRounds = Math.log2(P);
+
+            let curR = parseInt(startR);
+            let curM = parseInt(startM);
+
+            while (curR < totalRounds - 1) {
+                const nextR = curR + 1;
+                const nextM = Math.floor(curM / 2);
+                const nextKey = `${nextR}_${nextM}`;
+
+                if (winners[nextKey] === oldWinner) {
+                    delete winners[nextKey];
+                    curR = nextR;
+                    curM = nextM;
+                } else {
+                    break;
                 }
             }
         }
 
-        function showIllegalWarning(r, m) {
+        function showIllegalWarning(r, m, msg = "Esta partida aún no está lista para resolverse.") {
             const mBox = document.getElementById(`mch_${r}_${m}`);
             if (mBox) {
                 mBox.classList.add("illegal");
-                setTimeout(() => mBox.classList.remove("illegal"), 300);
+                setTimeout(() => mBox.classList.remove("illegal"), 350);
             }
-            tstMsg.classList.add("show");
-            setTimeout(() => tstMsg.classList.remove("show"), 2500);
+            showAdminToast(msg, true);
         }
 
+        // SELECCIONAR GANADOR DE PARTIDA
+        window.pickWinner = async (r, m, selEncoded, oppEncoded) => {
+            const selected = decodeURIComponent(selEncoded);
+            const opponent = decodeURIComponent(oppEncoded);
+
+            const isValid = (p) => p && p !== "" && p !== "BYE" && !p.startsWith("Esperando") && !p.startsWith("Seed ");
+
+            if (!isValid(selected)) {
+                showIllegalWarning(r, m, "No se puede declarar ganador a un participante no definido o esperando.");
+                return;
+            }
+
+            const mKey = `${r}_${m}`;
+            const currentWin = winners[mKey];
+
+            const N = currEvt.max_players || 16;
+            let P = 2;
+            while (P < N) P *= 2;
+            const finalRoundIndex = Math.log2(P) - 1;
+
+            if (currentWin === selected) {
+                delete winners[mKey];
+                invalidateDownstreamWinners(r, m, selected);
+                showAdminToast("Resultado revocado");
+            } else {
+                if (currentWin) {
+                    invalidateDownstreamWinners(r, m, currentWin);
+                }
+                winners[mKey] = selected;
+                showAdminToast(`Victoria asignada: ${selected}`);
+
+                if (parseInt(r) === finalRoundIndex) {
+                    cWin.innerText = selected;
+                    cMod.classList.add("on");
+                    launchConfetti();
+                }
+            }
+
+            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+            renderTree();
+        };
+
+        // CELEBRACIÓN CONFETTI
         function launchConfetti() {
             cCanv.width = window.innerWidth;
             cCanv.height = window.innerHeight;
             parts = [];
-            const clrs = ['#00ff88', '#00aaee', '#ff9a00', '#ff2a55', '#a855f7', '#ffffff'];
-            for (let i = 0; i < 120; i++) {
+            const clrs = ['#00ff88', '#00aaee', '#ff9a00', '#ff2a55', '#a855f7', '#ffd700', '#ffffff'];
+            for (let i = 0; i < 140; i++) {
                 parts.push({
                     x: Math.random() * cCanv.width,
                     y: Math.random() * cCanv.height + cCanv.height,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: -(Math.random() * 4 + 2),
+                    vx: (Math.random() - 0.5) * 4.5,
+                    vy: -(Math.random() * 4.5 + 2.5),
                     sz: Math.random() * 8 + 4,
                     clr: clrs[Math.floor(Math.random() * clrs.length)]
                 });
@@ -1272,48 +2128,22 @@
             draw();
         }
 
-        window.pickWinner = async (r, m, selected, opponent) => {
-            const isValid = (p) => p && p !== "" && !p.startsWith("Seed") && !p.startsWith("Esperando") && !p.startsWith("Ganador");
+        // AÑADIR JUGADOR INDIVIDUAL
+        document.getElementById("bAddP").addEventListener("click", addSinglePlayer);
+        document.getElementById("pAddDirect").addEventListener("click", addSinglePlayer);
 
-            if (!isValid(selected) || !isValid(opponent)) {
-                showIllegalWarning(r, m);
-                return;
-            }
-
-            const mKey = `${r}_${m}`;
-            const N = currEvt.max_players;
-            let targetPower = 2;
-            while (targetPower * 2 <= N) targetPower *= 2;
-            if (targetPower === N) targetPower = N;
-            const numPrelimMatches = N - targetPower;
-            const finalRoundIndex = numPrelimMatches > 0 ? Math.log2(targetPower) : Math.log2(targetPower) - 1;
-
-            if (winners[mKey] === selected) {
-                delete winners[mKey];
-            } else {
-                winners[mKey] = selected;
-                if (parseInt(r) === finalRoundIndex) {
-                    cWin.innerText = selected;
-                    cMod.classList.add("on");
-                    launchConfetti();
-                }
-            }
-
-            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
-            renderTree();
-        };
-
-        document.getElementById("bAddP").addEventListener("click", async () => {
+        async function addSinglePlayer() {
             const { data: players } = await sb.from("participants").select("seed").eq("event_id", currEvt.id);
-
             const count = players ? players.length : 0;
+
             if (count >= currEvt.max_players) {
-                alert("El evento ya está lleno.");
+                showAdminToast("El torneo ya alcanzó su capacidad máxima de jugadores.", true);
                 return;
             }
 
-            const pName = prompt("Nombre del participante:");
+            const pName = prompt(`Nombre del participante (${count + 1}/${currEvt.max_players}):`);
             if (!pName || !pName.trim()) return;
+
             const usedSeeds = players ? players.map(p => p.seed) : [];
             let nextSeed = 1;
             while (usedSeeds.includes(nextSeed)) {
@@ -1327,29 +2157,237 @@
             }]);
 
             if (!error) {
+                showAdminToast(`Participante añadido: #${nextSeed} ${pName.trim()}`);
                 renderTree();
+                if (playersMod.classList.contains("on")) renderPlayersModal();
+            } else {
+                alert("Error al agregar jugador: " + error.message);
+            }
+        }
+
+        // CARGA MASIVA DE JUGADORES
+        const bulkMod = document.getElementById("bulkMod");
+        const cBulk = document.getElementById("cBulk");
+        const bulkInp = document.getElementById("bulkInp");
+        const bulkAvailLbl = document.getElementById("bulkAvailLbl");
+        const bDoBulk = document.getElementById("bDoBulk");
+        const bBulkP = document.getElementById("bBulkP");
+
+        bBulkP.addEventListener("click", async () => {
+            const { data: players } = await sb.from("participants").select("seed").eq("event_id", currEvt.id);
+            const currentCount = players ? players.length : 0;
+            const remaining = currEvt.max_players - currentCount;
+            bulkAvailLbl.innerText = `${remaining} cupo(s) disponible(s)`;
+            bulkInp.value = "";
+            bulkMod.classList.add("on");
+        });
+
+        cBulk.addEventListener("click", () => bulkMod.classList.remove("on"));
+        bulkMod.addEventListener("click", (e) => {
+            if (e.target === bulkMod) bulkMod.classList.remove("on");
+        });
+
+        bDoBulk.addEventListener("click", async () => {
+            const text = bulkInp.value.trim();
+            if (!text) return;
+            const names = text.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+            if (names.length === 0) return;
+
+            const { data: players } = await sb.from("participants").select("seed").eq("event_id", currEvt.id);
+            const usedSeeds = players ? players.map(p => p.seed) : [];
+            const remaining = currEvt.max_players - usedSeeds.length;
+
+            if (names.length > remaining) {
+                alert(`Solo hay ${remaining} cupos disponibles, pero ingresaste ${names.length} nombres.`);
+                return;
+            }
+
+            let nextSeed = 1;
+            const newRecords = [];
+            names.forEach(name => {
+                while (usedSeeds.includes(nextSeed)) {
+                    nextSeed++;
+                }
+                usedSeeds.push(nextSeed);
+                newRecords.push({
+                    event_id: currEvt.id,
+                    name: name,
+                    seed: nextSeed
+                });
+            });
+
+            const { error } = await sb.from("participants").insert(newRecords);
+            if (!error) {
+                bulkMod.classList.remove("on");
+                showAdminToast(`✅ Se agregaron ${newRecords.length} jugadores exitosamente`);
+                renderTree();
+            } else {
+                alert("Error al guardar jugadores: " + error.message);
             }
         });
 
-        document.getElementById("bShf").addEventListener("click", async () => {
-            const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id);
-            if (!players || players.length < 2) return;
-            winners = {};
-            await sb.from("events").update({ bracket_state: {} }).eq("id", currEvt.id);
-            let seeds = players.map(p => p.seed);
-            for (let i = seeds.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [seeds[i], seeds[j]] = [seeds[j], seeds[i]];
+        // ROSTER Y GESTIÓN DE PARTICIPANTES
+        const playersMod = document.getElementById("playersMod");
+        const cPlayers = document.getElementById("cPlayers");
+        const cPlayersBtn = document.getElementById("cPlayersBtn");
+        const playersList = document.getElementById("playersList");
+        const pFilterInp = document.getElementById("pFilterInp");
+        const bMngP = document.getElementById("bMngP");
+        let cachedRoster = [];
+
+        bMngP.addEventListener("click", () => {
+            pFilterInp.value = "";
+            renderPlayersModal();
+            playersMod.classList.add("on");
+        });
+
+        cPlayers.addEventListener("click", () => playersMod.classList.remove("on"));
+        cPlayersBtn.addEventListener("click", () => playersMod.classList.remove("on"));
+        playersMod.addEventListener("click", (e) => {
+            if (e.target === playersMod) playersMod.classList.remove("on");
+        });
+
+        pFilterInp.addEventListener("input", (e) => {
+            const term = e.target.value.trim().toLowerCase();
+            renderRosterRows(term ? cachedRoster.filter(p => p.name.toLowerCase().includes(term) || String(p.seed).includes(term)) : cachedRoster);
+        });
+
+        function renderRosterRows(list) {
+            if (!list || list.length === 0) {
+                playersList.innerHTML = `<div style="text-align:center; padding:20px; color:var(--mtxt);">No se encontraron participantes.</div>`;
+                return;
             }
+            playersList.innerHTML = "";
+            list.forEach(p => {
+                const row = document.createElement("div");
+                row.style.display = "flex";
+                row.style.justifyContent = "space-between";
+                row.style.alignItems = "center";
+                row.style.padding = "10px 14px";
+                row.style.background = "rgba(0,0,0,0.25)";
+                row.style.borderRadius = "10px";
+                row.style.border = "1px solid var(--brd)";
+                row.innerHTML = `
+                    <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        <span class="seed-badge">Seed ${p.seed}</span>
+                        <strong style="font-size:0.95rem; margin-left:4px;">${p.name}</strong>
+                    </div>
+                    <div style="display:flex; gap:6px; flex-shrink:0;">
+                        <button class="btn sm edt-btn" style="padding:5px 10px; font-size:0.8rem;" title="Editar nombre">✏️</button>
+                        <button class="btn danger sm del-btn" style="padding:5px 10px; font-size:0.8rem;" title="Eliminar participante">✕</button>
+                    </div>
+                `;
+                row.querySelector(".edt-btn").addEventListener("click", async () => {
+                    const newName = prompt(`Nuevo nombre para el Seed #${p.seed}:`, p.name);
+                    if (newName && newName.trim() && newName.trim() !== p.name) {
+                        await sb.from("participants").update({ name: newName.trim() }).eq("id", p.id);
+                        renderPlayersModal();
+                        renderTree();
+                        showAdminToast("Nombre actualizado");
+                    }
+                });
+                row.querySelector(".del-btn").addEventListener("click", async () => {
+                    if (confirm(`¿Eliminar a "${p.name}" (Seed #${p.seed}) del torneo?`)) {
+                        await sb.from("participants").delete().eq("id", p.id);
+                        renderPlayersModal();
+                        renderTree();
+                        showAdminToast("Jugador eliminado");
+                    }
+                });
+                playersList.appendChild(row);
+            });
+        }
+
+        async function renderPlayersModal() {
+            playersList.innerHTML = `<div style="text-align:center; padding:15px; color:var(--mtxt);">Cargando lista...</div>`;
+            const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id).order("seed", { ascending: true });
+            cachedRoster = players || [];
+            renderRosterRows(cachedRoster);
+        }
+
+        // MEZCLAR POSICIONES DE FORMA SEGURA
+        document.getElementById("bShf").addEventListener("click", async () => {
+            const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id).order("seed", { ascending: true });
+            if (!players || players.length < 2) {
+                showAdminToast("Se necesitan al menos 2 participantes para mezclar.", true);
+                return;
+            }
+
+            if (!confirm("¿Mezclar aleatoriamente las posiciones de todos los participantes? Los resultados actuales del bracket se reiniciarán.")) return;
+
+            // Mantener metadatos intactos al reiniciar llaves
+            const meta = winners._meta || {};
+            winners = { _meta: meta, scores: {} };
+            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+
+            const shuffledNames = players.map(p => p.name);
+            for (let i = shuffledNames.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledNames[i], shuffledNames[j]] = [shuffledNames[j], shuffledNames[i]];
+            }
+
             const updates = players.map((p, idx) => ({
                 id: p.id,
                 event_id: p.event_id,
-                name: p.name,
-                seed: seeds[idx]
+                seed: p.seed,
+                name: shuffledNames[idx]
             }));
+
             const { error } = await sb.from("participants").upsert(updates);
             if (!error) {
+                showAdminToast("🎲 ¡Posiciones del torneo mezcladas!");
                 renderTree();
+            } else {
+                alert("Error al mezclar: " + error.message);
+            }
+        });
+
+        // REINICIAR RESULTADOS DEL BRACKET
+        document.getElementById("bRstB").addEventListener("click", async () => {
+            if (!confirm("¿Deseas reiniciar todos los resultados del bracket? Los participantes se mantendrán pero el torneo comenzará desde cero.")) return;
+            const meta = winners._meta || {};
+            winners = { _meta: meta, scores: {} };
+            await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+            renderTree();
+            showAdminToast("🔄 Bracket reiniciado a cero");
+        });
+
+        // COPIAR ENLACE PÚBLICO DEL TORNEO
+        document.getElementById("bShrAdm").addEventListener("click", async () => {
+            if (!currEvt) return;
+            let baseUrl = window.location.href.replace(/\/PanelAdmin\/(admin|sudo)\.html.*/i, '/index.html');
+            if (!baseUrl.endsWith('/index.html')) {
+                baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1) + 'index.html';
+            }
+            const url = `${baseUrl}?evento=${currEvt.id}`;
+            try {
+                await navigator.clipboard.writeText(url);
+                showAdminToast("📋 Enlace público copiado al portapapeles");
+            } catch (err) {
+                prompt("Enlace público del torneo:", url);
+            }
+        });
+
+        document.getElementById("bPrintAdm").addEventListener("click", () => {
+            window.print();
+        });
+
+        // ATAJOS DE TECLADO
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (mchScoreMod.classList.contains("on")) mchScoreMod.classList.remove("on");
+                else if (editEvtMod.classList.contains("on")) editEvtMod.classList.remove("on");
+                else if (bulkMod.classList.contains("on")) bulkMod.classList.remove("on");
+                else if (playersMod.classList.contains("on")) playersMod.classList.remove("on");
+                else if (sMod.classList.contains("on")) sMod.classList.remove("on");
+                else if (cMod.classList.contains("on")) cMod.classList.remove("on");
+                else if (bView.style.display === "flex") {
+                    document.getElementById("bClsB").click();
+                }
+            } else if (bView.style.display === "flex") {
+                if (e.key === "+" || e.key === "=") setZoom(zoom + 0.15);
+                else if (e.key === "-" || e.key === "_") setZoom(zoom - 0.15);
+                else if (e.key === "0") resetView();
             }
         });
     </script>
