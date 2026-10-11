@@ -262,27 +262,31 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background: transparent;
-            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--brd);
             cursor: pointer;
-            color: var(--mtxt);
+            color: var(--txt);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 6px;
-            border-radius: 50%;
-            transition: color 0.2s, transform 0.2s;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
         }
 
         .sbtn:hover {
             color: var(--act);
-            transform: rotate(45deg);
+            border-color: var(--act);
+            background: rgba(0, 255, 136, 0.14);
+            box-shadow: 0 0 18px var(--glow);
+            transform: rotate(60deg) scale(1.05);
         }
 
         .sbtn svg {
             width: 22px;
             height: 22px;
-            fill: currentColor;
         }
 
         .fgrp {
@@ -903,20 +907,40 @@
                 <label for="pInp">Contraseña</label>
                 <input type="password" id="pInp" name="password" placeholder="••••••••" autocomplete="new-password" required>
             </div>
-            <button type="submit" class="btn primary" id="lBtn" style="margin-top:8px;">Iniciar Sesión</button>
+            <div style="display:flex; justify-content:center; width:100%; margin-top:12px;">
+                <button type="submit" class="btn primary" id="lBtn" style="min-width: 240px; justify-content: center; font-weight: 700; padding: 12px 24px;">Iniciar Sesión</button>
+            </div>
         </form>
+    </div>
+
+    <!-- PANEL PARA VOLVER AL SITIO PUBLICO -->
+    <div class="box" id="lBackBox" style="margin-top: 14px; padding: 14px 20px; display: flex; justify-content: center; align-items: center; max-width: 440px;">
+        <a href="../index.html" class="btn" style="width: 100%; justify-content: center; gap: 10px; border-color: var(--act); color: var(--txt); background: rgba(0, 0, 0, 0.35); text-decoration: none; padding: 12px 20px; font-weight: 600; font-size: 0.95rem;">
+            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <span>← Volver al Sitio Público</span>
+        </a>
     </div>
 
     <!-- MENU PRINCIPAL DE ADMINISTRADOR -->
     <div class="box" id="mCard" style="display:none;">
-        <button class="sbtn" id="oStg" title="Ajustes">
-            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
+        <button class="sbtn" id="oStg" title="Ajustes" aria-label="Ajustes">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
         </button>
         <h1>Administrador</h1>
         <p class="subtitle">Gestión Oficial de Competencias LevelUP</p>
+        <div id="adminUserPill" style="display:inline-flex; align-items:center; gap:8px; font-size:0.8rem; background:rgba(0,255,136,0.08); border:1px solid var(--brd); padding:6px 14px; border-radius:20px; color:var(--act); margin-bottom:8px; align-self:center;">
+            <span>🟢 Conectado:</span> <strong id="adminEmailTxt">Admin</strong>
+        </div>
         <button class="btn primary" id="bCrt">➕ Crear Nuevo Torneo</button>
         <button class="btn" id="bMng">📋 Manejar Torneos Existentes</button>
         <a href="../index.html" class="btn" id="bHomePub" style="border-color:var(--act); color:var(--txt);">Ir al Sitio Público →</a>
+        <button class="btn danger" id="bLogoutMain" style="margin-top:6px; justify-content:center; gap:8px; width:100%;">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            <span>Cerrar Sesión</span>
+        </button>
     </div>
 
     <!-- CREAR NUEVO EVENTO -->
@@ -964,22 +988,33 @@
                 </div>
             </div>
 
-            <div class="fgrp">
-                <label>Capacidad de Jugadores</label>
-                <select id="eCap">
-                    <option value="4">4 Jugadores (Semifinales)</option>
-                    <option value="8">8 Jugadores (Cuartos)</option>
-                    <option value="10">10 Jugadores (Top 6 BYEs)</option>
-                    <option value="12">12 Jugadores (Top 4 BYEs)</option>
-                    <option value="14">14 Jugadores (Top 2 BYEs)</option>
-                    <option value="16" selected>16 Jugadores (Octavos completos)</option>
-                    <option value="20">20 Jugadores</option>
-                    <option value="24">24 Jugadores</option>
-                    <option value="28">28 Jugadores</option>
-                    <option value="32">32 Jugadores</option>
-                    <option value="48">48 Jugadores</option>
-                    <option value="64">64 Jugadores</option>
-                </select>
+            <div class="frow">
+                <div class="fgrp">
+                    <label>Formato de Competencia</label>
+                    <select id="eFormat">
+                        <option value="single" selected>⚡ Eliminación Directa (Single Elimination)</option>
+                        <option value="double">🔁 Doble Eliminación (Upper & Lower Brackets)</option>
+                        <option value="round_robin">🌐 Fase de Grupos / Round Robin</option>
+                        <option value="swiss">🛡️ Sistema Suizo (Swiss System)</option>
+                    </select>
+                </div>
+                <div class="fgrp">
+                    <label>Capacidad de Jugadores</label>
+                    <select id="eCap">
+                        <option value="4">4 Jugadores (Semifinales)</option>
+                        <option value="8">8 Jugadores (Cuartos)</option>
+                        <option value="10">10 Jugadores (Top 6 BYEs)</option>
+                        <option value="12">12 Jugadores (Top 4 BYEs)</option>
+                        <option value="14">14 Jugadores (Top 2 BYEs)</option>
+                        <option value="16" selected>16 Jugadores (Octavos completos)</option>
+                        <option value="20">20 Jugadores</option>
+                        <option value="24">24 Jugadores</option>
+                        <option value="28">28 Jugadores</option>
+                        <option value="32">32 Jugadores</option>
+                        <option value="48">48 Jugadores</option>
+                        <option value="64">64 Jugadores</option>
+                    </select>
+                </div>
             </div>
 
             <div class="fgrp">
@@ -1012,6 +1047,7 @@
                     <h2 id="bTtl" style="color:var(--act); font-size:1.25rem;">Torneo</h2>
                     <div style="display:flex; gap:8px; align-items:center; margin-top:2px;">
                         <span id="bGameBadge" class="game-tag-sm">🎮 ESPORTS</span>
+                        <span id="bFormatBadge" class="game-tag-sm" style="background:rgba(56,189,248,0.15); border-color:rgba(56,189,248,0.35); color:#38bdf8;">⚡ Eliminación Directa</span>
                         <span id="bDateDisplay" style="font-size:0.78rem; color:var(--mtxt);">📅 Fecha</span>
                     </div>
                 </div>
@@ -1084,6 +1120,15 @@
                             <option value="completed">🏆 Finalizado</option>
                         </select>
                     </div>
+                </div>
+                <div class="fgrp">
+                    <label>Formato de Competencia</label>
+                    <select id="edFormat">
+                        <option value="single">⚡ Eliminación Directa (Single Elimination)</option>
+                        <option value="double">🔁 Doble Eliminación (Upper & Lower Brackets)</option>
+                        <option value="round_robin">🌐 Fase de Grupos / Round Robin</option>
+                        <option value="swiss">🛡️ Sistema Suizo (Swiss System)</option>
+                    </select>
                 </div>
                 <div class="frow">
                     <div class="fgrp">
@@ -1212,12 +1257,6 @@
         const SB_KEY = "sb_publishable_08r8vqojnUnaQDIKwUaUxw_T8-ZnukA";
         const sb = supabase.createClient(SB_URL, SB_KEY);
 
-        // Credenciales Maestras de Administrador
-        const MASTER_ADMIN = {
-            email: "chris1976xd@gmail.com",
-            pass: "Chris14*$_"
-        };
-
         let currEvt = null;
         let winners = {};
         let allAdminEvents = [];
@@ -1236,23 +1275,29 @@
         const uInp = document.getElementById("uInp");
         const pInp = document.getElementById("pInp");
         const lCard = document.getElementById("lCard");
+        const lBackBox = document.getElementById("lBackBox");
         const mCard = document.getElementById("mCard");
         const cCard = document.getElementById("cCard");
         const mListCard = document.getElementById("mListCard");
         const bView = document.getElementById("bView");
         const eFrm = document.getElementById("eFrm");
+        const eFormat = document.getElementById("eFormat");
         const eLst = document.getElementById("eLst");
         const mEvtSrch = document.getElementById("mEvtSrch");
         const bTree = document.getElementById("bTree");
         const bTreeCanvas = document.getElementById("bTreeCanvas");
         const bTtl = document.getElementById("bTtl");
         const bGameBadge = document.getElementById("bGameBadge");
+        const bFormatBadge = document.getElementById("bFormatBadge");
         const bDateDisplay = document.getElementById("bDateDisplay");
         const sMod = document.getElementById("sMod");
         const oStg = document.getElementById("oStg");
         const cStg = document.getElementById("cStg");
         const thSel = document.getElementById("thSel");
         const lgOut = document.getElementById("lgOut");
+        const bLogoutMain = document.getElementById("bLogoutMain");
+        const adminUserPill = document.getElementById("adminUserPill");
+        const adminEmailTxt = document.getElementById("adminEmailTxt");
         const tstMsg = document.getElementById("tstMsg");
         const cMod = document.getElementById("cMod");
         const cWin = document.getElementById("cWin");
@@ -1275,10 +1320,22 @@
         const cEditEvtBtn = document.getElementById("cEditEvtBtn");
         const edTtl = document.getElementById("edTtl");
         const edGame = document.getElementById("edGame");
+        const edFormat = document.getElementById("edFormat");
         const edStatus = document.getElementById("edStatus");
         const edDate = document.getElementById("edDate");
         const edTime = document.getElementById("edTime");
         const edDsc = document.getElementById("edDsc");
+
+        const FORMAT_MAP = {
+            single: { label: "⚡ Eliminación Directa", short: "Single Elim", icon: "⚡" },
+            double: { label: "🔁 Doble Eliminación", short: "Double Elim", icon: "🔁" },
+            round_robin: { label: "🌐 Fase de Grupos", short: "Round Robin", icon: "🌐" },
+            swiss: { label: "🛡️ Sistema Suizo", short: "Suizo", icon: "🛡️" }
+        };
+
+        function getFormatInfo(fmt) {
+            return FORMAT_MAP[fmt] || FORMAT_MAP.single;
+        }
 
         // Modal de Gestión de Marcador
         const mchScoreMod = document.getElementById("mchScoreMod");
@@ -1454,54 +1511,72 @@
         function renderSession(session) {
             if (session) {
                 lCard.style.display = "none";
+                if (lBackBox) lBackBox.style.display = "none";
                 mCard.style.display = "flex";
+                if (session.user && session.user.email) {
+                    if (adminEmailTxt) adminEmailTxt.innerText = session.user.email;
+                    if (adminUserPill) adminUserPill.style.display = "inline-flex";
+                }
             } else {
                 lCard.style.display = "flex";
+                if (lBackBox) lBackBox.style.display = "flex";
                 mCard.style.display = "none";
                 cCard.style.display = "none";
                 mListCard.style.display = "none";
                 bView.style.display = "none";
             }
         }
-        renderSession(null);
+        // Restaurar sesión activa de Supabase si existe
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                renderSession(session);
+                loadAdminEvents();
+            } else {
+                renderSession(null);
+            }
+        });
 
         lFrm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const emailVal = uInp.value.trim().toLowerCase();
-            const passVal = pInp.value;
+            const email = uInp.value.trim();
+            const password = pInp.value;
 
-            if (emailVal === MASTER_ADMIN.email.toLowerCase() && passVal === MASTER_ADMIN.pass) {
-                renderSession({ user: { email: MASTER_ADMIN.email } });
-                uInp.value = "";
-                pInp.value = "";
-                showAdminToast("Bienvenido, Super Administrador");
-                return;
-            }
+            lBtn.disabled = true;
+            const originalBtnText = lBtn.innerText;
+            lBtn.innerText = "Verificando...";
 
             const { data, error } = await sb.auth.signInWithPassword({
-                email: uInp.value,
-                password: pInp.value
+                email,
+                password
             });
+
+            lBtn.disabled = false;
+            lBtn.innerText = originalBtnText;
 
             if (!error && data && data.user) {
                 renderSession(data.session);
                 uInp.value = "";
                 pInp.value = "";
-                showAdminToast("Sesión iniciada");
+                showAdminToast("Sesión iniciada correctamente");
+                loadAdminEvents();
             } else {
                 document.body.classList.add("err");
+                showAdminToast(error ? (error.message === "Invalid login credentials" ? "Correo o contraseña incorrectos" : error.message) : "Error al iniciar sesión");
                 setTimeout(() => document.body.classList.remove("err"), 2500);
             }
         });
 
-        lgOut.addEventListener("click", async () => {
-            sMod.classList.remove("on");
+        async function doLogout() {
+            if (sMod) sMod.classList.remove("on");
             uInp.value = "";
             pInp.value = "";
             await sb.auth.signOut();
             renderSession(null);
-            showAdminToast("Sesión cerrada");
-        });
+            showAdminToast("Sesión cerrada correctamente");
+        }
+
+        if (lgOut) lgOut.addEventListener("click", doLogout);
+        if (bLogoutMain) bLogoutMain.addEventListener("click", doLogout);
 
         document.getElementById("bCrt").addEventListener("click", () => {
             mCard.style.display = "none";
@@ -1534,12 +1609,13 @@
             const description = document.getElementById("eDsc").value.trim();
             const max_players = parseInt(document.getElementById("eCap").value);
             const game = document.getElementById("eGame").value;
+            const format = eFormat ? eFormat.value : 'single';
             const date = document.getElementById("eDate").value;
             const time = document.getElementById("eTime").value;
             const status = document.getElementById("eStatus").value;
 
             const bracket_state = {
-                _meta: { game, date, time, status },
+                _meta: { game, date, time, status, format },
                 scores: {}
             };
 
@@ -1565,6 +1641,7 @@
             edTtl.value = currEvt.title || '';
             edDsc.value = currEvt.description || '';
             edGame.value = meta.game || 'VALORANT';
+            if (edFormat) edFormat.value = meta.format || 'single';
             edStatus.value = meta.status || 'upcoming';
             edDate.value = meta.date || todayStr;
             edTime.value = meta.time || '14:00';
@@ -1581,12 +1658,14 @@
             const updatedTitle = edTtl.value.trim();
             const updatedDsc = edDsc.value.trim();
             const updatedGame = edGame.value;
+            const updatedFormat = edFormat ? edFormat.value : 'single';
             const updatedStatus = edStatus.value;
             const updatedDate = edDate.value;
             const updatedTime = edTime.value;
 
             if (!winners._meta) winners._meta = {};
             winners._meta.game = updatedGame;
+            winners._meta.format = updatedFormat;
             winners._meta.status = updatedStatus;
             winners._meta.date = updatedDate;
             winners._meta.time = updatedTime;
@@ -1603,9 +1682,11 @@
                 currEvt.bracket_state = winners;
                 bTtl.innerText = updatedTitle;
                 bGameBadge.innerText = `🎮 ${updatedGame}`;
+                if (bFormatBadge) bFormatBadge.innerText = getFormatInfo(updatedFormat).label;
                 bDateDisplay.innerText = `📅 ${updatedDate} a las ${updatedTime}`;
                 editEvtMod.classList.remove("on");
                 showAdminToast("✅ Datos del torneo actualizados");
+                renderTree();
             } else {
                 alert("Error al actualizar: " + error.message);
             }
@@ -1627,6 +1708,7 @@
             list.forEach(evt => {
                 const meta = (evt.bracket_state && evt.bracket_state._meta) ? evt.bracket_state._meta : {};
                 const gameName = meta.game || "ESPORTS";
+                const fmtInfo = getFormatInfo(meta.format);
                 const dateStr = meta.date ? `${meta.date} ${meta.time || ''}` : 'Sin fecha';
 
                 const item = document.createElement("div");
@@ -1634,8 +1716,9 @@
                 item.innerHTML = `
                     <div style="overflow:hidden;">
                         <strong style="color:var(--act); font-size:1.05rem; display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${evt.title}</strong>
-                        <div style="font-size:0.78rem; color:var(--mtxt); margin-top:3px; display:flex; gap:8px; align-items:center;">
+                        <div style="font-size:0.78rem; color:var(--mtxt); margin-top:3px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                             <span class="game-tag-sm">${gameName}</span>
+                            <span class="game-tag-sm" style="color:#38bdf8; border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.12);">${fmtInfo.label}</span>
                             <span>📅 ${dateStr}</span>
                             <span>⚔️ ${evt.max_players} Jug.</span>
                         </div>
@@ -1745,6 +1828,10 @@
 
             const meta = winners._meta || {};
             bGameBadge.innerText = `🎮 ${meta.game || 'ESPORTS'}`;
+            if (bFormatBadge) {
+                const fmtInfo = getFormatInfo(meta.format || 'single');
+                bFormatBadge.innerText = fmtInfo.label;
+            }
             bDateDisplay.innerText = meta.date ? `📅 ${meta.date} a las ${meta.time || '14:00'}` : '📅 Fecha no asignada';
 
             resetView();

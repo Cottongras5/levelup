@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sudo LevelUP - Panel de Control Esports</title>
+    <title>Admin LevelUP - Panel de Control Esports</title>
     <link rel="icon" type="image/png" href="../pics/a.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -931,9 +931,16 @@
         </button>
         <h1>Administrador</h1>
         <p class="subtitle">Gestión Oficial de Competencias LevelUP</p>
+        <div id="adminUserPill" style="display:inline-flex; align-items:center; gap:8px; font-size:0.8rem; background:rgba(0,255,136,0.08); border:1px solid var(--brd); padding:6px 14px; border-radius:20px; color:var(--act); margin-bottom:8px; align-self:center;">
+            <span>🟢 Conectado:</span> <strong id="adminEmailTxt">Admin</strong>
+        </div>
         <button class="btn primary" id="bCrt">➕ Crear Nuevo Torneo</button>
         <button class="btn" id="bMng">📋 Manejar Torneos Existentes</button>
         <a href="../index.html" class="btn" id="bHomePub" style="border-color:var(--act); color:var(--txt);">Ir al Sitio Público →</a>
+        <button class="btn danger" id="bLogoutMain" style="margin-top:6px; justify-content:center; gap:8px; width:100%;">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            <span>Cerrar Sesión</span>
+        </button>
     </div>
 
     <!-- CREAR NUEVO EVENTO -->
@@ -1250,12 +1257,6 @@
         const SB_KEY = "sb_publishable_08r8vqojnUnaQDIKwUaUxw_T8-ZnukA";
         const sb = supabase.createClient(SB_URL, SB_KEY);
 
-        // Credenciales Maestras de Administrador
-        const MASTER_ADMIN = {
-            email: "chris1976xd@gmail.com",
-            pass: "Chris14*$_"
-        };
-
         let currEvt = null;
         let winners = {};
         let allAdminEvents = [];
@@ -1294,6 +1295,9 @@
         const cStg = document.getElementById("cStg");
         const thSel = document.getElementById("thSel");
         const lgOut = document.getElementById("lgOut");
+        const bLogoutMain = document.getElementById("bLogoutMain");
+        const adminUserPill = document.getElementById("adminUserPill");
+        const adminEmailTxt = document.getElementById("adminEmailTxt");
         const tstMsg = document.getElementById("tstMsg");
         const cMod = document.getElementById("cMod");
         const cWin = document.getElementById("cWin");
@@ -1509,6 +1513,10 @@
                 lCard.style.display = "none";
                 if (lBackBox) lBackBox.style.display = "none";
                 mCard.style.display = "flex";
+                if (session.user && session.user.email) {
+                    if (adminEmailTxt) adminEmailTxt.innerText = session.user.email;
+                    if (adminUserPill) adminUserPill.style.display = "inline-flex";
+                }
             } else {
                 lCard.style.display = "flex";
                 if (lBackBox) lBackBox.style.display = "flex";
@@ -1518,45 +1526,57 @@
                 bView.style.display = "none";
             }
         }
-        renderSession(null);
+        // Restaurar sesión activa de Supabase si existe
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                renderSession(session);
+                loadAdminEvents();
+            } else {
+                renderSession(null);
+            }
+        });
 
         lFrm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const emailVal = uInp.value.trim().toLowerCase();
-            const passVal = pInp.value;
+            const email = uInp.value.trim();
+            const password = pInp.value;
 
-            if (emailVal === MASTER_ADMIN.email.toLowerCase() && passVal === MASTER_ADMIN.pass) {
-                renderSession({ user: { email: MASTER_ADMIN.email } });
-                uInp.value = "";
-                pInp.value = "";
-                showAdminToast("Bienvenido, Super Administrador");
-                return;
-            }
+            lBtn.disabled = true;
+            const originalBtnText = lBtn.innerText;
+            lBtn.innerText = "Verificando...";
 
             const { data, error } = await sb.auth.signInWithPassword({
-                email: uInp.value,
-                password: pInp.value
+                email,
+                password
             });
+
+            lBtn.disabled = false;
+            lBtn.innerText = originalBtnText;
 
             if (!error && data && data.user) {
                 renderSession(data.session);
                 uInp.value = "";
                 pInp.value = "";
-                showAdminToast("Sesión iniciada");
+                showAdminToast("Sesión iniciada correctamente");
+                loadAdminEvents();
             } else {
                 document.body.classList.add("err");
+                showAdminToast(error ? (error.message === "Invalid login credentials" ? "Correo o contraseña incorrectos" : error.message) : "Error al iniciar sesión");
                 setTimeout(() => document.body.classList.remove("err"), 2500);
             }
         });
 
-        lgOut.addEventListener("click", async () => {
-            sMod.classList.remove("on");
+        async function doLogout() {
+            if (sMod) sMod.classList.remove("on");
             uInp.value = "";
             pInp.value = "";
             await sb.auth.signOut();
             renderSession(null);
-            showAdminToast("Sesión cerrada");
-        });
+            showAdminToast("Sesión cerrada correctamente");
+        }
+
+        if (lgOut) lgOut.addEventListener("click", doLogout);
+        if (bLogoutMain) bLogoutMain.addEventListener("click", doLogout);
 
         document.getElementById("bCrt").addEventListener("click", () => {
             mCard.style.display = "none";
@@ -1808,6 +1828,10 @@
 
             const meta = winners._meta || {};
             bGameBadge.innerText = `🎮 ${meta.game || 'ESPORTS'}`;
+            if (bFormatBadge) {
+                const fmtInfo = getFormatInfo(meta.format || 'single');
+                bFormatBadge.innerText = fmtInfo.label;
+            }
             bDateDisplay.innerText = meta.date ? `📅 ${meta.date} a las ${meta.time || '14:00'}` : '📅 Fecha no asignada';
 
             resetView();
