@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="es" data-th="lvl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard Central - LevelUP Esports</title>
+    <link rel="icon" type="image/png" href="../pics/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg: #0f0a1c;
+            --sidebar: #17102b;
+            --card: #1f153a;
+            --card-hover: #291c4d;
+            --txt: #f5edff;
+            --mtxt: #a793c9;
+            --act: #00ff88;
+            --act-hover: #00dd77;
+            --act-glow: rgba(0, 255, 136, 0.3);
+            --danger: #ff3366;
+            --brd: rgba(255, 255, 255, 0.08);
+            --brd-act: rgba(0, 255, 136, 0.35);
+            --shd: 0 8px 30px rgba(0, 0, 0, 0.45);
+            --font-head: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        [data-th="light"] {
+            --bg: #f3f0fc;
+            --sidebar: #e5def5;
+            --card: #ffffff;
+            --card-hover: #f7f5ff;
+            --txt: #1c152e;
+            --mtxt: #6e6387;
+            --act: #00b85e;
+            --act-hover: #009a4e;
+            --act-glow: rgba(0, 184, 94, 0.2);
+            --danger: #e61f4d;
+            --brd: rgba(0, 0, 0, 0.1);
+            --brd-act: rgba(0, 184, 94, 0.4);
+            --shd: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-th="cyber"] {
+            --bg: #050510;
+            --sidebar: #0b0d1e;
+            --card: #10142d;
+            --card-hover: #171d42;
+            --txt: #e2f1ff;
+            --mtxt: #7995be;
+            --act: #00f0ff;
+            --act-hover: #00c7d4;
+            --act-glow: rgba(0, 240, 255, 0.4);
+            --danger: #ff0055;
+            --brd: rgba(0, 240, 255, 0.15);
+            --brd-act: rgba(0, 240, 255, 0.5);
+            --shd: 0 8px 30px rgba(0, 240, 255, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+        }
+
+        h1, h2, h3, .brand-title, .dash-title, .stat-num {
+            font-family: var(--font-head);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--txt);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* SIDEBAR */
+        .dash-sidebar {
+            width: 270px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--brd);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .side-head {
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--brd);
+        }
+
+        .side-head img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .side-head .brand-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--act);
+            letter-spacing: 0.5px;
+        }
+
+        .side-head .brand-sub {
+            font-size: 0.75rem;
+            color: var(--mtxt);
+        }
+
+        .side-nav {
+            padding: 18px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--mtxt);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link svg {
+            width: 19px;
+            height: 19px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .nav-link:hover {
+            color: var(--txt);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-link.active {
+            color: var(--act);
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--brd-act);
+        }
+
+        .side-foot {
+            padding: 16px;
+            border-top: 1px solid var(--brd);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .user-tag {
+            font-size: 0.78rem;
+            color: var(--mtxt);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-tag span {
+            color: var(--act);
+            font-weight: 700;
+        }
+
+        /* MAIN CONTENT */
+        .dash-main {
+            margin-left: 270px;
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 270px);
+        }
+
+        .dash-topbar {
+            height: 70px;
+            background: var(--sidebar);
+            border-bottom: 1px solid var(--brd);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mob-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--txt);
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .mob-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .dash-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            border: 1px solid var(--brd);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--txt);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--act);
+        }
+
+        .btn.primary {
+            background: var(--act);
+            color: #0b0717;
+            border-color: var(--act);
+            box-shadow: 0 0 16px var(--act-glow);
+        }
+
+        .btn.primary:hover {
+            background: var(--act-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn.danger {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--danger);
+            border-color: rgba(255, 51, 102, 0.4);
+        }
+
+        .btn.danger:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn.sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        /* CONTENT CONTAINER */
+        .dash-content {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--brd);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shd);
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--brd-act);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(0, 255, 136, 0.12);
+            color: var(--act);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .stat-info .stat-num {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--txt);
+            line-height: 1.1;
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.82rem;
+            color: var(--mtxt);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* SECTION CARDS */
+        .sec-card {
+            background: var(--card);
+            border: 1px solid var(--brd);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: var(--shd);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .sec-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid var(--brd);
+            padding-bottom: 14px;
+        }
+
+        .sec-hdr h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sec-hdr h2 span.badge {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--act);
+            border: 1px solid var(--brd-act);
+        }
+
+        /* FILTER / SEARCH TOOLBAR */
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-inp {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-inp:focus {
+            border-color: var(--act);
+        }
+
+        select.dash-select {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--brd);
+            color: var(--txt);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select.dash-select:focus {
+            border-color: var(--act);
+        }
+
+        /* TABLE VIEW */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--brd);
+        }
+
+        table.dash-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+            min-width: 780px;
+        }
+
+        table.dash-table th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--mtxt);
+            font-weight: 700;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--brd);
+            white-space: nowrap;
+        }
+
+        table.dash-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--brd);
+            color: var(--txt);
+            vertical-align: middle;
+        }
+
+        table.dash-table tbody tr {
+            transition: background 0.15s;
+        }
+
+        table.dash-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        table.dash-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .seed-pill {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--act);
+            border: 1px solid var(--brd-act);
+            font-weight: 800;
+            font-size: 0.78rem;
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+
+        .skin-tag {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .contact-tag {
+            color: var(--mtxt);
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .note-preview {
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--mtxt);
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        /* START.GG GUIDANCE ACCORDION */
+        .guide-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 10, 28, 0.6) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .guide-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .guide-header .icon {
+            font-size: 1.8rem;
+        }
+
+        .guide-header h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ff6b6b;
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 1050px) {
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-item {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--brd);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .step-num {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--act);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--txt);
+            display: block;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: var(--mtxt);
+            line-height: 1.5;
+            display: block;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--card);
+            border: 1px solid var(--brd-act);
+            border-radius: 20px;
+            max-width: 520px;
+            width: 92%;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transform: translateY(20px);
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--brd);
+            padding-bottom: 12px;
+        }
+
+        .modal-head h3 {
+            font-size: 1.2rem;
+            color: var(--act);
+            font-weight: 800;
+        }
+
+        .fgrp {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .fgrp label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--mtxt);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .fgrp input, .fgrp textarea, .fgrp select {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--brd);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--txt);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .fgrp input:focus, .fgrp textarea:focus, .fgrp select:focus {
+            border-color: var(--act);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--card);
+            border: 1px solid var(--act);
+            color: var(--txt);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.25);
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 900px) {
+            .dash-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .dash-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .dash-main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mob-menu-btn {
+                display: block;
+            }
+
+            .dash-content {
+                padding: 18px 14px;
+            }
+
+            .dash-topbar {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar" id="dashSidebar">
+        <div>
+            <div class="side-head">
+                <img src="../pics/logo.png" alt="LevelUP">
+                <div>
+                    <div class="brand-title">LevelUP ADMIN</div>
+                    <div class="brand-sub">Dashboard Central Esports</div>
+                </div>
+            </div>
+
+            <nav class="side-nav">
+                <a class="nav-link active" data-tab="tab-roster">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>Fichas y Participantes</span>
+                </a>
+                <a class="nav-link" data-tab="tab-tournaments">
+                    <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                    <span>Torneos y Brackets</span>
+                </a>
+                <a class="nav-link" data-tab="tab-startgg">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+                    <span>Integración Start.gg</span>
+                </a>
+                <a class="nav-link" data-tab="tab-banners">
+                    <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                    <span>Flyers y Noticias (Web)</span>
+                </a>
+                <a href="admin.html" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>Panel Clásico Admin</span>
+                </a>
+                <a href="../index.html" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    <span>Sitio Público LevelUP</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="side-foot">
+            <div class="user-tag">
+                <span id="userTagState">🟢</span> <span id="userTagMail">Cargando sesión...</span>
+            </div>
+            <button class="btn danger sm" id="dashLogoutBtn" style="width:100%; justify-content:center;">
+                Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="dash-main">
+        <header class="dash-topbar">
+            <div class="top-left">
+                <button class="mob-menu-btn" id="mobMenuBtn">
+                    <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                </button>
+                <div class="dash-title" id="pageTitle">Gestor Global de Fichas de Participantes</div>
+            </div>
+
+            <div class="top-right">
+                <select class="dash-select" id="themeSelector" style="padding: 7px 12px; font-size: 0.82rem;">
+                    <option value="lvl">Tema: LevelUP Neon</option>
+                    <option value="cyber">Tema: Cyberpunk</option>
+                    <option value="light">Tema: Claro</option>
+                </select>
+                <button class="btn sm primary" id="exportNotesBtn">
+                    📥 Exportar CSV
+                </button>
+            </div>
+        </header>
+
+        <div class="dash-content">
+
+            <!-- STATS ROW -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statTotalTournaments">0</div>
+                        <div class="stat-label">Torneos Registrados</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statTotalPlayers">0</div>
+                        <div class="stat-label">Participantes Totales</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statDocumentedFichas">0</div>
+                        <div class="stat-label">Fichas Completadas</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statStartggEvents">0</div>
+                        <div class="stat-label">Eventos Start.gg</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 1: FICHA Y NOTAS DE PARTICIPANTES -->
+            <div id="tab-roster" class="tab-panel">
+                <section class="sec-card">
+                    <div class="sec-hdr">
+                        <h2>
+                            <span>Fichas de Jugadores y Observaciones Arbitrales</span>
+                            <span class="badge" id="rosterBadgeCount">0 jugadores</span>
+                        </h2>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn sm primary" id="btnAddNewPlayerManual">+ Añadir Jugador</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <select class="dash-select" id="selFilterTournament" style="max-width: 280px;">
+                            <option value="ALL">🎯 Todos los Torneos</option>
+                        </select>
+                        <input type="text" id="rosterSearchInp" class="search-inp" placeholder="Buscar por Nickname, Nombre Real, Skin o Contacto...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Torneo</th>
+                                    <th>Seed</th>
+                                    <th>GamerTag</th>
+                                    <th>Nombre Real</th>
+                                    <th>Skin / Personaje</th>
+                                    <th>Contacto</th>
+                                    <th>Notas Arbitrales</th>
+                                    <th style="text-align: right;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterTbody">
+                                <tr>
+                                    <td colspan="8" style="text-align:center; padding: 28px; color: var(--mtxt);">Cargando participantes...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB 2: TORNEOS Y BRACKETS -->
+            <div id="tab-tournaments" class="tab-panel" style="display:none;">
+                <section class="sec-card">
+                    <div class="sec-hdr">
+                        <h2>
+                            <span>Control Central de Torneos</span>
+                            <span class="badge" id="tournamentsBadgeCount">0 torneos</span>
+                        </h2>
+                        <a href="admin.html" class="btn sm primary">+ Crear / Abrir en Panel</a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Título del Torneo</th>
+                                    <th>Juego / Disciplina</th>
+                                    <th>Formato</th>
+                                    <th>Seeding</th>
+                                    <th>Fecha y Hora</th>
+                                    <th>Capacidad</th>
+                                    <th>Start.gg</th>
+                                    <th style="text-align: right;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tournamentsTbody">
+                                <tr>
+                                    <td colspan="8" style="text-align:center; padding: 28px; color: var(--mtxt);">Cargando torneos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB 3: CONFIGURACIÓN E INTEGRACIÓN START.GG -->
+            <div id="tab-startgg" class="tab-panel" style="display:none;">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <!-- CONFIGURADOR Y GESTOR DE TOKEN DE API -->
+                    <section class="sec-card" style="border-color:rgba(239, 68, 68, 0.35);">
+                        <div class="sec-hdr">
+                            <h2>
+                                <span>🔑 Gestor de Token Personal de Start.gg</span>
+                                <span class="badge" style="background:rgba(239, 68, 68, 0.15); color:#ff6b6b; border-color:rgba(239, 68, 68, 0.4);">REQUERIDO</span>
+                            </h2>
+                            <button class="btn sm" id="dashSaveTokenBtn" style="border-color:var(--act); color:var(--act);">💾 Guardar Token en Este Navegador</button>
+                        </div>
+                        <p style="font-size:0.86rem; color:var(--mtxt); line-height:1.5;">
+                            El Token de API es la llave que permite a LevelUP consultar tus torneos oficiales en <strong>Start.gg</strong> y traer todos los participantes clasificados al bracket. 
+                            Sin este token, la API no autoriza la extracción de datos.
+                        </p>
+                        <div class="frow" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                            <div class="fgrp">
+                                <label>Token Personal de Start.gg (Obligatorio)</label>
+                                <input type="password" id="dashStgTokenInp" placeholder="Ingresa tu Personal Token (ej: 8a9f02b...)">
+                            </div>
+                            <div class="fgrp">
+                                <label>Estado de Conexión</label>
+                                <div id="dashTokenStatus" style="padding:10px 14px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid var(--brd); font-size:0.88rem; font-weight:700; color:var(--mtxt); display:flex; align-items:center; gap:8px;">
+                                    <span>⚪</span> <span>Verificando token guardado...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                            <button class="btn sm primary" id="dashTestTokenBtn">⚡ Probar Conexión con Start.gg</button>
+                            <a href="https://start.gg/admin/profile/developer" target="_blank" rel="noopener" class="btn sm" style="color:#38bdf8; border-color:rgba(56,189,248,0.4);">
+                                ↗ Obtener mi Token en Start.gg (Developer Settings)
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- ENLACE DIRECTO DE TORNEO CON START.GG -->
+                    <section class="sec-card" style="border-color:rgba(0, 255, 136, 0.35);">
+                        <div class="sec-hdr">
+                            <h2>
+                                <span>🎯 Asociar Torneo de LevelUP con Start.gg</span>
+                                <span class="badge">INTEGRACIÓN</span>
+                            </h2>
+                            <button class="btn sm primary" id="dashSaveTournamentLinkBtn">💾 Guardar Enlace del Torneo</button>
+                        </div>
+                        <p style="font-size:0.86rem; color:var(--mtxt); line-height:1.5;">
+                            Selecciona en qué torneo de LevelUP deseas integrar tu evento de Start.gg y coloca el link o slug oficial. 
+                            Esto actualizará el torneo inmediatamente en Supabase y activará el botón de inscripción en el sitio público.
+                        </p>
+                        <div class="frow" style="display:grid; grid-template-columns:1fr 1.2fr; gap:14px;">
+                            <div class="fgrp">
+                                <label>Selecciona el Torneo en LevelUP</label>
+                                <select class="dash-select" id="dashIntegrateTournamentSel" style="padding:10px 14px;">
+                                    <option value="">Cargando torneos...</option>
+                                </select>
+                            </div>
+                            <div class="fgrp">
+                                <label>URL o Slug de Start.gg para este Torneo</label>
+                                <input type="text" id="dashIntegrateStartggUrlInp" placeholder="https://www.start.gg/tournament/mi-torneo-levelup">
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:4px;">
+                            <div id="dashIntegrateInfoTxt" style="font-size:0.84rem; color:var(--mtxt);">
+                                Selecciona un torneo arriba para ver o actualizar su enlace de Start.gg.
+                            </div>
+                            <button class="btn sm" id="dashSyncTournamentNowBtn" style="border-color:#38bdf8; color:#38bdf8;">
+                                ⚡ Sincronizar Participantes de este Torneo Ahora
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- GUÍA EXPLICATIVA OFICIAL -->
+                    <section class="guide-box">
+                        <div class="guide-header">
+                            <div class="icon">🎮</div>
+                            <div>
+                                <h3>¿Cómo se conecta Start.gg con el Bracket de LevelUP?</h3>
+                                <p style="color:var(--mtxt); font-size:0.88rem; margin-top:2px;">
+                                    Flujo oficial para enlazar inscripciones de Start.gg con las llaves de LevelUP.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="guide-steps">
+                            <div class="step-item">
+                                <div class="step-num">Paso 1: El Enlace</div>
+                                <div class="step-title">Poner la URL del Torneo</div>
+                                <div class="step-desc">
+                                    Al crear o editar un torneo, colocas el enlace de tu evento (ej: <code>https://www.start.gg/tournament/mi-torneo</code>). 
+                                    Esto activa automáticamente el botón <strong>"🎮 Inscríbete en Start.gg"</strong> en la web pública.
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-num">Paso 2: La Conexión</div>
+                                <div class="step-title">Extracción de Participantes</div>
+                                <div class="step-desc">
+                                    En el bracket del torneo en el panel admin, presionas el botón <strong>Start.gg</strong>. 
+                                    Con tu Token Personal configurado arriba, el sistema descarga los competidores en 1 segundo vía GraphQL.
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-num">Paso 3: La Lógica del Bracket</div>
+                                <div class="step-title">Generación del Árbol Oficial</div>
+                                <div class="step-desc">
+                                    Los inscritos reciben sus <strong>Seeds (#1, #2, #3...)</strong> respetando la clasificación. 
+                                    Si eliges modo Secuencial (#1 vs #2) o modo Olímpico (#1 vs #16), el árbol se renderiza automáticamente.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- TAB 4: GESTOR DE FLYERS, NOTICIAS E IMÁGENES -->
+            <div id="tab-banners" class="tab-panel" style="display:none;">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <section class="sec-card" style="border-color:rgba(56, 189, 248, 0.35);">
+                        <div class="sec-hdr">
+                            <h2>
+                                <span>🖼️ Publicar Flyer / Noticia en la Página Principal</span>
+                                <span class="badge" style="background:rgba(56,189,248,0.15); color:#38bdf8; border-color:rgba(56,189,248,0.35);">BANNER WEB</span>
+                            </h2>
+                            <button class="btn sm primary" id="dashUploadBannerBtn">➕ Publicar en la Web</button>
+                        </div>
+                        <p style="font-size:0.86rem; color:var(--mtxt); line-height:1.5;">
+                            Las imágenes que agregues aquí se mostrarán automáticamente en el carrusel interactivo de la página pública entre 
+                            <strong>LevelUP</strong> e <strong>Información General</strong>. Si no hay imágenes publicadas, la sección se oculta automáticamente.
+                        </p>
+                        <div class="frow" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                            <div class="fgrp">
+                                <label>Título de la Noticia / Evento</label>
+                                <input type="text" id="bnTitleInp" placeholder="Ej: Gran Torneo Clausura Valorant 2026">
+                            </div>
+                            <div class="fgrp">
+                                <label>Subtítulo o Descripción Corta</label>
+                                <input type="text" id="bnSubInp" placeholder="Ej: Inscripciones abiertas hasta el 28 de Octubre">
+                            </div>
+                        </div>
+                        <div class="frow" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                            <div class="fgrp">
+                                <label>URL de la Imagen o Flyer (Cualquier tamaño / 16:9 / vertical)</label>
+                                <input type="text" id="bnUrlInp" placeholder="https://ejemplo.com/flyer.png o sube un archivo">
+                            </div>
+                            <div class="fgrp">
+                                <label>O Subir Imagen desde Tu Dispositivo (PNG, JPG, WEBP, GIF, SVG...)</label>
+                                <input type="file" id="bnFileInput" accept="image/*, .png, .jpg, .jpeg, .webp, .gif, .svg, .avif, .bmp" style="padding:7px 10px;">
+                            </div>
+                        </div>
+                        <div class="frow" style="display:grid; grid-template-columns:1.2fr 1fr; gap:14px;">
+                            <div class="fgrp">
+                                <label>Enlace al Hacer Clic (Opcional - ej: Link de Discord o Inscripción)</label>
+                                <input type="text" id="bnLinkInp" placeholder="https://discord.gg/... o https://start.gg/...">
+                            </div>
+                            <div class="fgrp">
+                                <label>Ajuste Visual en el Carrusel</label>
+                                <select class="dash-select" id="bnFitSel" style="padding:10px 14px;">
+                                    <option value="contain">🖼️ Completa sin recortar (Ideal para 16:9, flyers con texto y posters)</option>
+                                    <option value="cover">📐 Llenar todo el fondo (Cover panorámico)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="bnPreviewBox" style="display:none; position:relative; max-width:100%; border-radius:14px; overflow:hidden; border:1px solid var(--brd); height:220px; align-items:center; justify-content:center; background:#0b0716;">
+                            <div id="bnPreviewBlurBg" style="position:absolute; inset:0; background-size:cover; background-position:center; filter:blur(18px); opacity:0.35;"></div>
+                            <img id="bnPreviewImg" style="max-width:100%; max-height:100%; object-fit:contain; position:relative; z-index:2;">
+                            <div id="bnPreviewBadge" style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.8); border:1px solid var(--act); color:var(--act); font-size:0.75rem; font-weight:800; padding:4px 10px; border-radius:6px; z-index:5;">📐 Proporción: Detectando...</div>
+                        </div>
+                    </section>
+
+                    <!-- LISTADO DE FLYERS PUBLICADOS -->
+                    <section class="sec-card">
+                        <div class="sec-hdr">
+                            <h2>
+                                <span>📋 Flyers y Noticias Publicadas</span>
+                                <span class="badge" id="bannersCountBadge">0 banners</span>
+                            </h2>
+                        </div>
+                        <div id="bannersGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
+                            <div style="text-align:center; padding:32px; color:var(--mtxt); grid-column:1/-1;">Cargando flyers...</div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL DE EDICIÓN DE FICHA DE JUGADOR -->
+    <div class="modal-overlay" id="editPlayerModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3 id="epModalTitle">Editar Ficha del Participante</h3>
+                <button class="btn sm ico" id="epCloseBtn">✕</button>
+            </div>
+
+            <input type="hidden" id="epEventId">
+            <input type="hidden" id="epSeed">
+            <input type="hidden" id="epParticipantId">
+
+            <div class="fgrp">
+                <label>GamerTag / Nickname</label>
+                <input type="text" id="epGamerTag" required>
+            </div>
+
+            <div class="fgrp">
+                <label>Quién es / Nombre Real</label>
+                <input type="text" id="epRealName" placeholder="Ej: Carlos Mendoza">
+            </div>
+
+            <div class="fgrp">
+                <label>Skin / Personaje / Main</label>
+                <input type="text" id="epSkin" placeholder="Ej: Vandal Kuronami / Reyna / Steve">
+            </div>
+
+            <div class="fgrp">
+                <label>Contacto (Discord / WhatsApp / Teléfono)</label>
+                <input type="text" id="epContact" placeholder="Ej: @carlos#1234 / 0412-1234567">
+            </div>
+
+            <div class="fgrp">
+                <label>Observaciones / Notas Arbitrales</label>
+                <textarea id="epNotes" rows="3" placeholder="Ej: PC 4, monitor 144Hz, mousepad propio, avisó retraso..."></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+                <button class="btn" id="epCancelBtn">Cancelar</button>
+                <button class="btn primary" id="epSaveBtn">💾 Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="dashToast">Mensaje de notificación</div>
+
+    <script>
+        const SB_URL = "https://gcebprvplazuwqltnvns.supabase.co";
+        const SB_KEY = "sb_publishable_08r8vqojnUnaQDIKwUaUxw_T8-ZnukA";
+        const sb = supabase.createClient(SB_URL, SB_KEY);
+
+        let allEvents = [];
+        let allParticipants = [];
+        let currentEditingItem = null;
+
+        // DOM ELEMENTS
+        const dashSidebar = document.getElementById("dashSidebar");
+        const mobMenuBtn = document.getElementById("mobMenuBtn");
+        const userTagMail = document.getElementById("userTagMail");
+        const dashLogoutBtn = document.getElementById("dashLogoutBtn");
+        const themeSelector = document.getElementById("themeSelector");
+        const dashToast = document.getElementById("dashToast");
+
+        const statTotalTournaments = document.getElementById("statTotalTournaments");
+        const statTotalPlayers = document.getElementById("statTotalPlayers");
+        const statDocumentedFichas = document.getElementById("statDocumentedFichas");
+        const statStartggEvents = document.getElementById("statStartggEvents");
+
+        const selFilterTournament = document.getElementById("selFilterTournament");
+        const rosterSearchInp = document.getElementById("rosterSearchInp");
+        const rosterTbody = document.getElementById("rosterTbody");
+        const rosterBadgeCount = document.getElementById("rosterBadgeCount");
+
+        const tournamentsTbody = document.getElementById("tournamentsTbody");
+        const tournamentsBadgeCount = document.getElementById("tournamentsBadgeCount");
+
+        const editPlayerModal = document.getElementById("editPlayerModal");
+        const epCloseBtn = document.getElementById("epCloseBtn");
+        const epCancelBtn = document.getElementById("epCancelBtn");
+        const epSaveBtn = document.getElementById("epSaveBtn");
+
+        // NAVIGATION TABS
+        document.querySelectorAll(".side-nav .nav-link[data-tab]").forEach(link => {
+            link.addEventListener("click", () => {
+                document.querySelectorAll(".side-nav .nav-link").forEach(l => l.classList.remove("active"));
+                link.classList.add("active");
+                const targetTab = link.getAttribute("data-tab");
+                document.querySelectorAll(".tab-panel").forEach(p => p.style.display = "none");
+                const panel = document.getElementById(targetTab);
+                if (panel) panel.style.display = "block";
+
+                const titles = {
+                    'tab-roster': 'Gestor Global de Fichas de Participantes',
+                    'tab-tournaments': 'Control Central de Torneos y Brackets',
+                    'tab-startgg': 'Integración Oficial con Start.gg',
+                    'tab-banners': 'Flyers y Noticias (Web)'
+                };
+                document.getElementById("pageTitle").innerText = titles[targetTab] || 'Dashboard LevelUP';
+
+                if (window.innerWidth <= 900) {
+                    dashSidebar.classList.remove("open");
+                }
+            });
+        });
+
+        if (mobMenuBtn) {
+            mobMenuBtn.addEventListener("click", () => {
+                dashSidebar.classList.toggle("open");
+            });
+        }
+
+        // THEMES
+        const sThm = localStorage.getItem("l_thm") || "lvl";
+        document.documentElement.setAttribute("data-th", sThm);
+        themeSelector.value = sThm;
+        themeSelector.addEventListener("change", (e) => {
+            document.documentElement.setAttribute("data-th", e.target.value);
+            localStorage.setItem("l_thm", e.target.value);
+        });
+
+        function showToast(msg) {
+            dashToast.innerText = msg;
+            dashToast.classList.add("show");
+            clearTimeout(dashToast._tid);
+            dashToast._tid = setTimeout(() => dashToast.classList.remove("show"), 2800);
+        }
+
+        // AUTH CHECK
+        async function checkAuth() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) {
+                window.location.href = "admin.html";
+                return;
+            }
+            userTagMail.innerText = session.user.email;
+        }
+
+        dashLogoutBtn.addEventListener("click", async () => {
+            await sb.auth.signOut();
+            window.location.href = "admin.html";
+        });
+
+        // LOAD DATA
+        async function loadDashboardData() {
+            try {
+                const [evRes, ptRes] = await Promise.all([
+                    sb.from("events").select("*").order("created_at", { ascending: false }),
+                    sb.from("participants").select("*").order("seed", { ascending: true })
+                ]);
+
+                allEvents = (evRes.data || []).filter(e => e.title !== "__SYSTEM_GLOBAL_CONFIG__");
+                allParticipants = ptRes.data || [];
+
+                updateStats();
+                populateTournamentFilter();
+                populateIntegrateTournamentSelect();
+                renderRosterTable();
+                renderTournamentsTable();
+                await loadSystemBanners();
+            } catch (err) {
+                console.error("Error loading dashboard data:", err);
+                showToast("Error al cargar datos del dashboard");
+            }
+        }
+
+        function updateStats() {
+            statTotalTournaments.innerText = allEvents.length;
+            statTotalPlayers.innerText = allParticipants.length;
+
+            let documented = 0;
+            let startggCount = 0;
+
+            allEvents.forEach(ev => {
+                const meta = ev.bracket_state?._meta || {};
+                if (meta.startgg_url) startggCount++;
+                const notes = meta.player_notes || {};
+                documented += Object.keys(notes).length;
+            });
+
+            statDocumentedFichas.innerText = documented;
+            statStartggEvents.innerText = startggCount;
+        }
+
+        function populateTournamentFilter() {
+            selFilterTournament.innerHTML = `<option value="ALL">🎯 Todos los Torneos (${allEvents.length})</option>`;
+            allEvents.forEach(ev => {
+                const opt = document.createElement("option");
+                opt.value = ev.id;
+                opt.text = ev.title;
+                selFilterTournament.appendChild(opt);
+            });
+        }
+
+        // RENDER ROSTER TABLE
+        function renderRosterTable() {
+            const filterEvtId = selFilterTournament.value;
+            const term = rosterSearchInp.value.trim().toLowerCase();
+
+            const evMap = {};
+            allEvents.forEach(e => evMap[e.id] = e);
+
+            let rows = allParticipants.filter(p => {
+                if (filterEvtId !== "ALL" && String(p.event_id) !== String(filterEvtId)) return false;
+                return true;
+            });
+
+            if (term) {
+                rows = rows.filter(p => {
+                    const ev = evMap[p.event_id];
+                    const meta = ev?.bracket_state?._meta || {};
+                    const note = meta.player_notes?.[p.seed] || {};
+
+                    return (p.name && p.name.toLowerCase().includes(term)) ||
+                           (note.realName && note.realName.toLowerCase().includes(term)) ||
+                           (note.skin && note.skin.toLowerCase().includes(term)) ||
+                           (note.contact && note.contact.toLowerCase().includes(term)) ||
+                           (note.notes && note.notes.toLowerCase().includes(term));
+                });
+            }
+
+            rosterBadgeCount.innerText = `${rows.length} jugadores`;
+
+            if (rows.length === 0) {
+                rosterTbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 32px; color: var(--mtxt);">No se encontraron fichas ni participantes.</td></tr>`;
+                return;
+            }
+
+            rosterTbody.innerHTML = "";
+            rows.forEach(p => {
+                const ev = evMap[p.event_id];
+                const meta = ev?.bracket_state?._meta || {};
+                const note = meta.player_notes?.[p.seed] || {};
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong style="color:var(--act);">${ev ? ev.title : 'Torneo Desconocido'}</strong></td>
+                    <td><span class="seed-pill">#${p.seed}</span></td>
+                    <td><strong style="font-size:0.95rem;">${p.name}</strong></td>
+                    <td>${note.realName || '<span style="color:var(--mtxt);">-</span>'}</td>
+                    <td>${note.skin ? `<span class="skin-tag">🎨 ${note.skin}</span>` : '<span style="color:var(--mtxt);">-</span>'}</td>
+                    <td>${note.contact ? `<span class="contact-tag">📞 ${note.contact}</span>` : '<span style="color:var(--mtxt);">-</span>'}</td>
+                    <td><div class="note-preview" title="${note.notes || ''}">${note.notes || '-'}</div></td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn sm edit-ficha-btn">📝 Editar Ficha</button>
+                    </td>
+                `;
+
+                tr.querySelector(".edit-ficha-btn").addEventListener("click", () => {
+                    openEditPlayerModal(p, ev, note);
+                });
+
+                rosterTbody.appendChild(tr);
+            });
+        }
+
+        // RENDER TOURNAMENTS TABLE
+        function renderTournamentsTable() {
+            tournamentsBadgeCount.innerText = `${allEvents.length} torneos`;
+            if (allEvents.length === 0) {
+                tournamentsTbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 32px; color: var(--mtxt);">No hay torneos registrados.</td></tr>`;
+                return;
+            }
+
+            tournamentsTbody.innerHTML = "";
+            allEvents.forEach(ev => {
+                const meta = ev.bracket_state?._meta || {};
+                const startggUrl = meta.startgg_url;
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${ev.title}</strong></td>
+                    <td><span class="skin-tag" style="color:var(--act); border-color:var(--brd-act);">${meta.game || 'ESPORTS'}</span></td>
+                    <td>${meta.format || 'single'}</td>
+                    <td>${meta.seeding_type === 'standard' ? '🏅 Olímpico' : '🔢 Secuencial'}</td>
+                    <td>${meta.date ? `📅 ${meta.date} ${meta.time || ''}` : 'Sin fecha'}</td>
+                    <td>⚔️ ${ev.max_players || 16} máx</td>
+                    <td>
+                        ${startggUrl ? `<a href="${startggUrl}" target="_blank" rel="noopener" class="btn sm" style="color:#ff6b6b; border-color:rgba(239,68,68,0.4);">🔗 Abrir Start.gg</a>` : '<span style="color:var(--mtxt); font-size:0.8rem;">No enlazado</span>'}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="admin.html" class="btn sm primary">Gestionar Bracket →</a>
+                    </td>
+                `;
+                tournamentsTbody.appendChild(tr);
+            });
+        }
+
+        // EDIT FICHA MODAL
+        function openEditPlayerModal(participant, eventObj, noteObj) {
+            currentEditingItem = { participant, eventObj };
+
+            document.getElementById("epParticipantId").value = participant.id;
+            document.getElementById("epEventId").value = eventObj.id;
+            document.getElementById("epSeed").value = participant.seed;
+
+            document.getElementById("epGamerTag").value = participant.name;
+            document.getElementById("epRealName").value = noteObj.realName || '';
+            document.getElementById("epSkin").value = noteObj.skin || '';
+            document.getElementById("epContact").value = noteObj.contact || '';
+            document.getElementById("epNotes").value = noteObj.notes || '';
+
+            editPlayerModal.classList.add("open");
+        }
+
+        function closeEditModal() {
+            editPlayerModal.classList.remove("open");
+            currentEditingItem = null;
+        }
+
+        epCloseBtn.addEventListener("click", closeEditModal);
+        epCancelBtn.addEventListener("click", closeEditModal);
+        editPlayerModal.addEventListener("click", (e) => {
+            if (e.target === editPlayerModal) closeEditModal();
+        });
+
+        epSaveBtn.addEventListener("click", async () => {
+            if (!currentEditingItem) return;
+            const { participant, eventObj } = currentEditingItem;
+
+            const newName = document.getElementById("epGamerTag").value.trim();
+            const realName = document.getElementById("epRealName").value.trim();
+            const skin = document.getElementById("epSkin").value.trim();
+            const contact = document.getElementById("epContact").value.trim();
+            const notes = document.getElementById("epNotes").value.trim();
+
+            if (!newName) {
+                alert("El GamerTag no puede estar vacío.");
+                return;
+            }
+
+            epSaveBtn.disabled = true;
+            epSaveBtn.innerText = "Guardando...";
+
+            try {
+                // Actualizar nombre de participante en BD si cambió
+                if (newName !== participant.name) {
+                    await sb.from("participants").update({ name: newName }).eq("id", participant.id);
+                    participant.name = newName;
+                }
+
+                // Actualizar ficha en bracket_state._meta.player_notes
+                const bState = eventObj.bracket_state || {};
+                if (!bState._meta) bState._meta = {};
+                if (!bState._meta.player_notes) bState._meta.player_notes = {};
+
+                bState._meta.player_notes[participant.seed] = {
+                    realName,
+                    skin,
+                    contact,
+                    notes
+                };
+
+                await sb.from("events").update({ bracket_state: bState }).eq("id", eventObj.id);
+
+                showToast(`✅ Ficha de ${newName} guardada correctamente`);
+                closeEditModal();
+                loadDashboardData();
+            } catch (err) {
+                alert("Error al guardar: " + err.message);
+            } finally {
+                epSaveBtn.disabled = false;
+                epSaveBtn.innerText = "💾 Guardar Cambios";
+            }
+        });
+
+        // EXPORT TO CSV
+        document.getElementById("exportNotesBtn").addEventListener("click", () => {
+            if (allParticipants.length === 0) {
+                alert("No hay participantes para exportar.");
+                return;
+            }
+
+            const evMap = {};
+            allEvents.forEach(e => evMap[e.id] = e);
+
+            const headers = ["Torneo", "Seed", "GamerTag", "Nombre Real", "Skin/Personaje", "Contacto", "Notas Arbitrales"];
+            const rows = allParticipants.map(p => {
+                const ev = evMap[p.event_id];
+                const meta = ev?.bracket_state?._meta || {};
+                const note = meta.player_notes?.[p.seed] || {};
+
+                return [
+                    `"${(ev ? ev.title : '').replace(/"/g, '""')}"`,
+                    p.seed,
+                    `"${(p.name || '').replace(/"/g, '""')}"`,
+                    `"${(note.realName || '').replace(/"/g, '""')}"`,
+                    `"${(note.skin || '').replace(/"/g, '""')}"`,
+                    `"${(note.contact || '').replace(/"/g, '""')}"`,
+                    `"${(note.notes || '').replace(/"/g, '""')}"`
+                ].join(",");
+            });
+
+            const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\n");
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `LevelUP_Fichas_Participantes_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("📥 Exportación CSV descargada");
+        });
+
+        // AÑADIR JUGADOR MANUAL DESDE DASHBOARD
+        document.getElementById("btnAddNewPlayerManual").addEventListener("click", async () => {
+            if (allEvents.length === 0) {
+                alert("Primero debes crear un torneo en el panel.");
+                return;
+            }
+
+            const evtTitles = allEvents.map((e, idx) => `${idx + 1}. ${e.title}`).join("\n");
+            const selIdxStr = prompt(`Selecciona el número del torneo al que deseas agregar el participante:\n\n${evtTitles}`);
+            if (!selIdxStr) return;
+
+            const selIdx = parseInt(selIdxStr) - 1;
+            if (isNaN(selIdx) || selIdx < 0 || selIdx >= allEvents.length) {
+                alert("Selección inválida.");
+                return;
+            }
+
+            const targetEvt = allEvents[selIdx];
+            const pName = prompt(`GamerTag del participante para "${targetEvt.title}":`);
+            if (!pName || !pName.trim()) return;
+
+            // Obtener siguiente seed
+            const { data: curParts } = await sb.from("participants").select("seed").eq("event_id", targetEvt.id);
+            const usedSeeds = curParts ? curParts.map(p => p.seed) : [];
+
+            if (usedSeeds.length >= targetEvt.max_players) {
+                alert("Este torneo ya completó su límite de jugadores.");
+                return;
+            }
+
+            let nextSeed = 1;
+            while (usedSeeds.includes(nextSeed)) nextSeed++;
+
+            const { error } = await sb.from("participants").insert([{
+                event_id: targetEvt.id,
+                name: pName.trim(),
+                seed: nextSeed
+            }]);
+
+            if (!error) {
+                showToast(`✅ Jugador #${nextSeed} ${pName.trim()} agregado`);
+                loadDashboardData();
+            } else {
+                alert("Error al agregar jugador: " + error.message);
+            }
+        });
+
+        // EVENT LISTENERS DE FILTROS
+        selFilterTournament.addEventListener("change", renderRosterTable);
+        rosterSearchInp.addEventListener("input", renderRosterTable);
+
+        // START.GG TOKEN MANAGER EN DASHBOARD
+        const dashStgTokenInp = document.getElementById("dashStgTokenInp");
+        const dashTokenStatus = document.getElementById("dashTokenStatus");
+        const dashSaveTokenBtn = document.getElementById("dashSaveTokenBtn");
+        const dashTestTokenBtn = document.getElementById("dashTestTokenBtn");
+
+        function initDashToken() {
+            const saved = localStorage.getItem("startgg_token") || "";
+            if (dashStgTokenInp) dashStgTokenInp.value = saved;
+            if (dashTokenStatus) {
+                if (saved) {
+                    dashTokenStatus.innerHTML = `<span style="color:#00ff88;">🟢</span> <span style="color:var(--act);">Token configurado en este navegador</span>`;
+                } else {
+                    dashTokenStatus.innerHTML = `<span style="color:#ff4d4d;">🔴</span> <span style="color:#ff6b6b;">Sin token configurado (Requerido)</span>`;
+                }
+            }
+        }
+
+        if (dashSaveTokenBtn) {
+            dashSaveTokenBtn.addEventListener("click", () => {
+                const val = dashStgTokenInp.value.trim();
+                if (!val) {
+                    localStorage.removeItem("startgg_token");
+                    dashTokenStatus.innerHTML = `<span style="color:#ff4d4d;">🔴</span> <span style="color:#ff6b6b;">Token eliminado</span>`;
+                    showToast("Token de Start.gg eliminado");
+                    return;
+                }
+                localStorage.setItem("startgg_token", val);
+                dashTokenStatus.innerHTML = `<span style="color:#00ff88;">🟢</span> <span style="color:var(--act);">Token guardado exitosamente</span>`;
+                showToast("🔑 Token de Start.gg guardado correctamente");
+            });
+        }
+
+        if (dashTestTokenBtn) {
+            dashTestTokenBtn.addEventListener("click", async () => {
+                const token = dashStgTokenInp.value.trim();
+                if (!token) {
+                    alert("Por favor ingresa un token para probar.");
+                    return;
+                }
+                dashTestTokenBtn.disabled = true;
+                dashTestTokenBtn.innerText = "⏳ Verificando con Start.gg...";
+
+                try {
+                    const res = await fetch("https://api.start.gg/gql/alpha", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            query: `query { currentUser { id name } }`
+                        })
+                    });
+                    const json = await res.json();
+                    if (json.data && json.data.currentUser) {
+                        const u = json.data.currentUser;
+                        dashTokenStatus.innerHTML = `<span style="color:#00ff88;">🟢</span> <span style="color:var(--act);">Conectado como: ${u.name || 'Usuario Start.gg'} (ID: ${u.id})</span>`;
+                        localStorage.setItem("startgg_token", token);
+                        showToast(`⚡ ¡Conexión exitosa con Start.gg! (${u.name})`);
+                    } else {
+                        throw new Error(json.errors?.[0]?.message || "Token inválido o expirado");
+                    }
+                } catch (err) {
+                    dashTokenStatus.innerHTML = `<span style="color:#ff4d4d;">❌</span> <span style="color:#ff6b6b;">Error: ${err.message}</span>`;
+                    alert("Error al verificar token con Start.gg:\n" + err.message);
+                } finally {
+                    dashTestTokenBtn.disabled = false;
+                    dashTestTokenBtn.innerText = "⚡ Probar Conexión con Start.gg";
+                }
+            });
+        }
+
+        // ==========================================
+        // ASOCIACIÓN Y SINCRONIZACIÓN CON START.GG
+        // ==========================================
+        const dashIntegrateTournamentSel = document.getElementById("dashIntegrateTournamentSel");
+        const dashIntegrateStartggUrlInp = document.getElementById("dashIntegrateStartggUrlInp");
+        const dashSaveTournamentLinkBtn = document.getElementById("dashSaveTournamentLinkBtn");
+        const dashSyncTournamentNowBtn = document.getElementById("dashSyncTournamentNowBtn");
+        const dashIntegrateInfoTxt = document.getElementById("dashIntegrateInfoTxt");
+
+        function populateIntegrateTournamentSelect() {
+            if (!dashIntegrateTournamentSel) return;
+            dashIntegrateTournamentSel.innerHTML = '<option value="">-- Selecciona un Torneo en LevelUP --</option>';
+            allEvents.forEach(ev => {
+                const opt = document.createElement("option");
+                opt.value = ev.id;
+                opt.textContent = `${ev.title} (${ev.max_players || 16} máx)`;
+                dashIntegrateTournamentSel.appendChild(opt);
+            });
+        }
+
+        if (dashIntegrateTournamentSel) {
+            dashIntegrateTournamentSel.addEventListener("change", () => {
+                const evId = dashIntegrateTournamentSel.value;
+                const ev = allEvents.find(e => String(e.id) === String(evId));
+                if (ev) {
+                    const meta = ev.bracket_state?._meta || {};
+                    dashIntegrateStartggUrlInp.value = meta.startgg_url || "";
+                    if (meta.startgg_url) {
+                        dashIntegrateInfoTxt.innerHTML = `🔗 Enlace actual: <a href="${meta.startgg_url}" target="_blank" style="color:var(--act); font-weight:700;">${meta.startgg_url}</a>`;
+                    } else {
+                        dashIntegrateInfoTxt.innerText = "ℹ️ Este torneo no tiene un enlace de Start.gg asignado todavía.";
+                    }
+                } else {
+                    dashIntegrateStartggUrlInp.value = "";
+                    dashIntegrateInfoTxt.innerText = "Selecciona un torneo arriba para ver o actualizar su enlace de Start.gg.";
+                }
+            });
+        }
+
+        if (dashSaveTournamentLinkBtn) {
+            dashSaveTournamentLinkBtn.addEventListener("click", async () => {
+                const evId = dashIntegrateTournamentSel.value;
+                if (!evId) {
+                    alert("Por favor selecciona un torneo de la lista.");
+                    return;
+                }
+                const ev = allEvents.find(e => String(e.id) === String(evId));
+                if (!ev) return;
+
+                const url = dashIntegrateStartggUrlInp.value.trim();
+                dashSaveTournamentLinkBtn.disabled = true;
+                dashSaveTournamentLinkBtn.innerText = "Guardando...";
+
+                try {
+                    const bState = ev.bracket_state || {};
+                    if (!bState._meta) bState._meta = {};
+                    bState._meta.startgg_url = url;
+
+                    const { error } = await sb.from("events").update({ bracket_state: bState }).eq("id", ev.id);
+                    if (error) throw error;
+
+                    ev.bracket_state = bState;
+                    showToast("💾 Enlace de Start.gg guardado en el torneo");
+                    if (url) {
+                        dashIntegrateInfoTxt.innerHTML = `🔗 Enlace actual: <a href="${url}" target="_blank" style="color:var(--act); font-weight:700;">${url}</a>`;
+                    } else {
+                        dashIntegrateInfoTxt.innerText = "ℹ️ Se quitó el enlace de Start.gg de este torneo.";
+                    }
+                    renderTournamentsTable();
+                    updateStats();
+                } catch (err) {
+                    alert("Error al guardar enlace: " + err.message);
+                } finally {
+                    dashSaveTournamentLinkBtn.disabled = false;
+                    dashSaveTournamentLinkBtn.innerText = "💾 Guardar Enlace del Torneo";
+                }
+            });
+        }
+
+        if (dashSyncTournamentNowBtn) {
+            dashSyncTournamentNowBtn.addEventListener("click", async () => {
+                const evId = dashIntegrateTournamentSel.value;
+                if (!evId) {
+                    alert("Por favor selecciona un torneo primero.");
+                    return;
+                }
+                const ev = allEvents.find(e => String(e.id) === String(evId));
+                if (!ev) return;
+
+                const url = dashIntegrateStartggUrlInp.value.trim() || ev.bracket_state?._meta?.startgg_url;
+                if (!url) {
+                    alert("Ingresa o guarda primero la URL del torneo en Start.gg.");
+                    return;
+                }
+
+                const token = localStorage.getItem("startgg_token") || (dashStgTokenInp ? dashStgTokenInp.value.trim() : "");
+                if (!token) {
+                    alert("El Personal Token de Start.gg es OBLIGATORIO para sincronizar. Configúralo arriba en este panel.");
+                    return;
+                }
+
+                let slug = url;
+                try {
+                    const parsed = new URL(url);
+                    const parts = parsed.pathname.split("/").filter(Boolean);
+                    const tIdx = parts.indexOf("tournament");
+                    if (tIdx !== -1 && parts[tIdx + 1]) {
+                        slug = parts[tIdx + 1];
+                    }
+                } catch (e) {
+                    slug = url.replace(/.*start\.gg\/tournament\//, "").split("/")[0].trim();
+                }
+
+                if (!slug) {
+                    alert("No se pudo detectar el slug del torneo en la URL.");
+                    return;
+                }
+
+                dashSyncTournamentNowBtn.disabled = true;
+                dashSyncTournamentNowBtn.innerText = "⏳ Consultando API de Start.gg...";
+
+                try {
+                    const query = `query TournamentEntrants($slug: String!) {
+                        tournament(slug: $slug) {
+                            id
+                            name
+                            events {
+                                id
+                                name
+                                entrants(query: { page: 1, perPage: 128 }) {
+                                    nodes {
+                                        id
+                                        name
+                                        initialSeedNum
+                                        participants {
+                                            id
+                                            gamerTag
+                                            prefix
+                                            user {
+                                                name
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }`;
+
+                    const res = await fetch("https://api.start.gg/gql/alpha", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ query, variables: { slug } })
+                    });
+                    const json = await res.json();
+                    if (json.errors) throw new Error(json.errors[0].message);
+
+                    const tournamentData = json.data?.tournament;
+                    if (!tournamentData) throw new Error("Torneo no encontrado en Start.gg");
+
+                    const allEntrants = [];
+                    (tournamentData.events || []).forEach(e => {
+                        (e.entrants?.nodes || []).forEach(ent => allEntrants.push(ent));
+                    });
+
+                    if (allEntrants.length === 0) {
+                        alert(`Se conectó con el torneo "${tournamentData.name}", pero no tiene participantes inscritos todavía.`);
+                        return;
+                    }
+
+                    await sb.from("participants").delete().eq("event_id", ev.id);
+
+                    const newParticipants = [];
+                    const playerNotes = ev.bracket_state?._meta?.player_notes || {};
+
+                    allEntrants.forEach((ent, idx) => {
+                        const seedNum = ent.initialSeedNum || (idx + 1);
+                        const pItem = ent.participants?.[0] || {};
+                        const tag = pItem.gamerTag || ent.name || `Jugador ${seedNum}`;
+                        const realName = pItem.user?.name || '';
+
+                        newParticipants.push({
+                            event_id: ev.id,
+                            name: tag,
+                            seed: seedNum
+                        });
+
+                        if (realName && !playerNotes[seedNum]) {
+                            playerNotes[seedNum] = {
+                                realName: realName,
+                                skin: '',
+                                contact: '',
+                                notes: 'Importado de Start.gg'
+                            };
+                        }
+                    });
+
+                    const { error: insErr } = await sb.from("participants").insert(newParticipants);
+                    if (insErr) throw insErr;
+
+                    if (!ev.bracket_state) ev.bracket_state = {};
+                    if (!ev.bracket_state._meta) ev.bracket_state._meta = {};
+                    ev.bracket_state._meta.player_notes = playerNotes;
+                    ev.bracket_state._meta.startgg_url = url;
+
+                    await sb.from("events").update({ bracket_state: ev.bracket_state }).eq("id", ev.id);
+
+                    showToast(`⚡ ¡${newParticipants.length} participantes sincronizados de Start.gg!`);
+                    await loadDashboardData();
+                } catch (err) {
+                    console.error("Error al sincronizar con Start.gg:", err);
+                    alert("Error en la sincronización con Start.gg:\n" + err.message);
+                } finally {
+                    dashSyncTournamentNowBtn.disabled = false;
+                    dashSyncTournamentNowBtn.innerText = "⚡ Sincronizar Participantes de este Torneo Ahora";
+                }
+            });
+        }
+
+        // ==========================================
+        // GESTOR DE FLYERS, NOTICIAS Y BANNERS WEB
+        // ==========================================
+        let systemBanners = [];
+
+        const bnTitleInp = document.getElementById("bnTitleInp");
+        const bnSubInp = document.getElementById("bnSubInp");
+        const bnUrlInp = document.getElementById("bnUrlInp");
+        const bnFileInput = document.getElementById("bnFileInput");
+        const bnLinkInp = document.getElementById("bnLinkInp");
+        const bnPreviewBox = document.getElementById("bnPreviewBox");
+        const bnPreviewImg = document.getElementById("bnPreviewImg");
+        const dashUploadBannerBtn = document.getElementById("dashUploadBannerBtn");
+        const bannersGrid = document.getElementById("bannersGrid");
+        const bannersCountBadge = document.getElementById("bannersCountBadge");
+
+        const bnFitSel = document.getElementById("bnFitSel");
+        const bnPreviewBlurBg = document.getElementById("bnPreviewBlurBg");
+        const bnPreviewBadge = document.getElementById("bnPreviewBadge");
+
+        function detectAspectRatio(w, h) {
+            const ratio = w / h;
+            if (Math.abs(ratio - (16 / 9)) < 0.12) return "16:9 Panorámica Esports";
+            if (Math.abs(ratio - (9 / 16)) < 0.12) return "9:16 Vertical (Poster / Story)";
+            if (Math.abs(ratio - 1) < 0.1) return "1:1 Cuadrada";
+            if (Math.abs(ratio - (4 / 3)) < 0.12) return "4:3 Estándar";
+            if (ratio > 1.8) return "Ultra-Panorámica (Banner)";
+            if (ratio < 0.8) return "Vertical (Flyer)";
+            return `${w}x${h} Personalizada`;
+        }
+
+        function updatePreviewDisplay(imgUrl, w = 0, h = 0) {
+            if (!imgUrl) {
+                if (bnPreviewBox) bnPreviewBox.style.display = "none";
+                return;
+            }
+            if (bnPreviewImg) {
+                bnPreviewImg.src = imgUrl;
+                bnPreviewImg.style.objectFit = bnFitSel ? bnFitSel.value : 'contain';
+            }
+            if (bnPreviewBlurBg) {
+                bnPreviewBlurBg.style.backgroundImage = `url("${imgUrl}")`;
+            }
+            if (bnPreviewBadge) {
+                if (w && h) {
+                    bnPreviewBadge.innerText = `📐 ${detectAspectRatio(w, h)} (${w}x${h})`;
+                } else {
+                    bnPreviewBadge.innerText = "📐 Imagen cargada";
+                }
+            }
+            if (bnPreviewBox) bnPreviewBox.style.display = "flex";
+        }
+
+        if (bnFitSel) {
+            bnFitSel.addEventListener("change", () => {
+                if (bnPreviewImg) bnPreviewImg.style.objectFit = bnFitSel.value;
+            });
+        }
+
+        if (bnFileInput) {
+            bnFileInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const isSvg = file.type === "image/svg+xml" || file.name.endsWith(".svg");
+                const isGif = file.type === "image/gif" || file.name.endsWith(".gif");
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const rawDataUrl = event.target.result;
+
+                    // Si es GIF o SVG, mantener original sin pasar por canvas para no perder animación o vector
+                    if (isGif || isSvg) {
+                        bnUrlInp.value = rawDataUrl;
+                        const tempImg = new Image();
+                        tempImg.onload = () => updatePreviewDisplay(rawDataUrl, tempImg.width, tempImg.height);
+                        tempImg.src = rawDataUrl;
+                        return;
+                    }
+
+                    const img = new Image();
+                    img.onload = () => {
+                        const origW = img.width;
+                        const origH = img.height;
+                        const maxDim = 1920; // Full HD 16:9 de máxima fidelidad
+                        let w = origW;
+                        let h = origH;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) {
+                                h = Math.round((h * maxDim) / w);
+                                w = maxDim;
+                            } else {
+                                w = Math.round((w * maxDim) / h);
+                                h = maxDim;
+                            }
+                        }
+                        const canvas = document.createElement("canvas");
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+                        bnUrlInp.value = dataUrl;
+                        updatePreviewDisplay(dataUrl, origW, origH);
+                    };
+                    img.src = rawDataUrl;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (bnUrlInp) {
+            bnUrlInp.addEventListener("input", () => {
+                const u = bnUrlInp.value.trim();
+                if (u) {
+                    const temp = new Image();
+                    temp.onload = () => updatePreviewDisplay(u, temp.width, temp.height);
+                    temp.onerror = () => updatePreviewDisplay(u, 0, 0);
+                    temp.src = u;
+                } else {
+                    updatePreviewDisplay("");
+                }
+            });
+        }
+
+        async function loadSystemBanners() {
+            try {
+                const { data, error } = await sb.from("events").select("*").eq("title", "__SYSTEM_GLOBAL_CONFIG__").maybeSingle();
+                if (data && data.bracket_state && Array.isArray(data.bracket_state.banners)) {
+                    systemBanners = data.bracket_state.banners;
+                } else {
+                    systemBanners = [];
+                }
+                renderBannersGrid();
+            } catch (err) {
+                console.error("Error al cargar banners:", err);
+            }
+        }
+
+        function renderBannersGrid() {
+            if (bannersCountBadge) bannersCountBadge.innerText = `${systemBanners.length} banners`;
+            if (!bannersGrid) return;
+
+            if (systemBanners.length === 0) {
+                bannersGrid.innerHTML = `<div style="text-align:center; padding:32px; color:var(--mtxt); grid-column:1/-1;">No hay flyers publicados. Los banners aparecerán automáticamente en el carrusel interactivo de la página principal una vez agregues uno arriba.</div>`;
+                return;
+            }
+
+            bannersGrid.innerHTML = "";
+            systemBanners.forEach(bn => {
+                const card = document.createElement("div");
+                card.style.cssText = "background:rgba(0,0,0,0.4); border:1px solid var(--brd); border-radius:14px; overflow:hidden; display:flex; flex-direction:column;";
+                card.innerHTML = `
+                    <div style="height:170px; width:100%; position:relative; overflow:hidden; background:#0b0716; display:flex; align-items:center; justify-content:center;">
+                        <div style="position:absolute; inset:0; background-image:url('${bn.imageUrl}'); background-size:cover; background-position:center; filter:blur(16px); opacity:0.35;"></div>
+                        <img src="${bn.imageUrl}" style="max-width:100%; max-height:100%; object-fit:${bn.fit || 'contain'}; position:relative; z-index:2;" onerror="this.src='pics/logo.png'">
+                        ${bn.fit === 'cover' ? '<span style="position:absolute; top:8px; right:8px; z-index:3; font-size:0.7rem; background:rgba(0,0,0,0.7); padding:2px 6px; border-radius:4px; color:var(--act);">Cover</span>' : ''}
+                    </div>
+                    <div style="padding:14px; display:flex; flex-direction:column; gap:8px; flex:1;">
+                        <strong style="color:var(--txt); font-size:1rem;">${bn.title || 'Sin título'}</strong>
+                        ${bn.sub ? `<span style="color:var(--mtxt); font-size:0.83rem;">${bn.sub}</span>` : ''}
+                        ${bn.link ? `<a href="${bn.link}" target="_blank" rel="noopener" style="color:var(--act); font-size:0.78rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">🔗 ${bn.link}</a>` : ''}
+                        <div style="margin-top:auto; padding-top:10px; display:flex; justify-content:flex-end;">
+                            <button class="btn sm danger del-bn-btn" data-id="${bn.id}">🗑️ Eliminar Flyer</button>
+                        </div>
+                    </div>
+                `;
+
+                card.querySelector(".del-bn-btn").addEventListener("click", () => deleteBanner(bn.id));
+                bannersGrid.appendChild(card);
+            });
+        }
+
+        async function deleteBanner(id) {
+            if (!confirm("¿Deseas eliminar este flyer de la página principal?")) return;
+            systemBanners = systemBanners.filter(b => b.id !== id);
+
+            try {
+                const { data: cfg } = await sb.from("events").select("*").eq("title", "__SYSTEM_GLOBAL_CONFIG__").maybeSingle();
+                if (cfg) {
+                    const bState = cfg.bracket_state || {};
+                    bState.banners = systemBanners;
+                    await sb.from("events").update({ bracket_state: bState }).eq("id", cfg.id);
+                }
+                showToast("🗑️ Flyer eliminado correctamente");
+                renderBannersGrid();
+            } catch (err) {
+                alert("Error al eliminar banner: " + err.message);
+            }
+        }
+
+        if (dashUploadBannerBtn) {
+            dashUploadBannerBtn.addEventListener("click", async () => {
+                const title = bnTitleInp.value.trim();
+                const sub = bnSubInp.value.trim();
+                const imageUrl = bnUrlInp.value.trim();
+                const link = bnLinkInp.value.trim();
+                const fit = bnFitSel ? bnFitSel.value : 'contain';
+
+                if (!imageUrl) {
+                    alert("Por favor sube una imagen o introduce un enlace de imagen.");
+                    return;
+                }
+
+                dashUploadBannerBtn.disabled = true;
+                dashUploadBannerBtn.innerText = "Publicando...";
+
+                try {
+                    let { data: cfg } = await sb.from("events").select("*").eq("title", "__SYSTEM_GLOBAL_CONFIG__").maybeSingle();
+                    if (!cfg) {
+                        const { data: newCfg, error: insErr } = await sb.from("events").insert([{
+                            title: "__SYSTEM_GLOBAL_CONFIG__",
+                            description: "Configuración global de LevelUP y banners web",
+                            max_players: 0,
+                            bracket_state: { banners: [] }
+                        }]).select().single();
+                        if (insErr) throw insErr;
+                        cfg = newCfg;
+                    }
+
+                    const newBn = {
+                        id: "bn_" + Date.now(),
+                        title: title || "Noticia / Torneo LevelUP",
+                        sub: sub,
+                        imageUrl: imageUrl,
+                        link: link,
+                        fit: fit,
+                        created_at: new Date().toISOString()
+                    };
+
+                    const curBanners = (cfg.bracket_state && Array.isArray(cfg.bracket_state.banners)) ? cfg.bracket_state.banners : [];
+                    const updatedBanners = [newBn, ...curBanners];
+
+                    const bState = cfg.bracket_state || {};
+                    bState.banners = updatedBanners;
+                    bState.banners = updatedBanners;
+
+                    const { error: updErr } = await sb.from("events").update({ bracket_state: bState }).eq("id", cfg.id);
+                    if (updErr) throw updErr;
+
+                    systemBanners = updatedBanners;
+                    showToast("✅ Flyer publicado exitosamente en la web");
+
+                    bnTitleInp.value = "";
+                    bnSubInp.value = "";
+                    bnUrlInp.value = "";
+                    if (bnFileInput) bnFileInput.value = "";
+                    bnLinkInp.value = "";
+                    bnPreviewBox.style.display = "none";
+
+                    renderBannersGrid();
+                } catch (err) {
+                    alert("Error al publicar flyer: " + err.message);
+                } finally {
+                    dashUploadBannerBtn.disabled = false;
+                    dashUploadBannerBtn.innerText = "➕ Publicar en la Web";
+                }
+            });
+        }
+
+        // INICIALIZACIÓN
+        checkAuth().then(() => {
+            initDashToken();
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sudo LevelUP - Panel de Control Esports</title>
+    <title>Sudo LevelUP - Super Administrador Esports</title>
     <link rel="icon" type="image/png" href="../pics/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -875,6 +875,143 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             text-transform: uppercase;
         }
+
+        .pnote-tag {
+            font-size: 0.68rem;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+            padding: 1px 5px;
+            margin-left: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90px;
+        }
+
+        /* ESTILOS 100% RESPONSIVE / TELÉFONOS MÓVILES */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 6px;
+            }
+
+            .box {
+                padding: 18px 12px;
+                width: 100%;
+                max-width: 96vw;
+                border-radius: 16px;
+            }
+
+            .box h1 {
+                font-size: 1.4rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 12px;
+            }
+
+            .frow {
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+            }
+
+            .fgrp input, .fgrp select, .fgrp textarea {
+                font-size: 16px; /* Evita zoom automático en Safari/iOS */
+                padding: 10px 12px;
+            }
+
+            .btn {
+                padding: 10px 12px;
+                font-size: 0.86rem;
+                min-height: 42px;
+            }
+
+            .btn.sm {
+                padding: 6px 10px;
+                font-size: 0.78rem;
+                min-height: 36px;
+            }
+
+            /* Toolbar del Bracket en móvil */
+            #bView .bhdr {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px 12px;
+                gap: 10px;
+            }
+
+            #bView .bhdr > div:first-child {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            #bView .bhdr > div:last-child {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                justify-content: flex-start;
+                width: 100%;
+            }
+
+            .zctl {
+                order: 99;
+                margin-top: 4px;
+            }
+
+            /* Navegación rápida de rondas en móvil */
+            .rnd-nav {
+                padding: 6px 10px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                justify-content: flex-start;
+                gap: 6px;
+            }
+
+            .rjump-btn {
+                padding: 5px 12px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            /* Modales responsivos en móvil */
+            .mdl {
+                width: 96vw !important;
+                max-width: 96vw !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                padding: 18px 14px !important;
+                border-radius: 16px !important;
+            }
+
+            .eitem {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .eitem > div:last-child {
+                display: flex;
+                gap: 6px;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                font-size: 0.82rem;
+            }
+            .sbtn {
+                top: 8px;
+                right: 8px;
+                width: 38px;
+                height: 38px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -936,6 +1073,7 @@
         </div>
         <button class="btn primary" id="bCrt">➕ Crear Nuevo Torneo</button>
         <button class="btn" id="bMng">📋 Manejar Torneos Existentes</button>
+        <a href="dashboard.html" class="btn" style="border-color:#38bdf8; color:#38bdf8;">📊 Dashboard Central y Fichas →</a>
         <a href="../index.html" class="btn" id="bHomePub" style="border-color:var(--act); color:var(--txt);">Ir al Sitio Público →</a>
         <button class="btn danger" id="bLogoutMain" style="margin-top:6px; justify-content:center; gap:8px; width:100%;">
             <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
@@ -1017,6 +1155,20 @@
                 </div>
             </div>
 
+            <div class="frow">
+                <div class="fgrp">
+                    <label>Orden de Llaves (Seeding)</label>
+                    <select id="eSeeding">
+                        <option value="sequential" selected>🔢 Secuencial (Seed 1 vs 2, 3 vs 4...)</option>
+                        <option value="standard">🏆 Competitivo / Olímpico (Seed 1 vs N, 8 vs 9...)</option>
+                    </select>
+                </div>
+                <div class="fgrp">
+                    <label>🔗 Enlace de Start.gg (Inscripción)</label>
+                    <input type="url" id="eStartgg" placeholder="https://www.start.gg/tournament/mi-torneo">
+                </div>
+            </div>
+
             <div class="fgrp">
                 <label>Descripción / Reglas Breves</label>
                 <textarea id="eDsc" placeholder="Detalles de mapas, premios, tolerancia de espera..."></textarea>
@@ -1064,6 +1216,8 @@
                 <button class="btn sm" id="bAddP" title="Añadir jugador individual">+ Añadir</button>
                 <button class="btn sm" id="bBulkP" title="Cargar participantes en masa">+ Masivo</button>
                 <button class="btn sm" id="bMngP" title="Ver lista y editar participantes">👥 Jugadores</button>
+                <button class="btn sm" id="bPlayerNotes" title="Gestionar notas, skins e identidad de jugadores" style="border-color:#38bdf8; color:#38bdf8;">📝 Notas</button>
+                <button class="btn sm" id="bStartggSyncBtn" title="Sincronizar inscripciones con Start.gg" style="border-color:#ff4d4d; color:#ff4d4d;">🎮 Start.gg</button>
                 <button class="btn sm" id="bShf" title="Mezclar posiciones de forma segura">🎲 Mezclar</button>
                 <button class="btn sm" id="bRstB" title="Limpiar todos los resultados">🔄 Reset</button>
                 <button class="btn sm" id="bShrAdm" title="Copiar enlace público del torneo">🔗 Link</button>
@@ -1140,6 +1294,19 @@
                         <input type="time" id="edTime">
                     </div>
                 </div>
+                <div class="frow">
+                    <div class="fgrp">
+                        <label>Orden de Llaves (Seeding)</label>
+                        <select id="edSeeding">
+                            <option value="sequential">🔢 Secuencial (Seed 1 vs 2, 3 vs 4...)</option>
+                            <option value="standard">🏆 Competitivo / Olímpico (Seed 1 vs N, 8 vs 9...)</option>
+                        </select>
+                    </div>
+                    <div class="fgrp">
+                        <label>🔗 Enlace de Start.gg (Inscripción)</label>
+                        <input type="url" id="edStartgg" placeholder="https://www.start.gg/tournament/mi-torneo">
+                    </div>
+                </div>
                 <div class="fgrp">
                     <label>Descripción / Reglas</label>
                     <textarea id="edDsc"></textarea>
@@ -1160,25 +1327,35 @@
                 <button id="cMchScore" class="btn ico sm" style="width:30px;height:30px;">✕</button>
             </div>
             
-            <div style="display:flex; flex-direction:column; gap:12px; margin:8px 0;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:10px; border:1px solid var(--brd);">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="seed-badge" id="mchScSeed1">#1</span>
-                        <strong id="mchScP1Name" style="font-size:1rem;">Jugador 1</strong>
+            <div style="display:flex; flex-direction:column; gap:10px; margin:8px 0;">
+                <div style="background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:10px; border:1px solid var(--brd);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="seed-badge" id="mchScSeed1">#1</span>
+                            <strong id="mchScP1Name" style="font-size:1rem;">Jugador 1</strong>
+                        </div>
+                        <input type="number" id="mchScInp1" min="0" max="99" style="width:65px; text-align:center; font-weight:800; font-size:1.1rem; padding:6px;" placeholder="0">
                     </div>
-                    <input type="number" id="mchScInp1" min="0" max="99" style="width:65px; text-align:center; font-weight:800; font-size:1.1rem; padding:6px;" placeholder="0">
+                    <div id="mchP1NotesTxt" style="font-size:0.75rem; color:#38bdf8; margin-top:4px; display:none;"></div>
                 </div>
 
                 <div style="text-align:center; font-weight:900; color:var(--mtxt); font-size:0.85rem; letter-spacing:2px;">V S</div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:10px; border:1px solid var(--brd);">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="seed-badge" id="mchScSeed2">#2</span>
-                        <strong id="mchScP2Name" style="font-size:1rem;">Jugador 2</strong>
+                <div style="background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:10px; border:1px solid var(--brd);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="seed-badge" id="mchScSeed2">#2</span>
+                            <strong id="mchScP2Name" style="font-size:1rem;">Jugador 2</strong>
+                        </div>
+                        <input type="number" id="mchScInp2" min="0" max="99" style="width:65px; text-align:center; font-weight:800; font-size:1.1rem; padding:6px;" placeholder="0">
                     </div>
-                    <input type="number" id="mchScInp2" min="0" max="99" style="width:65px; text-align:center; font-weight:800; font-size:1.1rem; padding:6px;" placeholder="0">
+                    <div id="mchP2NotesTxt" style="font-size:0.75rem; color:#38bdf8; margin-top:4px; display:none;"></div>
                 </div>
             </div>
+
+            <button class="btn sm" id="mchOpenNotesBtn" style="border-color:#38bdf8; color:#38bdf8; width:100%; justify-content:center; margin-bottom:8px; gap:6px;">
+                📝 Ver / Editar Ficha y Skins de Estos Jugadores
+            </button>
 
             <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
                 <button class="btn primary" id="bWinP1">🏆 Declarar Victoria para <span id="winP1Label">P1</span></button>
@@ -1225,6 +1402,92 @@
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--brd); padding-top:12px;">
                 <button class="btn sm" id="pAddDirect">+ Añadir Jugador</button>
                 <button class="btn danger sm" id="cPlayersBtn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE NOTAS Y FICHA DE JUGADORES -->
+    <div class="moly" id="pNotesMod">
+        <div class="mdl" style="max-width:480px; max-height:88vh; display:flex; flex-direction:column;">
+            <div class="mhd">
+                <span>📝 Notas y Ficha de Jugador</span>
+                <button id="cPNotes" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            <p style="font-size:0.83rem; color:var(--mtxt); margin:4px 0 10px 0; line-height:1.4;">
+                Registra la identidad, personaje, skin, contacto y observaciones arbitrales de los participantes.
+            </p>
+            <div class="fgrp">
+                <label>Seleccionar Jugador / Seed</label>
+                <select id="pnSeedSel"></select>
+            </div>
+            <div class="fgrp">
+                <label>GamerTag / Nickname</label>
+                <input type="text" id="pnName" readonly style="background:rgba(0,0,0,0.25); color:var(--act); font-weight:700;">
+            </div>
+            <div class="frow">
+                <div class="fgrp">
+                    <label>Quién es / Nombre Real</label>
+                    <input type="text" id="pnRealName" placeholder="Ej: Carlos Mendoza (UNIMAR)">
+                </div>
+                <div class="fgrp">
+                    <label>Skin / Personaje / Main</label>
+                    <input type="text" id="pnSkin" placeholder="Ej: Vandal Kuronami / Reyna">
+                </div>
+            </div>
+            <div class="fgrp">
+                <label>Contacto (Discord / WhatsApp / Teléfono)</label>
+                <input type="text" id="pnContact" placeholder="Ej: @carlos#1234 / 0412-1234567">
+            </div>
+            <div class="fgrp">
+                <label>Observaciones / Notas Arbitrales</label>
+                <textarea id="pnNotes" rows="3" placeholder="Ej: PC 4, mousepad propio, avisó que llega 2:15pm..."></textarea>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+                <button class="btn primary" id="pnSaveBtn" style="flex:1;">💾 Guardar Ficha</button>
+                <button class="btn danger" id="pnCloseBtn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE SINCRONIZACIÓN CON START.GG -->
+    <div class="moly" id="startggSyncMod">
+        <div class="mdl" style="max-width:520px; max-height:88vh; display:flex; flex-direction:column;">
+            <div class="mhd">
+                <span>🎮 Sincronización con Start.gg</span>
+                <button id="cStartggSync" class="btn ico sm" style="width:30px;height:30px;">✕</button>
+            </div>
+            <p style="font-size:0.84rem; color:var(--mtxt); line-height:1.4; margin:4px 0 10px 0;">
+                Conecta este torneo con tu evento oficial en <strong>Start.gg</strong>. Los participantes inscritos se integrarán en las llaves del torneo en tiempo real.
+            </p>
+            <div class="fgrp">
+                <label>URL o Slug del Torneo en Start.gg</label>
+                <input type="text" id="stgSlugInp" placeholder="https://www.start.gg/tournament/nombre-torneo o 'nombre-torneo'">
+            </div>
+            <div class="fgrp">
+                <label>Token de API Personal de Start.gg <span style="color:#ff4d4d; font-weight:800;">(OBLIGATORIO PARA LA API)</span></label>
+                <input type="password" id="stgTokenInp" placeholder="Ingresa tu Personal Token de Start.gg (Obligatorio)">
+            </div>
+            
+            <div style="display:flex; gap:10px; margin-bottom:12px;">
+                <button class="btn" id="stgSaveConfigBtn" style="flex:1; justify-content:center; border-color:var(--act); color:var(--act);">
+                    💾 Guardar Cambios
+                </button>
+                <button class="btn primary" id="stgFetchBtn" style="flex:1.4; justify-content:center; gap:6px;">
+                    ⚡ Sincronizar Vía API
+                </button>
+            </div>
+
+            <div style="border-top:1px solid var(--brd); padding-top:12px; margin-top:4px;">
+                <label style="font-size:0.85rem; font-weight:700; color:var(--txt); display:block; margin-bottom:6px;">
+                    📥 Importación Rápida Directa (Copiar y Pegar)
+                </label>
+                <p style="font-size:0.78rem; color:var(--mtxt); margin-bottom:8px;">
+                    También puedes copiar los asistentes desde Start.gg y pegarlos aquí (un participante por línea):
+                </p>
+                <textarea id="stgPasteInp" rows="4" placeholder="Zyrex&#10;Melon&#10;Astra&#10;Shadow..." style="font-family:monospace; margin-bottom:8px;"></textarea>
+                <button class="btn" id="stgApplyPasteBtn" style="width:100%; justify-content:center;">
+                    📥 Cargar Jugadores al Torneo
+                </button>
             </div>
         </div>
     </div>
@@ -1321,10 +1584,41 @@
         const edTtl = document.getElementById("edTtl");
         const edGame = document.getElementById("edGame");
         const edFormat = document.getElementById("edFormat");
+        const edSeeding = document.getElementById("edSeeding");
+        const edStartgg = document.getElementById("edStartgg");
         const edStatus = document.getElementById("edStatus");
         const edDate = document.getElementById("edDate");
         const edTime = document.getElementById("edTime");
         const edDsc = document.getElementById("edDsc");
+        const eSeeding = document.getElementById("eSeeding");
+        const eStartgg = document.getElementById("eStartgg");
+
+        // Notas de Jugadores
+        const bPlayerNotes = document.getElementById("bPlayerNotes");
+        const pNotesMod = document.getElementById("pNotesMod");
+        const cPNotes = document.getElementById("cPNotes");
+        const pnCloseBtn = document.getElementById("pnCloseBtn");
+        const pnSeedSel = document.getElementById("pnSeedSel");
+        const pnName = document.getElementById("pnName");
+        const pnRealName = document.getElementById("pnRealName");
+        const pnSkin = document.getElementById("pnSkin");
+        const pnContact = document.getElementById("pnContact");
+        const pnNotes = document.getElementById("pnNotes");
+        const pnSaveBtn = document.getElementById("pnSaveBtn");
+        const mchP1NotesTxt = document.getElementById("mchP1NotesTxt");
+        const mchP2NotesTxt = document.getElementById("mchP2NotesTxt");
+        const mchOpenNotesBtn = document.getElementById("mchOpenNotesBtn");
+
+        // Start.gg Sincronización
+        const bStartggSyncBtn = document.getElementById("bStartggSyncBtn");
+        const startggSyncMod = document.getElementById("startggSyncMod");
+        const cStartggSync = document.getElementById("cStartggSync");
+        const stgSlugInp = document.getElementById("stgSlugInp");
+        const stgTokenInp = document.getElementById("stgTokenInp");
+        const stgSaveConfigBtn = document.getElementById("stgSaveConfigBtn");
+        const stgFetchBtn = document.getElementById("stgFetchBtn");
+        const stgPasteInp = document.getElementById("stgPasteInp");
+        const stgApplyPasteBtn = document.getElementById("stgApplyPasteBtn");
 
         const FORMAT_MAP = {
             single: { label: "⚡ Eliminación Directa", short: "Single Elim", icon: "⚡" },
@@ -1613,9 +1907,11 @@
             const date = document.getElementById("eDate").value;
             const time = document.getElementById("eTime").value;
             const status = document.getElementById("eStatus").value;
+            const seeding_type = eSeeding ? eSeeding.value : 'sequential';
+            const startgg_url = eStartgg ? eStartgg.value.trim() : '';
 
             const bracket_state = {
-                _meta: { game, date, time, status, format },
+                _meta: { game, date, time, status, format, seeding_type, startgg_url, player_notes: {} },
                 scores: {}
             };
 
@@ -1627,6 +1923,7 @@
                 cCard.style.display = "none";
                 document.getElementById("eTtl").value = "";
                 document.getElementById("eDsc").value = "";
+                if (eStartgg) eStartgg.value = "";
                 showAdminToast("¡Torneo programado exitosamente!");
                 openBracket(data);
             } else {
@@ -1642,6 +1939,8 @@
             edDsc.value = currEvt.description || '';
             edGame.value = meta.game || 'VALORANT';
             if (edFormat) edFormat.value = meta.format || 'single';
+            if (edSeeding) edSeeding.value = meta.seeding_type || 'sequential';
+            if (edStartgg) edStartgg.value = meta.startgg_url || '';
             edStatus.value = meta.status || 'upcoming';
             edDate.value = meta.date || todayStr;
             edTime.value = meta.time || '14:00';
@@ -1659,6 +1958,8 @@
             const updatedDsc = edDsc.value.trim();
             const updatedGame = edGame.value;
             const updatedFormat = edFormat ? edFormat.value : 'single';
+            const updatedSeeding = edSeeding ? edSeeding.value : 'sequential';
+            const updatedStartgg = edStartgg ? edStartgg.value.trim() : '';
             const updatedStatus = edStatus.value;
             const updatedDate = edDate.value;
             const updatedTime = edTime.value;
@@ -1666,6 +1967,8 @@
             if (!winners._meta) winners._meta = {};
             winners._meta.game = updatedGame;
             winners._meta.format = updatedFormat;
+            winners._meta.seeding_type = updatedSeeding;
+            winners._meta.startgg_url = updatedStartgg;
             winners._meta.status = updatedStatus;
             winners._meta.date = updatedDate;
             winners._meta.time = updatedTime;
@@ -1744,7 +2047,7 @@
                 eLst.innerHTML = "<div style='text-align:center; padding:24px; color:#ff2a55;'>Error al cargar torneos.</div>";
                 return;
             }
-            allAdminEvents = data;
+            allAdminEvents = (data || []).filter(e => e.title !== "__SYSTEM_GLOBAL_CONFIG__");
             renderAdminEventsList(allAdminEvents);
         }
 
@@ -1771,19 +2074,23 @@
             loadEvents();
         }
 
-        // ALGORITMO OFICIAL DE SEEDING ESPORTS (ESTÁNDAR OLÍMPICO)
-        function getSeededOrder(power) {
-            let order = [1, 2];
-            while (order.length < power) {
-                const next = [];
-                const sum = (order.length * 2) + 1;
-                for (let i = 0; i < order.length; i++) {
-                    next.push(order[i]);
-                    next.push(sum - order[i]);
+        // ALGORITMO DE SEEDING (SECUENCIAL POR DEFECTO O COMPETITIVO OLÍMPICO)
+        function getSeededOrder(power, type = 'sequential') {
+            if (type === 'standard') {
+                let order = [1, 2];
+                while (order.length < power) {
+                    const next = [];
+                    const sum = (order.length * 2) + 1;
+                    for (let i = 0; i < order.length; i++) {
+                        next.push(order[i]);
+                        next.push(sum - order[i]);
+                    }
+                    order = next;
                 }
-                order = next;
+                return order;
             }
-            return order;
+            // Secuencial: Seed 1 vs Seed 2, Seed 3 vs Seed 4, etc.
+            return Array.from({ length: power }, (_, i) => i + 1);
         }
 
         function subscribeRealtime(eventId) {
@@ -1851,7 +2158,9 @@
             while (P < N) P *= 2;
 
             const totalRounds = Math.log2(P);
-            const seededOrder = getSeededOrder(P);
+            const meta = (winners && winners._meta) || {};
+            const seedingType = meta.seeding_type || 'sequential';
+            const seededOrder = getSeededOrder(P, seedingType);
             const scores = (winners && winners.scores) ? winners.scores : {};
 
             let pMap = {};
@@ -1951,16 +2260,22 @@
                     const p1Class = `ply ${isP1Bye ? 'bye' : ''} ${isP1Empty ? 'empty' : ''} ${curWin && curWin === p1 ? 'win' : ''}`;
                     const p2Class = `ply ${isP2Bye ? 'bye' : ''} ${isP2Empty ? 'empty' : ''} ${curWin && curWin === p2 ? 'win' : ''}`;
 
+                    const pNotes = meta.player_notes || {};
+                    const note1 = (r === 0 && seed1) ? pNotes[seed1] : null;
+                    const note2 = (r === 0 && seed2) ? pNotes[seed2] : null;
+
                     mBox.innerHTML = `
                         <div class="${p1Class}" data-player="${encodeURIComponent(p1)}" onclick="event.stopPropagation(); pickWinner(${r}, ${m}, '${encodeURIComponent(p1)}', '${encodeURIComponent(p2)}')">
                             ${(r === 0 && seed1 && seed1 <= N) ? `<span class="seed-badge">#${seed1}</span>` : ''}
                             <span class="pname">${isP1Bye ? 'Pase Libre (BYE)' : p1}</span>
+                            ${note1 && note1.skin ? `<span class="pnote-tag" title="${note1.skin}">🎨 ${note1.skin}</span>` : ''}
                             ${sc1 !== '' ? `<span class="pscore ${curWin === p1 ? 'win' : ''}">${sc1}</span>` : ''}
                             ${curWin && curWin === p1 && sc1 === '' ? '<span style="font-weight:900;">✓</span>' : ''}
                         </div>
                         <div class="${p2Class}" data-player="${encodeURIComponent(p2)}" onclick="event.stopPropagation(); pickWinner(${r}, ${m}, '${encodeURIComponent(p2)}', '${encodeURIComponent(p1)}')">
                             ${(r === 0 && seed2 && seed2 <= N) ? `<span class="seed-badge">#${seed2}</span>` : ''}
                             <span class="pname">${isP2Bye ? 'Pase Libre (BYE)' : p2}</span>
+                            ${note2 && note2.skin ? `<span class="pnote-tag" title="${note2.skin}">🎨 ${note2.skin}</span>` : ''}
                             ${sc2 !== '' ? `<span class="pscore ${curWin === p2 ? 'win' : ''}">${sc2}</span>` : ''}
                             ${curWin && curWin === p2 && sc2 === '' ? '<span style="font-weight:900;">✓</span>' : ''}
                         </div>
@@ -2024,7 +2339,7 @@
 
         // MODAL DE MARCADOR Y GESTIÓN DE PARTIDA (ADMIN)
         function openMatchScoreModal(r, m, rName, p1, p2, s1, s2, sc1, sc2, curWin) {
-            activeMatchContext = { r, m, p1, p2, curWin };
+            activeMatchContext = { r, m, p1, p2, s1, s2, curWin };
             mchScRoundTitle.innerText = `${rName} - Partida ${m + 1}`;
             mchScP1Name.innerText = p1;
             mchScP2Name.innerText = p2;
@@ -2034,7 +2349,47 @@
             winP2Label.innerText = p2;
             mchScInp1.value = sc1 !== '' ? sc1 : '';
             mchScInp2.value = sc2 !== '' ? sc2 : '';
+
+            // Mostrar notas/skins de jugadores si existen
+            const meta = (winners && winners._meta) || {};
+            const playerNotes = meta.player_notes || {};
+            const n1 = s1 ? playerNotes[s1] : null;
+            const n2 = s2 ? playerNotes[s2] : null;
+
+            if (mchP1NotesTxt) {
+                if (n1 && (n1.skin || n1.realName || n1.contact)) {
+                    const tagParts = [];
+                    if (n1.realName) tagParts.push(`👤 ${n1.realName}`);
+                    if (n1.skin) tagParts.push(`🎨 ${n1.skin}`);
+                    if (n1.contact) tagParts.push(`📞 ${n1.contact}`);
+                    mchP1NotesTxt.innerText = tagParts.join(' • ');
+                    mchP1NotesTxt.style.display = 'block';
+                } else {
+                    mchP1NotesTxt.style.display = 'none';
+                }
+            }
+
+            if (mchP2NotesTxt) {
+                if (n2 && (n2.skin || n2.realName || n2.contact)) {
+                    const tagParts = [];
+                    if (n2.realName) tagParts.push(`👤 ${n2.realName}`);
+                    if (n2.skin) tagParts.push(`🎨 ${n2.skin}`);
+                    if (n2.contact) tagParts.push(`📞 ${n2.contact}`);
+                    mchP2NotesTxt.innerText = tagParts.join(' • ');
+                    mchP2NotesTxt.style.display = 'block';
+                } else {
+                    mchP2NotesTxt.style.display = 'none';
+                }
+            }
+
             mchScoreMod.classList.add("on");
+        }
+
+        if (mchOpenNotesBtn) {
+            mchOpenNotesBtn.addEventListener("click", () => {
+                mchScoreMod.classList.remove("on");
+                if (bPlayerNotes) bPlayerNotes.click();
+            });
         }
 
         cMchScore.addEventListener("click", () => mchScoreMod.classList.remove("on"));
@@ -2458,6 +2813,316 @@
         document.getElementById("bPrintAdm").addEventListener("click", () => {
             window.print();
         });
+
+        // ==========================================
+        // GESTIÓN DE NOTAS Y FICHAS DE JUGADORES
+        // ==========================================
+        let notesPlayerCache = [];
+
+        if (bPlayerNotes) {
+            bPlayerNotes.addEventListener("click", async () => {
+                if (!currEvt) return;
+                const { data: players } = await sb.from("participants").select("*").eq("event_id", currEvt.id).order("seed", { ascending: true });
+                notesPlayerCache = players || [];
+                pnSeedSel.innerHTML = "";
+                if (notesPlayerCache.length === 0) {
+                    const opt = document.createElement("option");
+                    opt.value = "";
+                    opt.text = "Sin participantes registrados";
+                    pnSeedSel.appendChild(opt);
+                    pnName.value = "";
+                    pnRealName.value = "";
+                    pnSkin.value = "";
+                    pnContact.value = "";
+                    pnNotes.value = "";
+                } else {
+                    notesPlayerCache.forEach(p => {
+                        const opt = document.createElement("option");
+                        opt.value = p.seed;
+                        opt.text = `#${p.seed} — ${p.name}`;
+                        pnSeedSel.appendChild(opt);
+                    });
+                    // Si se abrió desde una partida con jugador específico, preseleccionarlo
+                    if (activeMatchContext && activeMatchContext.s1) {
+                        const targetSeed = String(activeMatchContext.s1);
+                        if (Array.from(pnSeedSel.options).some(o => o.value === targetSeed)) {
+                            pnSeedSel.value = targetSeed;
+                        }
+                    }
+                    loadPlayerNoteForm();
+                }
+                pNotesMod.classList.add("on");
+            });
+        }
+
+        if (pnSeedSel) {
+            pnSeedSel.addEventListener("change", loadPlayerNoteForm);
+        }
+
+        function loadPlayerNoteForm() {
+            const seed = pnSeedSel.value;
+            if (!seed) return;
+            const targetP = notesPlayerCache.find(p => String(p.seed) === String(seed));
+            pnName.value = targetP ? targetP.name : '';
+
+            const meta = (winners && winners._meta) || {};
+            const playerNotes = meta.player_notes || {};
+            const curNote = playerNotes[seed] || {};
+
+            pnRealName.value = curNote.realName || '';
+            pnSkin.value = curNote.skin || '';
+            pnContact.value = curNote.contact || '';
+            pnNotes.value = curNote.notes || '';
+        }
+
+        if (pnSaveBtn) {
+            pnSaveBtn.addEventListener("click", async () => {
+                if (!currEvt) return;
+                const seed = pnSeedSel.value;
+                if (!seed) {
+                    showAdminToast("Selecciona un jugador válido.", true);
+                    return;
+                }
+                if (!winners._meta) winners._meta = {};
+                if (!winners._meta.player_notes) winners._meta.player_notes = {};
+
+                winners._meta.player_notes[seed] = {
+                    realName: pnRealName.value.trim(),
+                    skin: pnSkin.value.trim(),
+                    contact: pnContact.value.trim(),
+                    notes: pnNotes.value.trim()
+                };
+
+                const { error } = await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+                if (!error) {
+                    showAdminToast(`📝 Ficha del Seed #${seed} guardada`);
+                    pNotesMod.classList.remove("on");
+                    renderTree();
+                } else {
+                    alert("Error al guardar ficha: " + error.message);
+                }
+            });
+        }
+
+        if (cPNotes) cPNotes.addEventListener("click", () => pNotesMod.classList.remove("on"));
+        if (pnCloseBtn) pnCloseBtn.addEventListener("click", () => pNotesMod.classList.remove("on"));
+        if (pNotesMod) {
+            pNotesMod.addEventListener("click", (e) => {
+                if (e.target === pNotesMod) pNotesMod.classList.remove("on");
+            });
+        }
+
+        // ==========================================
+        // SINCRONIZACIÓN CON START.GG
+        // ==========================================
+        if (bStartggSyncBtn) {
+            bStartggSyncBtn.addEventListener("click", () => {
+                if (!currEvt) return;
+                const meta = (winners && winners._meta) || {};
+                if (stgSlugInp && meta.startgg_url) {
+                    stgSlugInp.value = meta.startgg_url;
+                }
+                const savedToken = localStorage.getItem("startgg_token");
+                if (stgTokenInp && savedToken) {
+                    stgTokenInp.value = savedToken;
+                }
+                startggSyncMod.classList.add("on");
+            });
+        }
+
+        if (cStartggSync) {
+            cStartggSync.addEventListener("click", () => startggSyncMod.classList.remove("on"));
+        }
+        if (startggSyncMod) {
+            startggSyncMod.addEventListener("click", (e) => {
+                if (e.target === startggSyncMod) startggSyncMod.classList.remove("on");
+            });
+        }
+
+        // Importación rápida manual pegando lista de Start.gg
+        if (stgApplyPasteBtn) {
+            stgApplyPasteBtn.addEventListener("click", async () => {
+                if (!currEvt) return;
+                const raw = stgPasteInp.value.trim();
+                if (!raw) {
+                    showAdminToast("Pega al menos un nombre de participante.", true);
+                    return;
+                }
+                const names = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+                if (names.length === 0) return;
+
+                const { data: currentPlayers } = await sb.from("participants").select("seed").eq("event_id", currEvt.id);
+                const usedSeeds = currentPlayers ? currentPlayers.map(p => p.seed) : [];
+                const remaining = currEvt.max_players - usedSeeds.length;
+
+                if (names.length > remaining) {
+                    alert(`Solo hay ${remaining} cupos disponibles en este torneo, pero intentas importar ${names.length} jugadores.`);
+                    return;
+                }
+
+                let nextSeed = 1;
+                const newRecords = [];
+                names.forEach(name => {
+                    while (usedSeeds.includes(nextSeed)) {
+                        nextSeed++;
+                    }
+                    usedSeeds.push(nextSeed);
+                    newRecords.push({
+                        event_id: currEvt.id,
+                        name: name,
+                        seed: nextSeed
+                    });
+                });
+
+                const { error } = await sb.from("participants").insert(newRecords);
+                if (!error) {
+                    stgPasteInp.value = "";
+                    startggSyncMod.classList.remove("on");
+                    showAdminToast(`🎮 ${newRecords.length} participantes de Start.gg importados exitosamente`);
+                    renderTree();
+                } else {
+                    alert("Error al importar participantes: " + error.message);
+                }
+            });
+        }
+
+        // Guardar configuración / enlace Start.gg
+        if (stgSaveConfigBtn) {
+            stgSaveConfigBtn.addEventListener("click", async () => {
+                if (!currEvt) return;
+                const rawSlug = stgSlugInp.value.trim();
+                const token = stgTokenInp.value.trim();
+
+                if (token) {
+                    localStorage.setItem("startgg_token", token);
+                }
+
+                if (!winners._meta) winners._meta = {};
+                winners._meta.startgg_url = rawSlug;
+
+                const { error } = await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+                if (!error) {
+                    showAdminToast("💾 Enlace y configuración de Start.gg guardados");
+                } else {
+                    alert("Error al guardar: " + error.message);
+                }
+            });
+        }
+
+        // Sincronización mediante API GraphQL de Start.gg (TOKEN OBLIGATORIO)
+        if (stgFetchBtn) {
+            stgFetchBtn.addEventListener("click", async () => {
+                if (!currEvt) return;
+                const rawSlug = stgSlugInp.value.trim();
+                const token = stgTokenInp.value.trim();
+
+                if (!rawSlug) {
+                    alert("Por favor ingresa la URL o slug del torneo de Start.gg.");
+                    return;
+                }
+
+                if (!token) {
+                    alert("⚠️ EL TOKEN DE API ES OBLIGATORIO.\n\nPara consultar Start.gg y armar el bracket se requiere tu Token Personal de Start.gg.\n(Lo obtienes en start.gg > Developer Settings > Create Token).");
+                    stgTokenInp.focus();
+                    return;
+                }
+
+                // Guardar token en localStorage para comodidad del admin
+                localStorage.setItem("startgg_token", token);
+
+                // Extraer el tournament slug de la URL si es necesario
+                let tournamentSlug = rawSlug;
+                const match = rawSlug.match(/start\.gg\/tournament\/([^/?#]+)/i);
+                if (match) {
+                    tournamentSlug = match[1];
+                }
+
+                // Guardar la URL en el torneo
+                if (!winners._meta) winners._meta = {};
+                winners._meta.startgg_url = rawSlug.startsWith("http") ? rawSlug : `https://www.start.gg/tournament/${tournamentSlug}`;
+                await sb.from("events").update({ bracket_state: winners }).eq("id", currEvt.id);
+
+                stgFetchBtn.disabled = true;
+                stgFetchBtn.innerText = "⏳ Consultando API de Start.gg...";
+
+                try {
+                    const query = `
+                        query TournamentParticipants($slug: String!) {
+                            tournament(slug: $slug) {
+                                name
+                                participants(query: { perPage: 100 }) {
+                                    nodes {
+                                        gamerTag
+                                        user {
+                                            name
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    `;
+
+                    const res = await fetch("https://api.start.gg/gql/alpha", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            query,
+                            variables: { slug: tournamentSlug }
+                        })
+                    });
+
+                    const json = await res.json();
+                    if (json.errors && json.errors.length > 0) {
+                        throw new Error(json.errors[0].message || "Error al conectar con Start.gg");
+                    }
+
+                    const nodes = json.data?.tournament?.participants?.nodes || [];
+                    if (nodes.length === 0) {
+                        alert("No se encontraron participantes registrados en ese torneo de Start.gg.");
+                        return;
+                    }
+
+                    const { data: currentPlayers } = await sb.from("participants").select("seed, name").eq("event_id", currEvt.id);
+                    const existingNames = new Set((currentPlayers || []).map(p => p.name.toLowerCase()));
+                    const usedSeeds = (currentPlayers || []).map(p => p.seed);
+
+                    let imported = 0;
+                    let nextSeed = 1;
+                    const newRecords = [];
+
+                    nodes.forEach(node => {
+                        const tag = (node.gamerTag || (node.user && node.user.name) || "").trim();
+                        if (tag && !existingNames.has(tag.toLowerCase()) && (usedSeeds.length + newRecords.length) < currEvt.max_players) {
+                            while (usedSeeds.includes(nextSeed)) nextSeed++;
+                            usedSeeds.push(nextSeed);
+                            newRecords.push({
+                                event_id: currEvt.id,
+                                name: tag,
+                                seed: nextSeed
+                            });
+                            imported++;
+                        }
+                    });
+
+                    if (newRecords.length > 0) {
+                        await sb.from("participants").insert(newRecords);
+                        showAdminToast(`⚡ ${newRecords.length} participantes sincronizados desde Start.gg`);
+                        renderTree();
+                    } else {
+                        showAdminToast("Todos los participantes ya estaban sincronizados en el bracket.");
+                    }
+                    startggSyncMod.classList.remove("on");
+                } catch (err) {
+                    alert("Error al sincronizar con Start.gg: " + err.message + "\n\nPuedes usar la caja de abajo para copiar y pegar la lista de participantes directamente.");
+                } finally {
+                    stgFetchBtn.disabled = false;
+                    stgFetchBtn.innerHTML = "⚡ Sincronizar Participantes Vía API";
+                }
+            });
+        }
 
         // ATAJOS DE TECLADO
         window.addEventListener("keydown", (e) => {
